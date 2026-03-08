@@ -1,21 +1,21 @@
-# BIONOVA México
+# BIONOVA México - sitio actualizado
 
-Sitio estático listo para GitHub Pages.
+Este paquete ya viene corregido para usar los nombres nuevos de la carpeta `assets`.
 
-## Archivos
+## Archivos principales
 - `index.html`
 - `styles.css`
 - `script.js`
-- `assets/`
 
-## Publicación en GitHub Pages
-1. Sube todos los archivos al repositorio.
-2. En GitHub entra a **Settings > Pages**.
-3. En **Build and deployment**, selecciona **Deploy from a branch**.
-4. Elige la rama `main` y la carpeta `/root`.
-5. Guarda y espera unos minutos.
+## Carpeta assets
+Incluye:
+- logo y banner
+- cursos renombrados
+- temarios renombrados
+- testimonios
 
-## Personalización rápida
-- Cambia textos en `index.html`
-- Ajusta colores en `styles.css` dentro de `:root`
-- Cambia enlaces de WhatsApp y redes en `index.html` y `script.js`
+## Cómo subirlo a GitHub
+1. Borra o reemplaza los archivos viejos de tu repositorio.
+2. Sube todo el contenido de esta carpeta.
+3. Verifica que `index.html` y la carpeta `assets` estén en la raíz del repositorio.
+4. En GitHub Pages usa `main` y `/(root)`.
