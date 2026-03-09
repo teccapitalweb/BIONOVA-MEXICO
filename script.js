@@ -54,3 +54,41 @@ chips.forEach(chip => {
     });
   });
 });
+
+
+const modal = document.getElementById('course-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalDescription = document.getElementById('modal-description');
+const modalImage = document.getElementById('modal-image');
+const modalTriggers = document.querySelectorAll('.modal-trigger');
+const modalClose = document.querySelector('.modal-close');
+
+const openModal = key => {
+  if (!modal || !window.courseModalData || !window.courseModalData[key]) return;
+  const data = window.courseModalData[key];
+  modalTitle.textContent = data.title;
+  modalDescription.textContent = data.description;
+  modalImage.src = data.image;
+  modalImage.alt = 'Contenido incluido en ' + data.title;
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+};
+
+const closeModal = () => {
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+};
+
+modalTriggers.forEach(btn => btn.addEventListener('click', () => openModal(btn.dataset.modal)));
+if (modalClose) modalClose.addEventListener('click', closeModal);
+if (modal) {
+  modal.addEventListener('click', e => {
+    if (e.target === modal) closeModal();
+  });
+}
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});

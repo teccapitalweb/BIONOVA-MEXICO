@@ -158,3 +158,45 @@ img{max-width:100%;display:block}
   .section{padding:72px 0}
   .cta-box{padding:30px}
 }
+
+
+.tech-grid{position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(68,115,255,.06) 1px, transparent 1px),linear-gradient(90deg, rgba(68,115,255,.06) 1px, transparent 1px);background-size:40px 40px;mask-image:radial-gradient(circle at center, black, transparent 80%);z-index:-1}
+.site-header{background:rgba(5,12,28,.72);backdrop-filter:blur(18px);border-bottom:1px solid rgba(148,163,184,.14)}
+.hero::before{content:"";position:absolute;inset:auto 8% 18% auto;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle, rgba(34,211,238,.18), transparent 70%);filter:blur(10px);pointer-events:none}
+.hero{position:relative;overflow:hidden}
+.hero-card,.quick-card,.info-card,.benefit-card,.course-card,.client-card,.certificate-list div,.stat-card{box-shadow:0 20px 60px rgba(2,8,23,.18), inset 0 1px 0 rgba(255,255,255,.03)}
+.hero-card{background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));border-color:rgba(255,255,255,.18)}
+.btn,.chip,.social-chip,.dock-btn,.modal-panel{transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease, background .25s ease}
+.btn:hover,.chip:hover,.social-chip:hover,.dock-btn:hover{transform:translateY(-2px)}
+.section-kicker,.chip.active,.social-chip,.dock-btn{box-shadow:0 10px 30px rgba(37,99,235,.18)}
+.social-inline{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 0}
+.social-chip{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(148,163,184,.18);background:rgba(255,255,255,.08);color:#fff;font-weight:800;font-size:.9rem}
+.social-chip.facebook{background:linear-gradient(135deg,#1877f2,#2451ff)}
+.social-chip.instagram{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}
+.social-chip.whatsapp{background:linear-gradient(135deg,#16a34a,#22c55e)}
+.clients-marquee{overflow:hidden;position:relative;padding:10px 0 4px}
+.clients-marquee::before,.clients-marquee::after{content:"";position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none}
+.clients-marquee::before{left:0;background:linear-gradient(90deg, #f5f9ff, rgba(245,249,255,0))}
+.clients-marquee::after{right:0;background:linear-gradient(270deg, #f5f9ff, rgba(245,249,255,0))}
+.clients-track{display:flex;gap:20px;width:max-content;animation:marquee 28s linear infinite}
+.clients-marquee:hover .clients-track{animation-play-state:paused}
+.marquee-card{min-width:320px;max-width:320px;min-height:240px}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.course-actions{display:flex;gap:10px;flex-wrap:wrap}
+.course-actions .btn,.course-actions button{flex:1 1 auto}
+.modal-backdrop{position:fixed;inset:0;background:rgba(2,8,23,.68);backdrop-filter:blur(10px);display:grid;place-items:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:60}
+.modal-backdrop.open{opacity:1;pointer-events:auto}
+.modal-panel{width:min(960px,100%);max-height:min(88vh,860px);overflow:auto;background:linear-gradient(180deg,#f8fbff,#eef5ff);border:1px solid rgba(148,163,184,.28);border-radius:28px;padding:22px;box-shadow:0 30px 80px rgba(2,8,23,.45)}
+.modal-close{position:sticky;top:0;margin-left:auto;display:grid;place-items:center;width:42px;height:42px;border:none;border-radius:999px;background:#0f172a;color:#fff;font-size:1.8rem;cursor:pointer;z-index:2}
+.modal-copy{padding:4px 4px 18px}
+.modal-copy h3{margin:12px 0 10px;font-size:clamp(1.5rem,3vw,2.2rem);color:#0f172a}
+.modal-copy p{margin:0;color:#4b6385;line-height:1.7}
+.modal-media-wrap{border-radius:22px;overflow:hidden;border:1px solid #d8e4f4;background:#fff}
+.modal-media{display:block;width:100%;height:auto}
+.social-dock{position:fixed;left:18px;bottom:18px;z-index:30;display:flex;flex-direction:column;gap:10px}
+.dock-btn{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:18px;color:#fff;font-weight:900;background:#0f172a;border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 45px rgba(2,8,23,.28)}
+.dock-btn.facebook{background:linear-gradient(135deg,#1877f2,#2451ff)}
+.dock-btn.instagram{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}
+.dock-btn.whatsapp{background:linear-gradient(135deg,#16a34a,#22c55e)}
+.floating-whatsapp{right:18px;bottom:18px;border:1px solid rgba(255,255,255,.22);background:linear-gradient(135deg,#16a34a,#22c55e)}
+@media (max-width:780px){.social-dock{left:12px;bottom:12px}.dock-btn{width:46px;height:46px;border-radius:16px}.floating-whatsapp{right:12px;bottom:12px;padding:13px 14px}.clients-marquee::before,.clients-marquee::after{width:46px}.marquee-card{min-width:280px;max-width:280px}.social-inline{margin-top:12px}.modal-panel{padding:16px;border-radius:22px}}

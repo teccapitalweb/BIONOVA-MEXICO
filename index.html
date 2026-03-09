@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="tech-grid"></div>
   <div class="bg-orb bg-orb-1"></div>
   <div class="bg-orb bg-orb-2"></div>
 
@@ -51,6 +52,12 @@
           <div class="hero-actions">
             <a class="btn btn-primary" href="#cursos">Ver cursos</a>
             <a class="btn btn-secondary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20cursos%20de%20BIONOVA%20M%C3%A9xico" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          </div>
+
+          <div class="social-inline">
+            <a class="social-chip whatsapp" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20BIONOVA%20M%C3%A9xico" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a class="social-chip facebook" href="#contacto">Facebook</a>
+            <a class="social-chip instagram" href="#contacto">Instagram</a>
           </div>
 
           <div class="hero-points">
@@ -120,30 +127,52 @@
           <p>Capacitamos profesionales y equipos con programas online especializados y atención cercana.</p>
         </div>
 
-        <div class="client-grid">
-          <a class="client-card reveal" href="https://www.tetrapak.com/es-mx" target="_blank" rel="noopener noreferrer">
-            <img src="assets/logos/tetrapak.png" alt="Tetra Pak">
-            <div>
-              <h3>Tetra Pak</h3>
-              <p>Capacitación profesional para talento y actualización especializada.</p>
-            </div>
-          </a>
-          <a class="client-card reveal" href="https://nnproducts.com.mx/" target="_blank" rel="noopener noreferrer">
-            <img src="assets/logos/nnproducts.png" alt="NN Products">
-            <div>
-              <h3>NN Products</h3>
-              <p>Programas online con enfoque técnico y acompañamiento profesional.</p>
-            </div>
-          </a>
-          <a class="client-card reveal" href="https://laboratoriociaj.com.mx/" target="_blank" rel="noopener noreferrer">
-            <img src="assets/logos/desu.png" alt="DESU Operadora">
-            <div>
-              <h3>DESU Operadora</h3>
-              <p>Capacitación aplicada para organizaciones y equipos especializados.</p>
-            </div>
-          </a>
-        </div>
-      </div>
+        <div class="clients-marquee reveal">
+          <div class="clients-track">
+            <a class="client-card marquee-card" href="https://www.tetrapak.com/es-mx" target="_blank" rel="noopener noreferrer">
+              <img src="assets/logos/tetrapak.png" alt="Tetra Pak">
+              <div>
+                <h3>Tetra Pak</h3>
+                <p>Capacitación profesional para talento y actualización especializada.</p>
+              </div>
+            </a>
+            <a class="client-card marquee-card" href="https://nnproducts.com.mx/" target="_blank" rel="noopener noreferrer">
+              <img src="assets/logos/nnproducts.png" alt="NN Products">
+              <div>
+                <h3>NN Products</h3>
+                <p>Programas online con enfoque técnico y acompañamiento profesional.</p>
+              </div>
+            </a>
+            <a class="client-card marquee-card" href="https://laboratoriociaj.com.mx/" target="_blank" rel="noopener noreferrer">
+              <img src="assets/logos/desu.png" alt="DESU Operadora">
+              <div>
+                <h3>DESU Operadora</h3>
+                <p>Capacitación aplicada para organizaciones y equipos especializados.</p>
+              </div>
+            </a>
+            <a class="client-card marquee-card" href="https://www.tetrapak.com/es-mx" target="_blank" rel="noopener noreferrer">
+              <img src="assets/logos/tetrapak.png" alt="Tetra Pak">
+              <div>
+                <h3>Tetra Pak</h3>
+                <p>Capacitación profesional para talento y actualización especializada.</p>
+              </div>
+            </a>
+            <a class="client-card marquee-card" href="https://nnproducts.com.mx/" target="_blank" rel="noopener noreferrer">
+              <img src="assets/logos/nnproducts.png" alt="NN Products">
+              <div>
+                <h3>NN Products</h3>
+                <p>Programas online con enfoque técnico y acompañamiento profesional.</p>
+              </div>
+            </a>
+            <a class="client-card marquee-card" href="https://laboratoriociaj.com.mx/" target="_blank" rel="noopener noreferrer">
+              <img src="assets/logos/desu.png" alt="DESU Operadora">
+              <div>
+                <h3>DESU Operadora</h3>
+                <p>Capacitación aplicada para organizaciones y equipos especializados.</p>
+              </div>
+            </a>
+          </div>
+        </div>      </div>
     </section>
 
     <section class="section" id="servicios">
@@ -221,7 +250,7 @@
               <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
               <h3>Resistencia antimicrobiana</h3>
               <p>Mecanismos y retos actuales con enfoque profesional actualizado.</p>
-              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-resistencia-antimicrobiana.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Resistencia%20antimicrobiana" target="_blank">Inscribirme</a></div>
+              <div class="course-actions"><button class="btn btn-ghost modal-trigger" data-modal="resistencia">Incluye</button><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Resistencia%20antimicrobiana" target="_blank">Inscribirme</a></div>
             </div>
           </article>
 
@@ -231,7 +260,7 @@
               <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
               <h3>Células madre y terapia celular</h3>
               <p>Principios y aplicaciones en formación biomédica especializada.</p>
-              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-celulas-madre.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20C%C3%A9lulas%20madre%20y%20terapia%20celular" target="_blank">Inscribirme</a></div>
+              <div class="course-actions"><button class="btn btn-ghost modal-trigger" data-modal="celulas">Incluye</button><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20C%C3%A9lulas%20madre%20y%20terapia%20celular" target="_blank">Inscribirme</a></div>
             </div>
           </article>
 
@@ -241,7 +270,7 @@
               <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
               <h3>Bioquímica de los alimentos</h3>
               <p>Calidad, nutrición y procesamiento con enfoque práctico.</p>
-              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-bioquimica-alimentos.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Bioqu%C3%ADmica%20de%20los%20alimentos" target="_blank">Inscribirme</a></div>
+              <div class="course-actions"><button class="btn btn-ghost modal-trigger" data-modal="bioquimica">Incluye</button><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Bioqu%C3%ADmica%20de%20los%20alimentos" target="_blank">Inscribirme</a></div>
             </div>
           </article>
 
@@ -251,7 +280,7 @@
               <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
               <h3>Microbiología clínica aplicada</h3>
               <p>Fundamentos, análisis e interpretación en contexto clínico.</p>
-              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-microbiologia-clinica.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Microbiolog%C3%ADa%20cl%C3%ADnica%20aplicada" target="_blank">Inscribirme</a></div>
+              <div class="course-actions"><button class="btn btn-ghost modal-trigger" data-modal="microbiologia">Incluye</button><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Microbiolog%C3%ADa%20cl%C3%ADnica%20aplicada" target="_blank">Inscribirme</a></div>
             </div>
           </article>
 
@@ -261,7 +290,7 @@
               <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
               <h3>Protocolos de muestras biológicas</h3>
               <p>Recolección, conservación, transporte y almacenamiento.</p>
-              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-protocolos-muestras.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Protocolos%20de%20muestras%20biol%C3%B3gicas" target="_blank">Inscribirme</a></div>
+              <div class="course-actions"><button class="btn btn-ghost modal-trigger" data-modal="protocolos">Incluye</button><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Protocolos%20de%20muestras%20biol%C3%B3gicas" target="_blank">Inscribirme</a></div>
             </div>
           </article>
 
@@ -271,7 +300,7 @@
               <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
               <h3>Control de calidad en la industria química</h3>
               <p>Buenas prácticas y verificación de procesos con enfoque aplicado.</p>
-              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-control-calidad-quimica.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Control%20de%20calidad%20en%20la%20industria%20qu%C3%ADmica" target="_blank">Inscribirme</a></div>
+              <div class="course-actions"><button class="btn btn-ghost modal-trigger" data-modal="controlcalidad">Incluye</button><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Control%20de%20calidad%20en%20la%20industria%20qu%C3%ADmica" target="_blank">Inscribirme</a></div>
             </div>
           </article>
 
@@ -419,6 +448,38 @@
       <a href="#inicio">Volver arriba ↑</a>
     </div>
   </footer>
+
+
+  <div class="social-dock">
+    <a class="dock-btn facebook" href="#contacto" aria-label="Facebook">Fb</a>
+    <a class="dock-btn instagram" href="#contacto" aria-label="Instagram">Ig</a>
+    <a class="dock-btn whatsapp" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20BIONOVA%20M%C3%A9xico" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">Wa</a>
+  </div>
+
+  <div class="modal-backdrop" id="course-modal" aria-hidden="true">
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Cerrar ventana">×</button>
+      <div class="modal-copy">
+        <span class="section-kicker">Incluye</span>
+        <h3 id="modal-title">Contenido del curso</h3>
+        <p id="modal-description">Consulta el contenido incluido en este programa.</p>
+      </div>
+      <div class="modal-media-wrap">
+        <img id="modal-image" class="modal-media" src="" alt="Temario del curso">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.courseModalData = {
+      resistencia: { title: 'Resistencia antimicrobiana', description: 'Incluye introducción, mecanismos de resistencia, abordaje microbiológico y puntos clave de aplicación profesional.', image: 'assets/temario-resistencia-antimicrobiana.jpg' },
+      celulas: { title: 'Células madre y terapia celular', description: 'Incluye fundamentos, clasificación, aplicaciones clínicas y panorama actual de la terapia celular.', image: 'assets/temario-celulas-madre.jpg' },
+      bioquimica: { title: 'Bioquímica de los alimentos', description: 'Incluye calidad, evaluación fisicoquímica, componentes bioquímicos y análisis orientado a alimentos.', image: 'assets/temario-bioquimica-alimentos.jpg' },
+      microbiologia: { title: 'Microbiología clínica aplicada', description: 'Incluye fundamentos, identificación microbiológica, interpretación y enfoque aplicado al laboratorio clínico.', image: 'assets/temario-microbiologia-clinica.jpg' },
+      protocolos: { title: 'Protocolos de muestras biológicas', description: 'Incluye recolección, conservación, transporte y manejo adecuado de muestras biológicas.', image: 'assets/temario-protocolos-muestras.jpg' },
+      controlcalidad: { title: 'Control de calidad en la industria química', description: 'Incluye verificación de procesos, control analítico, criterios de calidad y enfoque aplicado a industria.', image: 'assets/temario-control-calidad-quimica.jpg' }
+    };
+  </script>
 
   <script src="script.js"></script>
 </body>
