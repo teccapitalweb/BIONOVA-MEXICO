@@ -169,11 +169,6 @@ img{max-width:100%;display:block}
 .btn,.chip,.social-chip,.dock-btn,.modal-panel{transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease, background .25s ease}
 .btn:hover,.chip:hover,.social-chip:hover,.dock-btn:hover{transform:translateY(-2px)}
 .section-kicker,.chip.active,.social-chip,.dock-btn{box-shadow:0 10px 30px rgba(37,99,235,.18)}
-.social-inline{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 0}
-.social-chip{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(148,163,184,.18);background:rgba(255,255,255,.08);color:#fff;font-weight:800;font-size:.9rem}
-.social-chip.facebook{background:linear-gradient(135deg,#1877f2,#2451ff)}
-.social-chip.instagram{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}
-.social-chip.whatsapp{background:linear-gradient(135deg,#16a34a,#22c55e)}
 .clients-marquee{overflow:hidden;position:relative;padding:10px 0 4px}
 .clients-marquee::before,.clients-marquee::after{content:"";position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none}
 .clients-marquee::before{left:0;background:linear-gradient(90deg, #f5f9ff, rgba(245,249,255,0))}
@@ -193,10 +188,19 @@ img{max-width:100%;display:block}
 .modal-copy p{margin:0;color:#4b6385;line-height:1.7}
 .modal-media-wrap{border-radius:22px;overflow:hidden;border:1px solid #d8e4f4;background:#fff}
 .modal-media{display:block;width:100%;height:auto}
-.social-dock{position:fixed;left:18px;bottom:18px;z-index:30;display:flex;flex-direction:column;gap:10px}
+.social-dock{position:fixed;right:18px;bottom:18px;z-index:30;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
 .dock-btn{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:18px;color:#fff;font-weight:900;background:#0f172a;border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 45px rgba(2,8,23,.28)}
+.dock-btn.whatsapp{width:68px;height:68px;border-radius:22px;font-size:1.05rem}
 .dock-btn.facebook{background:linear-gradient(135deg,#1877f2,#2451ff)}
 .dock-btn.instagram{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}
 .dock-btn.whatsapp{background:linear-gradient(135deg,#16a34a,#22c55e)}
-.floating-whatsapp{right:18px;bottom:18px;border:1px solid rgba(255,255,255,.22);background:linear-gradient(135deg,#16a34a,#22c55e)}
-@media (max-width:780px){.social-dock{left:12px;bottom:12px}.dock-btn{width:46px;height:46px;border-radius:16px}.floating-whatsapp{right:12px;bottom:12px;padding:13px 14px}.clients-marquee::before,.clients-marquee::after{width:46px}.marquee-card{min-width:280px;max-width:280px}.social-inline{margin-top:12px}.modal-panel{padding:16px;border-radius:22px}}
+.floating-whatsapp{display:none}
+@media (max-width:780px){.social-dock{right:12px;bottom:12px}.dock-btn{width:46px;height:46px;border-radius:16px}.dock-btn.whatsapp{width:58px;height:58px;border-radius:18px}.clients-marquee::before,.clients-marquee::after{width:46px}.marquee-card{min-width:280px;max-width:280px}.modal-panel{padding:16px;border-radius:22px}}
+
+.course-benefits{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 28px}
+.benefit-pill{padding:12px 16px;border-radius:999px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.12);color:#1d4ed8;font-weight:800}
+.modal-list{margin:16px 0 12px;padding-left:20px;color:#123;display:grid;gap:8px}
+.modal-list li{line-height:1.5}
+.modal-benefits-inline{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 18px}
+.modal-benefits-inline span{padding:9px 12px;border-radius:999px;background:#eaf2ff;color:#21406c;font-weight:700;font-size:.92rem;border:1px solid #d7e5ff}
+.client-card h3{margin-bottom:6px}

@@ -59,6 +59,7 @@ chips.forEach(chip => {
 const modal = document.getElementById('course-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalDescription = document.getElementById('modal-description');
+const modalList = document.getElementById('modal-list');
 const modalImage = document.getElementById('modal-image');
 const modalTriggers = document.querySelectorAll('.modal-trigger');
 const modalClose = document.querySelector('.modal-close');
@@ -68,6 +69,7 @@ const openModal = key => {
   const data = window.courseModalData[key];
   modalTitle.textContent = data.title;
   modalDescription.textContent = data.description;
+  if (modalList) modalList.innerHTML = (data.items || []).map(item => `<li>${item}</li>`).join('');
   modalImage.src = data.image;
   modalImage.alt = 'Contenido incluido en ' + data.title;
   modal.classList.add('open');
