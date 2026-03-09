@@ -1,101 +1,56 @@
 const menuToggle = document.querySelector('.menu-toggle');
 const menu = document.querySelector('.menu');
-
 if (menuToggle && menu) {
   menuToggle.addEventListener('click', () => {
-    const isOpen = menu.classList.toggle('open');
-    menuToggle.setAttribute('aria-expanded', String(isOpen));
+    const open = menu.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', String(open));
   });
-
-  menu.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      menu.classList.remove('open');
-      menuToggle.setAttribute('aria-expanded', 'false');
-    });
-  });
+  menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => menu.classList.remove('open')));
 }
 
-const form = document.getElementById('whatsappForm');
-if (form) {
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    const nombre = document.getElementById('nombre')?.value.trim() || '';
-    const interes = document.getElementById('interes')?.value.trim() || '';
-    const tipo = document.getElementById('tipo')?.value.trim() || '';
-
-    const mensaje = [
-      'Hola, quiero información de BIONOVA México.',
-      nombre ? `Mi nombre es ${nombre}.` : '',
-      interes ? `Me interesa ${interes}.` : '',
-      tipo ? `Solicitud: ${tipo}.` : '',
-    ].filter(Boolean).join(' ');
-
-    const url = `https://wa.me/522384092448?text=${encodeURIComponent(mensaje)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+const revealItems = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
   });
-}
+}, { threshold: 0.12 });
+revealItems.forEach(item => revealObserver.observe(item));
 
-const filterButtons = document.querySelectorAll('.filter-btn');
-const programCards = document.querySelectorAll('.program-card');
+const statNumbers = document.querySelectorAll('[data-count]');
+const animateValue = el => {
+  const target = Number(el.dataset.count || 0);
+  const start = 0;
+  const duration = 1200;
+  const startTime = performance.now();
+  const tick = now => {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const value = Math.floor(start + (target - start) * (1 - Math.pow(1 - progress, 3)));
+    el.textContent = value;
+    if (progress < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+};
+const statObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !entry.target.dataset.animated) {
+      animateValue(entry.target);
+      entry.target.dataset.animated = 'true';
+    }
+  });
+}, { threshold: 0.6 });
+statNumbers.forEach(item => statObserver.observe(item));
 
-filterButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const filter = button.dataset.filter;
-
-    filterButtons.forEach((btn) => btn.classList.remove('active'));
-    button.classList.add('active');
-
-    programCards.forEach((card) => {
-      const categories = (card.dataset.category || '').split(' ');
-      const show = filter === 'all' || categories.includes(filter);
-      card.classList.toggle('is-hidden', !show);
+const chips = document.querySelectorAll('.chip');
+const courseCards = document.querySelectorAll('.course-card');
+chips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    chips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const filter = chip.dataset.filter;
+    courseCards.forEach(card => {
+      const category = card.dataset.category;
+      const show = filter === 'all' || filter === category;
+      card.classList.toggle('hidden-card', !show);
     });
   });
 });
-
-const revealItems = document.querySelectorAll('.reveal');
-if ('IntersectionObserver' in window && revealItems.length) {
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-
-  revealItems.forEach((item) => revealObserver.observe(item));
-} else {
-  revealItems.forEach((item) => item.classList.add('is-visible'));
-}
-
-const counters = document.querySelectorAll('[data-counter]');
-if ('IntersectionObserver' in window && counters.length) {
-  const counterObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-
-      const el = entry.target;
-      const endValue = Number(el.dataset.counter || 0);
-      const duration = 1100;
-      const startTime = performance.now();
-
-      const animate = (now) => {
-        const progress = Math.min((now - startTime) / duration, 1);
-        const current = Math.floor(progress * endValue);
-        el.textContent = `+${current}`;
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          el.textContent = `+${endValue}`;
-        }
-      };
-
-      requestAnimationFrame(animate);
-      counterObserver.unobserve(el);
-    });
-  }, { threshold: 0.8 });
-
-  counters.forEach((counter) => counterObserver.observe(counter));
-}

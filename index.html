@@ -1,48 +1,425 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Bionova Consultoría</title>
-<style>
-body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#0f172a;color:white}
-header{padding:80px 20px;text-align:center;background:linear-gradient(120deg,#0f172a,#1e293b)}
-h1{font-size:48px;margin-bottom:10px}
-p{max-width:700px;margin:auto;font-size:18px;opacity:.9}
-
-.section{padding:80px 20px;text-align:center;background:white;color:#111}
-.section h2{font-size:34px;margin-bottom:40px}
-
-.logos{display:flex;justify-content:center;align-items:center;gap:60px;flex-wrap:wrap}
-.logos img{height:70px;opacity:.8;transition:.3s}
-.logos img:hover{opacity:1;transform:scale(1.05)}
-
-.cta{margin-top:50px}
-.btn{background:#2563eb;color:white;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BIONOVA México | Formación especializada para profesionales y empresas</title>
+  <meta name="description" content="BIONOVA México ofrece cursos online en vivo con acceso a grabaciones, capacitación empresarial y consultoría especializada para profesionales y empresas." />
+  <meta name="theme-color" content="#0b1530" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
 
-<header>
-<h1>BIONOVA</h1>
-<p>Consultoría y capacitación profesional para empresas del sector industrial, alimenticio y corporativo.</p>
-<div class="cta">
-<a class="btn" href="#">Solicitar Información</a>
-</div>
-</header>
+  <header class="site-header" id="inicio">
+    <div class="container nav">
+      <a class="brand" href="#inicio">
+        <img src="assets/logo-bionova.jpg" alt="Logo BIONOVA México" class="brand-logo" onerror="this.onerror=null;this.src='assets/logo.jpg'">
+        <div>
+          <span class="brand-title">BIONOVA México</span>
+          <span class="brand-subtitle">Formación especializada para profesionales y empresas</span>
+        </div>
+      </a>
 
-<section class="section">
-<h2>Empresas que han confiado en nosotros</h2>
+      <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
 
-<div class="logos">
-<img src="assets/logos/tetrapak.png" alt="Tetra Pak">
-<img src="assets/logos/nnproducts.png" alt="NN Products">
-<img src="assets/logos/desu.png" alt="DESU Operadora">
-</div>
+      <nav class="menu">
+        <a href="#cursos">Cursos</a>
+        <a href="#empresas">Empresas</a>
+        <a href="#modalidad">Modalidad</a>
+        <a href="#testimonios">Testimonios</a>
+        <a href="#contacto" class="btn btn-small btn-primary">Inscribirme</a>
+      </nav>
+    </div>
+  </header>
 
-</section>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <span class="eyebrow">Cursos online en vivo · Acceso a grabaciones · Atención por WhatsApp</span>
+          <h1>Capacitación online con enfoque profesional, científico y empresarial.</h1>
+          <p>
+            En <strong>BIONOVA México</strong> impulsamos la actualización profesional con cursos en vivo,
+            acceso a grabaciones, capacitación para equipos y programas especializados para empresas.
+          </p>
 
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#cursos">Ver cursos</a>
+            <a class="btn btn-secondary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20cursos%20de%20BIONOVA%20M%C3%A9xico" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          </div>
+
+          <div class="hero-points">
+            <span>Clases en vivo</span>
+            <span>Sesiones grabadas</span>
+            <span>Capacitación empresarial</span>
+            <span>Temarios disponibles</span>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat-card reveal">
+              <strong data-count="13">0</strong>
+              <span>programas y cursos</span>
+            </article>
+            <article class="stat-card reveal">
+              <strong data-count="3">0</strong>
+              <span>empresas destacadas capacitadas</span>
+            </article>
+            <article class="stat-card reveal">
+              <strong>100%</strong>
+              <span>inscripción por WhatsApp</span>
+            </article>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <div class="hero-card glass">
+            <img src="assets/banner-bionova.jpg" alt="Cursos online y capacitación BIONOVA México" class="hero-banner" onerror="this.onerror=null;this.src='assets/banner.jpg'">
+            <div class="hero-badge">BIONOVA México</div>
+          </div>
+
+          <div class="quick-card glass">
+            <div class="quick-card-head">
+              <img src="assets/logo-bionova.jpg" alt="Logo BIONOVA" class="mini-logo" onerror="this.onerror=null;this.src='assets/logo.jpg'">
+              <div>
+                <small>Modalidad</small>
+                <h2>En vivo + grabación</h2>
+              </div>
+            </div>
+            <ul>
+              <li>Clases online con especialistas</li>
+              <li>Acceso posterior a la grabación</li>
+              <li>Material visual y temarios</li>
+              <li>Atención directa por WhatsApp</li>
+            </ul>
+            <a class="btn btn-primary btn-block" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20inscribirme%20a%20un%20curso%20de%20BIONOVA%20M%C3%A9xico" target="_blank" rel="noopener noreferrer">Solicitar información</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="logo-strip reveal">
+      <div class="container logo-strip-inner">
+        <span>Formación especializada para profesionales y empresas</span>
+        <span>Cursos en vivo</span>
+        <span>Acceso a grabaciones</span>
+        <span>Capacitación empresarial</span>
+        <span>Consultoría especializada</span>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="empresas">
+      <div class="container">
+        <div class="section-head centered reveal">
+          <span class="section-kicker">Confianza empresarial</span>
+          <h2>Empresas que han confiado en BIONOVA México</h2>
+          <p>Capacitamos profesionales y equipos con programas online especializados y atención cercana.</p>
+        </div>
+
+        <div class="client-grid">
+          <a class="client-card reveal" href="https://www.tetrapak.com/es-mx" target="_blank" rel="noopener noreferrer">
+            <img src="assets/logos/tetrapak.png" alt="Tetra Pak">
+            <div>
+              <h3>Tetra Pak</h3>
+              <p>Capacitación profesional para talento y actualización especializada.</p>
+            </div>
+          </a>
+          <a class="client-card reveal" href="https://nnproducts.com.mx/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/logos/nnproducts.png" alt="NN Products">
+            <div>
+              <h3>NN Products</h3>
+              <p>Programas online con enfoque técnico y acompañamiento profesional.</p>
+            </div>
+          </a>
+          <a class="client-card reveal" href="https://laboratoriociaj.com.mx/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/logos/desu.png" alt="DESU Operadora">
+            <div>
+              <h3>DESU Operadora</h3>
+              <p>Capacitación aplicada para organizaciones y equipos especializados.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="servicios">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-kicker">Qué hacemos</span>
+          <h2>Consultoría y formación con una presentación mucho más clara y comercial</h2>
+          <p>La web está pensada para convertir mejor: explica rápido qué hacen, cómo funciona la modalidad y por qué confiar en BIONOVA México.</p>
+        </div>
+
+        <div class="cards cards-3">
+          <article class="info-card reveal">
+            <span class="icon-badge">01</span>
+            <h3>Cursos online especializados</h3>
+            <p>Programas en vivo con acceso posterior a la grabación, ideal para estudiantes, profesionales y especialistas.</p>
+          </article>
+          <article class="info-card reveal">
+            <span class="icon-badge">02</span>
+            <h3>Capacitación para empresas</h3>
+            <p>Soluciones de formación para equipos, actualización profesional y programas adaptados a necesidades específicas.</p>
+          </article>
+          <article class="info-card reveal">
+            <span class="icon-badge">03</span>
+            <h3>Consultoría especializada</h3>
+            <p>Acompañamiento en procesos, conocimiento técnico, fortalecimiento de competencias y orientación aplicada.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="modalidad">
+      <div class="container feature-grid">
+        <div class="feature-copy reveal">
+          <span class="section-kicker light">Nuestra modalidad</span>
+          <h2>Los cursos son en vivo y también quedan grabados.</h2>
+          <p>Esta combinación te da lo mejor de ambos formatos: interacción directa con el ponente y acceso posterior para repasar cada sesión con calma.</p>
+          <div class="feature-list">
+            <div><strong>En vivo</strong><span>Participa, pregunta e interactúa en tiempo real.</span></div>
+            <div><strong>Grabaciones</strong><span>Revisa el contenido después y no pierdas ningún detalle.</span></div>
+            <div><strong>WhatsApp</strong><span>Inscripción rápida y comunicación directa.</span></div>
+            <div><strong>Empresas</strong><span>Ideal para formación de equipos y actualización profesional.</span></div>
+          </div>
+        </div>
+        <div class="process-card glass reveal">
+          <h3>Cómo funciona</h3>
+          <ol>
+            <li><span>1</span>Solicitas información por WhatsApp</li>
+            <li><span>2</span>Recibes detalles, fechas y costos</li>
+            <li><span>3</span>Te integras a la sesión en vivo</li>
+            <li><span>4</span>Accedes a la grabación y material</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cursos">
+      <div class="container">
+        <div class="section-head split reveal">
+          <div>
+            <span class="section-kicker">Portafolio de cursos</span>
+            <h2>Nuestros cursos online</h2>
+            <p>Explora los cursos principales con temario disponible y los programas adicionales de BIONOVA México.</p>
+          </div>
+          <div class="filter-chips" aria-label="Filtros de cursos">
+            <button class="chip active" data-filter="all">Todos</button>
+            <button class="chip" data-filter="principal">Con temario</button>
+            <button class="chip" data-filter="adicional">Adicionales</button>
+          </div>
+        </div>
+
+        <div class="course-grid">
+          <article class="course-card reveal" data-category="principal">
+            <img src="assets/curso-resistencia-antimicrobiana.jpg" alt="Resistencia antimicrobiana">
+            <div class="course-body">
+              <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
+              <h3>Resistencia antimicrobiana</h3>
+              <p>Mecanismos y retos actuales con enfoque profesional actualizado.</p>
+              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-resistencia-antimicrobiana.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Resistencia%20antimicrobiana" target="_blank">Inscribirme</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="principal">
+            <img src="assets/curso-celulas-madre.jpg" alt="Células madre y terapia celular">
+            <div class="course-body">
+              <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
+              <h3>Células madre y terapia celular</h3>
+              <p>Principios y aplicaciones en formación biomédica especializada.</p>
+              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-celulas-madre.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20C%C3%A9lulas%20madre%20y%20terapia%20celular" target="_blank">Inscribirme</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="principal">
+            <img src="assets/curso-bioquimica-alimentos.jpg" alt="Bioquímica aplicada a los alimentos">
+            <div class="course-body">
+              <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
+              <h3>Bioquímica de los alimentos</h3>
+              <p>Calidad, nutrición y procesamiento con enfoque práctico.</p>
+              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-bioquimica-alimentos.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Bioqu%C3%ADmica%20de%20los%20alimentos" target="_blank">Inscribirme</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="principal">
+            <img src="assets/curso-microbiologia-clinica.jpg" alt="Microbiología clínica aplicada">
+            <div class="course-body">
+              <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
+              <h3>Microbiología clínica aplicada</h3>
+              <p>Fundamentos, análisis e interpretación en contexto clínico.</p>
+              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-microbiologia-clinica.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Microbiolog%C3%ADa%20cl%C3%ADnica%20aplicada" target="_blank">Inscribirme</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="principal">
+            <img src="assets/curso-protocolos-muestras.jpg" alt="Protocolos de muestras biológicas">
+            <div class="course-body">
+              <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
+              <h3>Protocolos de muestras biológicas</h3>
+              <p>Recolección, conservación, transporte y almacenamiento.</p>
+              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-protocolos-muestras.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Protocolos%20de%20muestras%20biol%C3%B3gicas" target="_blank">Inscribirme</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="principal">
+            <img src="assets/curso-control-calidad-quimica.jpg" alt="Control de calidad en la industria química">
+            <div class="course-body">
+              <div class="course-top"><span>Curso principal</span><small>En vivo + grabación</small></div>
+              <h3>Control de calidad en la industria química</h3>
+              <p>Buenas prácticas y verificación de procesos con enfoque aplicado.</p>
+              <div class="course-actions"><a class="btn btn-ghost" href="assets/temario-control-calidad-quimica.jpg" target="_blank">Ver temario</a><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Control%20de%20calidad%20en%20la%20industria%20qu%C3%ADmica" target="_blank">Inscribirme</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="adicional">
+            <img src="assets/curso-validacion-equipos-farmaceutica.jpg" alt="Validación de equipos en la industria farmacéutica">
+            <div class="course-body">
+              <div class="course-top"><span>Curso adicional</span><small>Online</small></div>
+              <h3>Validación de equipos</h3>
+              <p>Aplicada a la industria farmacéutica.</p>
+              <div class="course-actions"><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Validaci%C3%B3n%20de%20equipos" target="_blank">Solicitar información</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="adicional">
+            <img src="assets/curso-interpretacion-resultados-laboratorio.jpg" alt="Interpretación de resultados de laboratorio">
+            <div class="course-body">
+              <div class="course-top"><span>Curso adicional</span><small>Online</small></div>
+              <h3>Interpretación de resultados de laboratorio</h3>
+              <p>Lectura, correlación y análisis aplicado.</p>
+              <div class="course-actions"><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Interpretaci%C3%B3n%20de%20resultados%20de%20laboratorio" target="_blank">Solicitar información</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="adicional">
+            <img src="assets/curso-estructura-cristalina.jpg" alt="Estructura cristalina">
+            <div class="course-body">
+              <div class="course-top"><span>Curso adicional</span><small>Online</small></div>
+              <h3>Estructura cristalina</h3>
+              <p>Fundamentos y aplicaciones en ciencia de materiales.</p>
+              <div class="course-actions"><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Estructura%20cristalina" target="_blank">Solicitar información</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="adicional">
+            <img src="assets/curso-quimica-sanguinea.jpg" alt="Interpretación de química sanguínea">
+            <div class="course-body">
+              <div class="course-top"><span>Curso adicional</span><small>Online</small></div>
+              <h3>Interpretación de química sanguínea</h3>
+              <p>Lectura de resultados con enfoque clínico.</p>
+              <div class="course-actions"><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Interpretaci%C3%B3n%20de%20qu%C3%ADmica%20sangu%C3%ADnea" target="_blank">Solicitar información</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="adicional">
+            <img src="assets/curso-extraccion-metabolitos.jpg" alt="Extracción de metabolitos secundarios">
+            <div class="course-body">
+              <div class="course-top"><span>Curso adicional</span><small>Online</small></div>
+              <h3>Extracción de metabolitos secundarios</h3>
+              <p>De interés farmacéutico y biotecnológico.</p>
+              <div class="course-actions"><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Extracci%C3%B3n%20de%20metabolitos%20secundarios" target="_blank">Solicitar información</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="adicional">
+            <img src="assets/curso-terapia-celular-enfermedades.jpg" alt="Terapia celular aplicada a enfermedades crónicas y degenerativas">
+            <div class="course-body">
+              <div class="course-top"><span>Curso adicional</span><small>Online</small></div>
+              <h3>Terapia celular aplicada</h3>
+              <p>En enfermedades crónicas y degenerativas.</p>
+              <div class="course-actions"><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Terapia%20celular%20aplicada" target="_blank">Solicitar información</a></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="adicional">
+            <img src="assets/curso-fermentaciones-industriales.jpg" alt="Fermentaciones industriales">
+            <div class="course-body">
+              <div class="course-top"><span>Curso adicional</span><small>Online</small></div>
+              <h3>Fermentaciones industriales</h3>
+              <p>De la teoría a la práctica con visión aplicada.</p>
+              <div class="course-actions"><a class="btn btn-primary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20Fermentaciones%20industriales" target="_blank">Solicitar información</a></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container split-feature">
+        <div class="reveal">
+          <span class="section-kicker">Capacitación empresarial</span>
+          <h2>También capacitamos equipos y organizaciones.</h2>
+          <p>Además de cursos para profesionales, BIONOVA México puede apoyar procesos de actualización y desarrollo para empresas que buscan fortalecer competencias y elevar el nivel técnico de su personal.</p>
+        </div>
+        <div class="benefit-grid">
+          <article class="benefit-card reveal"><h3>Programas adaptados</h3><p>Contenido según objetivos y nivel del equipo.</p></article>
+          <article class="benefit-card reveal"><h3>Atención cercana</h3><p>Seguimiento directo y rápida comunicación.</p></article>
+          <article class="benefit-card reveal"><h3>Enfoque práctico</h3><p>Conocimiento aplicable al entorno laboral real.</p></article>
+          <article class="benefit-card reveal"><h3>Formato flexible</h3><p>Modalidad online con acceso a grabaciones.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section certificates">
+      <div class="container certificate-grid">
+        <div class="certificate-copy reveal">
+          <span class="section-kicker">Constancias y respaldo</span>
+          <h2>Los cursos incluyen constancia o certificado con mayor formalidad y confianza.</h2>
+          <p>La página mantiene esta ventaja visible para reforzar credibilidad frente a alumnos, profesionales y empresas interesadas.</p>
+        </div>
+        <div class="certificate-list reveal">
+          <div>Constancia o certificado de participación</div>
+          <div>Mayor confianza en el proceso formativo</div>
+          <div>Presentación más profesional de la oferta</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="testimonios">
+      <div class="container">
+        <div class="section-head centered reveal">
+          <span class="section-kicker">Opiniones reales</span>
+          <h2>Alumnos que ya tomaron nuestros cursos</h2>
+          <p>Capturas compartidas por participantes de la experiencia BIONOVA México.</p>
+        </div>
+        <div class="testimonial-images">
+          <img class="reveal" src="assets/testimonio-1.png" alt="Testimonio 1 de alumna BIONOVA">
+          <img class="reveal" src="assets/testimonio-2.png" alt="Testimonio 2 de alumna BIONOVA">
+          <img class="reveal" src="assets/testimonio-3.png" alt="Testimonio 3 de alumna BIONOVA">
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta-section" id="contacto">
+      <div class="container cta-box reveal">
+        <div>
+          <span class="section-kicker light">Contacto e inscripciones</span>
+          <h2>¿Listo para inscribirte o capacitar a tu equipo?</h2>
+          <p>Recibe información sobre fechas, costos, cursos disponibles y capacitación empresarial directamente por WhatsApp.</p>
+        </div>
+        <div class="cta-actions">
+          <a class="btn btn-light" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20BIONOVA%20M%C3%A9xico" target="_blank" rel="noopener noreferrer">WhatsApp: +52 238 409 2448</a>
+          <a class="btn btn-outline-light" href="#cursos">Ver cursos</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <a class="floating-whatsapp" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20BIONOVA%20M%C3%A9xico" target="_blank" rel="noopener noreferrer" aria-label="Abrir WhatsApp">
+    <span>WhatsApp</span>
+  </a>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© 2026 BIONOVA México. Todos los derechos reservados.</p>
+      <a href="#inicio">Volver arriba ↑</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
