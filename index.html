@@ -544,7 +544,7 @@
     </section>
 
     <!-- ═══════════════════════════════════════════════════════════════════════════
-         MODAL GUÍA — "¡YA CASI ESTÁS DENTRO!"
+         MODAL GUÍA — REGISTRO/LOGIN + PAGO
          ═══════════════════════════════════════════════════════════════════════════ -->
     <div class="club-modal-backdrop" id="club-modal" aria-hidden="true">
       <div class="club-modal-panel">
@@ -554,49 +554,147 @@
           <img src="assets/logo-bionova.jpg" alt="BIONOVA Academy" class="club-modal-logo" onerror="this.style.display='none'">
           <div>
             <strong>Club BIONOVA Academy</strong>
-            <small>Portal PRO de miembros</small>
+            <small id="club-modal-plan-label">Portal PRO de miembros</small>
           </div>
         </div>
 
-        <h3 class="club-modal-title">¡Ya casi estás dentro! 🔬</h3>
-        <p class="club-modal-subtitle">Completa tu pago en la ventana de Shopify y te damos acceso automático al portal.</p>
-
+        <!-- Stepper global (4 pasos) -->
         <ol class="club-modal-stepper">
-          <li class="step active" id="club-step-pago">
+          <li class="step active" id="club-step-cuenta">
             <span class="step-dot">1</span>
-            <span class="step-label">Pago seguro en Shopify</span>
+            <span class="step-label">Tu cuenta</span>
+          </li>
+          <li class="step" id="club-step-pago">
+            <span class="step-dot">2</span>
+            <span class="step-label">Pago seguro</span>
           </li>
           <li class="step" id="club-step-verificando">
-            <span class="step-dot">2</span>
-            <span class="step-label">Verificando pago</span>
+            <span class="step-dot">3</span>
+            <span class="step-label">Verificando</span>
           </li>
           <li class="step" id="club-step-acceso">
-            <span class="step-dot">3</span>
-            <span class="step-label">Acceso al portal</span>
+            <span class="step-dot">4</span>
+            <span class="step-label">Acceso</span>
           </li>
         </ol>
 
-        <div class="club-modal-info" id="club-modal-info">
-          <div class="club-modal-info-icon">⏳</div>
-          <div class="club-modal-info-text">
-            <strong>Esperando confirmación de pago…</strong>
-            <small>Detectaremos automáticamente cuando completes el pago.</small>
+        <!-- ═══ VISTA 1: LOGIN ════════════════════════════════════════════════ -->
+        <div class="club-modal-view" id="view-login">
+          <h3 class="club-modal-title">Inicia sesión</h3>
+          <p class="club-modal-subtitle">Entra con tu cuenta para continuar al pago seguro.</p>
+
+          <div class="club-form">
+            <label class="club-field">
+              <span>Correo electrónico</span>
+              <input type="email" id="login-email" autocomplete="email" required placeholder="tu@correo.com">
+            </label>
+            <label class="club-field">
+              <span>Contraseña</span>
+              <input type="password" id="login-password" autocomplete="current-password" required placeholder="Tu contraseña">
+            </label>
+            <p class="club-error" id="login-error" hidden></p>
+            <button class="btn btn-club-action-primary" type="button" id="btn-login-submit">
+              Continuar →
+            </button>
           </div>
+
+          <p class="club-modal-help">
+            ¿No tienes cuenta?
+            <a href="#" id="switch-to-register">Crear cuenta nueva</a>
+          </p>
         </div>
 
-        <div class="club-modal-actions">
-          <button class="btn btn-club-action-primary" type="button" id="club-open-shopify">
-            🛒 Abrir ventana de Shopify
-          </button>
-          <button class="btn btn-club-action-secondary" type="button" id="club-verify-now">
-            ✓ Ya pagué · Verificar y entrar
+        <!-- ═══ VISTA 2: REGISTRO ═════════════════════════════════════════════ -->
+        <div class="club-modal-view" id="view-register" hidden>
+          <h3 class="club-modal-title">Crea tu cuenta</h3>
+          <p class="club-modal-subtitle">Llena tus datos para activar tu membresía PRO.</p>
+
+          <div class="club-form">
+            <label class="club-field">
+              <span>Nombre completo</span>
+              <input type="text" id="reg-nombre" autocomplete="name" required placeholder="Ej. Miguel Carrera">
+            </label>
+            <label class="club-field">
+              <span>Correo electrónico</span>
+              <input type="email" id="reg-email" autocomplete="email" required placeholder="tu@correo.com">
+            </label>
+            <label class="club-field">
+              <span>Número de WhatsApp</span>
+              <input type="tel" id="reg-whatsapp" autocomplete="tel" required placeholder="Ej. 522381234567" inputmode="tel">
+            </label>
+            <label class="club-field">
+              <span>Contraseña <small>(mínimo 6 caracteres)</small></span>
+              <input type="password" id="reg-password" autocomplete="new-password" required minlength="6" placeholder="Elige una contraseña segura">
+            </label>
+            <p class="club-error" id="reg-error" hidden></p>
+            <button class="btn btn-club-action-primary" type="button" id="btn-register-submit">
+              Crear cuenta y continuar al pago →
+            </button>
+          </div>
+
+          <p class="club-modal-help">
+            ¿Ya tienes cuenta?
+            <a href="#" id="switch-to-login">Iniciar sesión</a>
+          </p>
+        </div>
+
+        <!-- ═══ VISTA 3: YA ERES MIEMBRO ACTIVO ═══════════════════════════════ -->
+        <div class="club-modal-view" id="view-already-active" hidden>
+          <div class="club-modal-success-icon">✓</div>
+          <h3 class="club-modal-title">¡Ya eres miembro PRO!</h3>
+          <p class="club-modal-subtitle" id="already-active-msg">Tu membresía está activa. Entra al portal para ver todo tu contenido.</p>
+
+          <button class="btn btn-club-action-primary" type="button" id="btn-go-portal">
+            Entrar al portal →
           </button>
         </div>
 
-        <p class="club-modal-help">
-          ¿Problemas con el pago? Escríbenos por
-          <a href="https://wa.me/522384092448?text=Hola%2C%20tuve%20un%20problema%20con%20mi%20pago%20del%20Club%20BIONOVA%20Academy" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-        </p>
+        <!-- ═══ VISTA 4: RENOVAR (cancelada/vencida) ══════════════════════════ -->
+        <div class="club-modal-view" id="view-renew" hidden>
+          <div class="club-modal-warn-icon">🔄</div>
+          <h3 class="club-modal-title">Renueva tu membresía</h3>
+          <p class="club-modal-subtitle" id="renew-msg">Tu membresía está cancelada o vencida. ¡Renuévala para volver a acceder al portal!</p>
+
+          <div class="club-renew-info">
+            <div class="club-renew-row"><span>Cuenta:</span> <strong id="renew-email-display">—</strong></div>
+            <div class="club-renew-row"><span>Plan anterior:</span> <strong id="renew-plan-display">—</strong></div>
+          </div>
+
+          <button class="btn btn-club-action-primary" type="button" id="btn-renew-pay">
+            Renovar y pagar →
+          </button>
+          <button class="btn btn-club-action-secondary" type="button" id="btn-renew-back">
+            ← Volver
+          </button>
+        </div>
+
+        <!-- ═══ VISTA 5: PAGO EN SHOPIFY ══════════════════════════════════════ -->
+        <div class="club-modal-view" id="view-payment" hidden>
+          <h3 class="club-modal-title">¡Ya casi estás dentro! 🔬</h3>
+          <p class="club-modal-subtitle">Completa tu pago en la ventana de Shopify y te damos acceso automático al portal.</p>
+
+          <div class="club-modal-info" id="club-modal-info">
+            <div class="club-modal-info-icon">⏳</div>
+            <div class="club-modal-info-text">
+              <strong>Esperando confirmación de pago…</strong>
+              <small>Detectaremos automáticamente cuando completes el pago.</small>
+            </div>
+          </div>
+
+          <div class="club-modal-actions">
+            <button class="btn btn-club-action-primary" type="button" id="club-open-shopify">
+              🛒 Abrir ventana de Shopify
+            </button>
+            <button class="btn btn-club-action-secondary" type="button" id="club-verify-now">
+              ✓ Ya pagué · Verificar y entrar
+            </button>
+          </div>
+
+          <p class="club-modal-help">
+            ¿Problemas con el pago? Escríbenos por
+            <a href="https://wa.me/522384092448?text=Hola%2C%20tuve%20un%20problema%20con%20mi%20pago%20del%20Club%20BIONOVA%20Academy" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          </p>
+        </div>
       </div>
     </div>
 
@@ -665,14 +763,14 @@
   <script src="script.js"></script>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       FIREBASE SDK — PARA AUTO-DETECCIÓN DE PAGOS
+       FIREBASE SDK — AUTH + FIRESTORE + FLUJO COMPLETO DEL CLUB
        ═══════════════════════════════════════════════════════════════════════════ -->
   <script type="module">
-    import { initializeApp }        from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { initializeApp }                 from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword }
-                                   from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp }
-                                   from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+                                             from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp }
+                                             from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey:            "AIzaSyDNZijSLGkbCM6-H_x_vT_OWDfucqplXYs",
@@ -701,57 +799,294 @@
     let firestoreUnsubscribe = null;
     let timeoutHandle = null;
     let currentUid = null;
+    let currentEmail = null;
+    let currentPlan = null;        // 'PRO Mensual' | 'PRO Anual'
     let currentVariant = null;
-    let currentPlan = null;
+    let selectedPlanKey = null;    // 'mensual' | 'anual'
 
     // ── REFERENCIAS DOM ───────────────────────────────────────────────────
     const modal        = document.getElementById('club-modal');
     const btnClose     = modal.querySelector('.club-modal-close');
-    const btnOpenShop  = document.getElementById('club-open-shopify');
-    const btnVerify    = document.getElementById('club-verify-now');
-    const modalInfo    = document.getElementById('club-modal-info');
+    const planLabel    = document.getElementById('club-modal-plan-label');
+
+    // Stepper
+    const stepCuenta   = document.getElementById('club-step-cuenta');
     const stepPago     = document.getElementById('club-step-pago');
     const stepVerif    = document.getElementById('club-step-verificando');
     const stepAcceso   = document.getElementById('club-step-acceso');
 
-    // ── ABRIR POPUP DE SHOPIFY CENTRADO ───────────────────────────────────
-    async function abrirShopifyPopup(variantId, planLabel) {
-      currentVariant = variantId;
-      currentPlan    = planLabel;
+    // Vistas
+    const viewLogin         = document.getElementById('view-login');
+    const viewRegister      = document.getElementById('view-register');
+    const viewAlreadyActive = document.getElementById('view-already-active');
+    const viewRenew         = document.getElementById('view-renew');
+    const viewPayment       = document.getElementById('view-payment');
 
-      // Generar email temporal anónimo para trackear al usuario
-      // (después Shopify pedirá el email real del comprador y Railway lo usará)
-      if (!currentUid) {
-        try {
-          const tempEmail = `guest_${Date.now()}_${Math.random().toString(36).slice(2,8)}@bionova.temp`;
-          const tempPass  = Math.random().toString(36).slice(-10) + 'Bi!';
-          const cred = await createUserWithEmailAndPassword(auth, tempEmail, tempPass);
-          currentUid = cred.user.uid;
+    // Login inputs
+    const loginEmail    = document.getElementById('login-email');
+    const loginPassword = document.getElementById('login-password');
+    const loginError    = document.getElementById('login-error');
+    const btnLoginSub   = document.getElementById('btn-login-submit');
 
-          // Crear doc temporal en Firestore
-          await setDoc(doc(db, 'miembros', currentUid), {
-            email:         tempEmail,
-            estado:        'pendiente',
-            plan:          planLabel,
-            fechaRegistro: serverTimestamp(),
-            _temp:         true
-          });
-        } catch (err) {
-          console.warn('Usuario anónimo no creado:', err.message);
-        }
+    // Register inputs
+    const regNombre     = document.getElementById('reg-nombre');
+    const regEmail      = document.getElementById('reg-email');
+    const regWhatsapp   = document.getElementById('reg-whatsapp');
+    const regPassword   = document.getElementById('reg-password');
+    const regError      = document.getElementById('reg-error');
+    const btnRegSub     = document.getElementById('btn-register-submit');
+
+    // Already active / renew / payment
+    const alreadyMsg    = document.getElementById('already-active-msg');
+    const btnGoPortal   = document.getElementById('btn-go-portal');
+    const renewMsg      = document.getElementById('renew-msg');
+    const renewEmail    = document.getElementById('renew-email-display');
+    const renewPlan     = document.getElementById('renew-plan-display');
+    const btnRenewPay   = document.getElementById('btn-renew-pay');
+    const btnRenewBack  = document.getElementById('btn-renew-back');
+    const modalInfo     = document.getElementById('club-modal-info');
+    const btnOpenShop   = document.getElementById('club-open-shopify');
+    const btnVerify     = document.getElementById('club-verify-now');
+
+    // ── HELPERS DE VISTAS ─────────────────────────────────────────────────
+    function showView(viewId) {
+      [viewLogin, viewRegister, viewAlreadyActive, viewRenew, viewPayment].forEach(v => {
+        v.hidden = (v.id !== viewId);
+      });
+    }
+
+    function setStep(stepElem, state) {
+      // state: 'active' | 'done' | 'reset'
+      stepElem.classList.remove('active', 'done');
+      const dot = stepElem.querySelector('.step-dot');
+      const num = { cuenta:1, pago:2, verificando:3, acceso:4 }[stepElem.id.replace('club-step-','')];
+      if (state === 'active') { stepElem.classList.add('active'); dot.textContent = String(num); }
+      else if (state === 'done') { stepElem.classList.add('done'); dot.textContent = '✓'; }
+      else { dot.textContent = String(num); }
+    }
+
+    function resetStepper() {
+      setStep(stepCuenta, 'active');
+      setStep(stepPago, 'reset');
+      setStep(stepVerif, 'reset');
+      setStep(stepAcceso, 'reset');
+    }
+
+    function abrirModal(planKey) {
+      selectedPlanKey = planKey;
+      currentPlan    = planKey === 'anual' ? 'PRO Anual' : 'PRO Mensual';
+      currentVariant = planKey === 'anual' ? CLUB_CONFIG.variantAnual : CLUB_CONFIG.variantMensual;
+      planLabel.textContent = currentPlan + ' · $' + (planKey === 'anual' ? '1,980 MXN/año' : '200 MXN/mes');
+
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      // Limpiar errores e inputs
+      loginError.hidden = true; regError.hidden = true;
+
+      resetStepper();
+      showView('view-login');
+    }
+
+    function cerrarModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      clearTimeout(timeoutHandle);
+      if (firestoreUnsubscribe) { firestoreUnsubscribe(); firestoreUnsubscribe = null; }
+      // Reset estado
+      currentUid = null; currentEmail = null;
+      shopifyWindow = null;
+    }
+
+    // ── CLICS EN BOTONES DE PLANES ────────────────────────────────────────
+    document.querySelectorAll('[data-plan]').forEach(btn => {
+      btn.addEventListener('click', () => abrirModal(btn.dataset.plan));
+    });
+
+    // ── SWITCH LOGIN <-> REGISTER ─────────────────────────────────────────
+    document.getElementById('switch-to-register').addEventListener('click', (e) => {
+      e.preventDefault();
+      showView('view-register');
+    });
+    document.getElementById('switch-to-login').addEventListener('click', (e) => {
+      e.preventDefault();
+      showView('view-login');
+    });
+
+    // ── HELPER: leer doc del miembro ──────────────────────────────────────
+    async function getMemberDoc(uid) {
+      const snap = await getDoc(doc(db, 'miembros', uid));
+      return snap.exists() ? snap.data() : null;
+    }
+
+    // ── AL LOGUEAR EXITOSAMENTE → DECIDIR VISTA ───────────────────────────
+    async function procesarPostLogin(user, esRegistroNuevo, nombre, whatsapp) {
+      currentUid   = user.uid;
+      currentEmail = user.email;
+
+      // Si es registro nuevo, crear doc en miembros
+      if (esRegistroNuevo) {
+        await setDoc(doc(db, 'miembros', user.uid), {
+          nombre:        nombre || user.email.split('@')[0],
+          email:         user.email,
+          whatsapp:      whatsapp || '',
+          plan:          currentPlan,
+          estado:        'pendiente',
+          fechaRegistro: serverTimestamp()
+        });
+        irAPago();
+        return;
       }
 
-      // Llamar a Railway para generar el checkout URL
+      // Si es login, verificar estado actual del miembro
+      const memberData = await getMemberDoc(user.uid);
+
+      if (!memberData) {
+        // Tiene cuenta Auth pero no doc miembros → tratar como nuevo
+        await setDoc(doc(db, 'miembros', user.uid), {
+          nombre:        user.displayName || user.email.split('@')[0],
+          email:         user.email,
+          whatsapp:      '',
+          plan:          currentPlan,
+          estado:        'pendiente',
+          fechaRegistro: serverTimestamp()
+        });
+        irAPago();
+        return;
+      }
+
+      const estado = (memberData.estado || '').toLowerCase();
+
+      if (estado === 'activo') {
+        // Ya es miembro activo → mensaje + ir al portal
+        alreadyMsg.textContent = `Tu membresía ${memberData.plan || ''} está activa hasta ${memberData.vence || 'la fecha establecida'}. Entra al portal para ver tu contenido.`;
+        setStep(stepCuenta, 'done');
+        showView('view-already-active');
+      }
+      else if (estado === 'cancelado' || estado === 'vencido') {
+        // Mostrar vista de renovación
+        renewEmail.textContent = memberData.email || user.email;
+        renewPlan.textContent  = memberData.plan || '—';
+        renewMsg.textContent = estado === 'cancelado'
+          ? 'Tu membresía fue cancelada. ¡Renuévala para volver a acceder al portal!'
+          : 'Tu membresía venció. ¡Renuévala para recuperar tu acceso!';
+        setStep(stepCuenta, 'done');
+        showView('view-renew');
+      }
+      else {
+        // 'pendiente' u otro → ir directo al pago
+        irAPago();
+      }
+    }
+
+    // ── IR A PAGO ─────────────────────────────────────────────────────────
+    async function irAPago() {
+      setStep(stepCuenta, 'done');
+      setStep(stepPago, 'active');
+      showView('view-payment');
+
+      await abrirShopifyPopup();
+      escucharFirebase();
+    }
+
+    // ── LOGIN SUBMIT ──────────────────────────────────────────────────────
+    btnLoginSub.addEventListener('click', async () => {
+      loginError.hidden = true;
+      const email = loginEmail.value.trim();
+      const pass  = loginPassword.value;
+
+      if (!email || !pass) {
+        loginError.textContent = 'Completa correo y contraseña.';
+        loginError.hidden = false;
+        return;
+      }
+
+      btnLoginSub.disabled = true;
+      btnLoginSub.textContent = 'Ingresando…';
+
+      try {
+        const cred = await signInWithEmailAndPassword(auth, email, pass);
+        await procesarPostLogin(cred.user, false);
+      } catch (err) {
+        let msg = 'Correo o contraseña incorrectos. Intenta de nuevo.';
+        if (err.code === 'auth/user-not-found') msg = 'No encontramos esa cuenta. ¿Te gustaría crear una?';
+        if (err.code === 'auth/too-many-requests') msg = 'Demasiados intentos. Espera unos minutos.';
+        loginError.textContent = msg;
+        loginError.hidden = false;
+      } finally {
+        btnLoginSub.disabled = false;
+        btnLoginSub.textContent = 'Continuar →';
+      }
+    });
+
+    // ── REGISTER SUBMIT ───────────────────────────────────────────────────
+    btnRegSub.addEventListener('click', async () => {
+      regError.hidden = true;
+      const nombre   = regNombre.value.trim();
+      const email    = regEmail.value.trim();
+      const whatsapp = regWhatsapp.value.trim();
+      const pass     = regPassword.value;
+
+      if (!nombre || !email || !whatsapp || !pass) {
+        regError.textContent = 'Completa todos los campos.';
+        regError.hidden = false;
+        return;
+      }
+      if (pass.length < 6) {
+        regError.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+        regError.hidden = false;
+        return;
+      }
+      if (whatsapp.replace(/\D/g, '').length < 10) {
+        regError.textContent = 'Número de WhatsApp inválido. Incluye código de país (ej. 52238...).';
+        regError.hidden = false;
+        return;
+      }
+
+      btnRegSub.disabled = true;
+      btnRegSub.textContent = 'Creando cuenta…';
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        await procesarPostLogin(cred.user, true, nombre, whatsapp);
+      } catch (err) {
+        let msg = 'Error al crear la cuenta. Intenta de nuevo.';
+        if (err.code === 'auth/email-already-in-use') msg = 'Ese correo ya tiene cuenta. Intenta iniciar sesión.';
+        if (err.code === 'auth/invalid-email') msg = 'El correo no es válido.';
+        if (err.code === 'auth/weak-password') msg = 'La contraseña es muy débil.';
+        regError.textContent = msg;
+        regError.hidden = false;
+      } finally {
+        btnRegSub.disabled = false;
+        btnRegSub.textContent = 'Crear cuenta y continuar al pago →';
+      }
+    });
+
+    // ── YA ERES MIEMBRO: BOTÓN IR AL PORTAL ───────────────────────────────
+    btnGoPortal.addEventListener('click', () => {
+      window.location.href = CLUB_CONFIG.portalUrl;
+    });
+
+    // ── RENOVAR: BOTONES ──────────────────────────────────────────────────
+    btnRenewPay.addEventListener('click', irAPago);
+    btnRenewBack.addEventListener('click', () => {
+      resetStepper();
+      showView('view-login');
+    });
+
+    // ── ABRIR POPUP SHOPIFY ───────────────────────────────────────────────
+    async function abrirShopifyPopup() {
       try {
         const res = await fetch(`${CLUB_CONFIG.railwayUrl}/crear-checkout`, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ variantId })
+          body:    JSON.stringify({ variantId: currentVariant, email: currentEmail })
         });
         const data = await res.json();
         if (!data.checkoutUrl) throw new Error(data.error || 'Sin URL');
 
-        // Abrir popup centrado
         const w = 540, h = 780;
         const left = (screen.width - w) / 2;
         const top  = (screen.height - h) / 2;
@@ -761,11 +1096,17 @@
           `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`
         );
       } catch (err) {
-        alert('Error al abrir el checkout: ' + err.message + '\n\nEscríbenos por WhatsApp y te lo resolvemos al momento.');
+        modalInfo.innerHTML = `
+          <div class="club-modal-info-icon" style="background:#fee2e2;color:#dc2626">⚠️</div>
+          <div class="club-modal-info-text">
+            <strong>Error al abrir el pago</strong>
+            <small>${err.message}. Escríbenos por WhatsApp y te lo resolvemos.</small>
+          </div>
+        `;
       }
     }
 
-    // ── ESCUCHAR CAMBIOS EN EL DOC DEL MIEMBRO ────────────────────────────
+    // ── ESCUCHAR FIREBASE PARA DETECTAR PAGO ──────────────────────────────
     function escucharFirebase() {
       if (!currentUid) return;
       if (firestoreUnsubscribe) firestoreUnsubscribe();
@@ -773,33 +1114,24 @@
       firestoreUnsubscribe = onSnapshot(doc(db, 'miembros', currentUid), (snap) => {
         if (!snap.exists()) return;
         const d = snap.data();
-        if (d.estado === 'activo') {
+        if ((d.estado || '').toLowerCase() === 'activo') {
           onPagoDetectado(d);
         }
       });
 
-      // Timeout de seguridad
       timeoutHandle = setTimeout(() => {
         if (firestoreUnsubscribe) firestoreUnsubscribe();
       }, CLUB_CONFIG.timeoutMinutos * 60 * 1000);
     }
 
-    // ── CUANDO EL PAGO SE DETECTA AUTOMÁTICAMENTE ─────────────────────────
+    // ── PAGO DETECTADO ────────────────────────────────────────────────────
     function onPagoDetectado(memberData) {
-      // Paso 1 (Pago) → DONE
-      stepPago.classList.remove('active');
-      stepPago.classList.add('done');
-      stepPago.querySelector('.step-dot').textContent = '✓';
-      // Paso 2 (Verificando) → DONE
-      stepVerif.classList.remove('active');
-      stepVerif.classList.add('done');
-      stepVerif.querySelector('.step-dot').textContent = '✓';
-      // Paso 3 (Acceso) → ACTIVE
-      stepAcceso.classList.add('active');
-      stepAcceso.querySelector('.step-dot').textContent = '3';
+      setStep(stepPago, 'done');
+      setStep(stepVerif, 'done');
+      setStep(stepAcceso, 'active');
 
       modalInfo.innerHTML = `
-        <div class="club-modal-info-icon" style="background:#10b98122;color:#10b981">✓</div>
+        <div class="club-modal-info-icon" style="background:#d1fae5;color:#10b981">✓</div>
         <div class="club-modal-info-text">
           <strong>¡Pago confirmado! 🎉</strong>
           <small>Redirigiendo al portal en un momento…</small>
@@ -820,62 +1152,20 @@
       }, 1800);
     }
 
-    // ── HANDLERS DE BOTONES DE PLAN ───────────────────────────────────────
-    document.querySelectorAll('[data-plan]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const plan    = btn.dataset.plan; // 'mensual' | 'anual'
-        const variant = btn.dataset.variant;
-        const label   = plan === 'anual' ? 'PRO Anual' : 'PRO Mensual';
-
-        // Abrir modal con stepper
-        modal.classList.add('open');
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-
-        // Reset stepper a estado inicial
-        stepPago.classList.add('active');
-        stepPago.classList.remove('done');
-        stepPago.querySelector('.step-dot').textContent = '1';
-        stepVerif.classList.remove('active', 'done');
-        stepVerif.querySelector('.step-dot').textContent = '2';
-        stepAcceso.classList.remove('active', 'done');
-        stepAcceso.querySelector('.step-dot').textContent = '3';
-        modalInfo.style.background = '';
-        modalInfo.style.borderColor = '';
-        modalInfo.innerHTML = `
-          <div class="club-modal-info-icon">⏳</div>
-          <div class="club-modal-info-text">
-            <strong>Esperando confirmación de pago…</strong>
-            <small>Detectaremos automáticamente cuando completes el pago.</small>
-          </div>
-        `;
-
-        await abrirShopifyPopup(variant, label);
-        escucharFirebase();
-      });
-    });
-
     // ── REABRIR POPUP SHOPIFY ─────────────────────────────────────────────
     btnOpenShop.addEventListener('click', async () => {
       if (shopifyWindow && !shopifyWindow.closed) {
         shopifyWindow.focus();
-      } else if (currentVariant) {
-        await abrirShopifyPopup(currentVariant, currentPlan);
+      } else {
+        await abrirShopifyPopup();
       }
     });
 
     // ── VERIFICAR MANUALMENTE ─────────────────────────────────────────────
     btnVerify.addEventListener('click', () => {
-      if (!currentUid) {
-        alert('Primero completa el pago en la ventana de Shopify.');
-        return;
-      }
-      // Avanzar visualmente: Paso 1 done → Paso 2 active
-      stepPago.classList.remove('active');
-      stepPago.classList.add('done');
-      stepPago.querySelector('.step-dot').textContent = '✓';
-      stepVerif.classList.add('active');
-
+      if (!currentUid) return;
+      setStep(stepPago, 'done');
+      setStep(stepVerif, 'active');
       modalInfo.innerHTML = `
         <div class="club-modal-info-icon">🔄</div>
         <div class="club-modal-info-text">
@@ -883,7 +1173,6 @@
           <small>Si ya pagaste, te redirigimos en segundos.</small>
         </div>
       `;
-      // Si a los 10s no pasó nada, damos un mensaje más claro
       setTimeout(() => {
         if (!modalInfo.innerHTML.includes('confirmado')) {
           modalInfo.innerHTML = `
@@ -898,13 +1187,6 @@
     });
 
     // ── CERRAR MODAL ──────────────────────────────────────────────────────
-    function cerrarModal() {
-      modal.classList.remove('open');
-      modal.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-      clearTimeout(timeoutHandle);
-      if (firestoreUnsubscribe) firestoreUnsubscribe();
-    }
     btnClose.addEventListener('click', cerrarModal);
     modal.addEventListener('click', (e) => {
       if (e.target === modal) cerrarModal();

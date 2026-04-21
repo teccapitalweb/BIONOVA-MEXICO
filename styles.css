@@ -811,3 +811,162 @@ img{max-width:100%;display:block}
   .club-modal-stepper .step-label { font-size: .7rem; }
 }
 
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODAL MULTI-VISTA — FORMS, RENOVAR, YA ERES MIEMBRO
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.club-modal-view { display: block; }
+.club-modal-view[hidden] { display: none; }
+
+/* ── Formularios ──────────────────────────────────────────────────────────── */
+.club-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.club-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.club-field > span {
+  font-size: .86rem;
+  font-weight: 700;
+  color: #334155;
+  letter-spacing: .01em;
+}
+.club-field > span > small {
+  font-weight: 500;
+  color: #94a3b8;
+  font-size: .78rem;
+  margin-left: 2px;
+}
+.club-field input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  font-size: .95rem;
+  font-family: inherit;
+  background: #fff;
+  color: #0f172a;
+  transition: all .18s ease;
+  outline: none;
+}
+.club-field input::placeholder {
+  color: #94a3b8;
+}
+.club-field input:focus {
+  border-color: #2a6df6;
+  box-shadow: 0 0 0 4px rgba(42,109,246,.12);
+}
+.club-field input:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* ── Error message ────────────────────────────────────────────────────────── */
+.club-error {
+  padding: 10px 14px;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+  color: #b91c1c;
+  font-size: .88rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.4;
+}
+.club-error[hidden] { display: none; }
+
+/* ── Vista "Ya eres miembro" ──────────────────────────────────────────────── */
+.club-modal-success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  font-weight: 900;
+  margin: 0 auto 18px;
+  box-shadow: 0 10px 30px rgba(16,185,129,.35);
+  animation: successPop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes successPop {
+  0%   { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── Vista Renovar ────────────────────────────────────────────────────────── */
+.club-modal-warn-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  margin: 0 auto 16px;
+  box-shadow: 0 10px 30px rgba(249,115,22,.35);
+}
+.club-renew-info {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.club-renew-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: .92rem;
+  color: #475569;
+}
+.club-renew-row strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+.club-renew-row + .club-renew-row {
+  border-top: 1px solid #e2e8f0;
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+/* ── Links dentro del modal ───────────────────────────────────────────────── */
+.club-modal-help a {
+  cursor: pointer;
+  color: #2a6df6;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.club-modal-help a:hover { color: #1d4ed8; }
+
+/* ── Stepper de 4 pasos ───────────────────────────────────────────────────── */
+.club-modal-stepper::before {
+  left: 11%;
+  right: 11%;
+}
+
+/* ── Acción secundaria con mt ─────────────────────────────────────────────── */
+#btn-renew-back {
+  margin-top: 8px;
+}
+
+/* ── Scroll smooth en el panel si es muy alto ─────────────────────────────── */
+.club-modal-panel {
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+  .club-modal-stepper .step-label { font-size: .64rem; }
+}
+
