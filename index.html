@@ -562,13 +562,13 @@
         <p class="club-modal-subtitle">Completa tu pago en la ventana de Shopify y te damos acceso automático al portal.</p>
 
         <ol class="club-modal-stepper">
-          <li class="step done">
-            <span class="step-dot">✓</span>
-            <span class="step-label">Registro iniciado</span>
-          </li>
           <li class="step active" id="club-step-pago">
-            <span class="step-dot">2</span>
+            <span class="step-dot">1</span>
             <span class="step-label">Pago seguro en Shopify</span>
+          </li>
+          <li class="step" id="club-step-verificando">
+            <span class="step-dot">2</span>
+            <span class="step-label">Verificando pago</span>
           </li>
           <li class="step" id="club-step-acceso">
             <span class="step-dot">3</span>
@@ -711,6 +711,7 @@
     const btnVerify    = document.getElementById('club-verify-now');
     const modalInfo    = document.getElementById('club-modal-info');
     const stepPago     = document.getElementById('club-step-pago');
+    const stepVerif    = document.getElementById('club-step-verificando');
     const stepAcceso   = document.getElementById('club-step-acceso');
 
     // ── ABRIR POPUP DE SHOPIFY CENTRADO ───────────────────────────────────
@@ -785,10 +786,15 @@
 
     // ── CUANDO EL PAGO SE DETECTA AUTOMÁTICAMENTE ─────────────────────────
     function onPagoDetectado(memberData) {
-      // Actualizar UI
+      // Paso 1 (Pago) → DONE
       stepPago.classList.remove('active');
       stepPago.classList.add('done');
       stepPago.querySelector('.step-dot').textContent = '✓';
+      // Paso 2 (Verificando) → DONE
+      stepVerif.classList.remove('active');
+      stepVerif.classList.add('done');
+      stepVerif.querySelector('.step-dot').textContent = '✓';
+      // Paso 3 (Acceso) → ACTIVE
       stepAcceso.classList.add('active');
       stepAcceso.querySelector('.step-dot').textContent = '3';
 
@@ -826,10 +832,12 @@
         modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
 
-        // Reset stepper
+        // Reset stepper a estado inicial
         stepPago.classList.add('active');
         stepPago.classList.remove('done');
-        stepPago.querySelector('.step-dot').textContent = '2';
+        stepPago.querySelector('.step-dot').textContent = '1';
+        stepVerif.classList.remove('active', 'done');
+        stepVerif.querySelector('.step-dot').textContent = '2';
         stepAcceso.classList.remove('active', 'done');
         stepAcceso.querySelector('.step-dot').textContent = '3';
         modalInfo.style.background = '';
@@ -862,7 +870,12 @@
         alert('Primero completa el pago en la ventana de Shopify.');
         return;
       }
-      // Ya hay onSnapshot activo — solo damos feedback visual
+      // Avanzar visualmente: Paso 1 done → Paso 2 active
+      stepPago.classList.remove('active');
+      stepPago.classList.add('done');
+      stepPago.querySelector('.step-dot').textContent = '✓';
+      stepVerif.classList.add('active');
+
       modalInfo.innerHTML = `
         <div class="club-modal-info-icon">🔄</div>
         <div class="club-modal-info-text">
