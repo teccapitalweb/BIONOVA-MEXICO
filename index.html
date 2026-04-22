@@ -1077,18 +1077,27 @@
     });
 
     // ── ABRIR POPUP SHOPIFY ───────────────────────────────────────────────
-    // Cart permalink con selling_plan y email pre-llenado → va directo al checkout
+    // Abre popup en /cart y luego inyecta el item via Ajax API
     async function abrirShopifyPopup() {
       try {
-        const sellingPlanId = selectedPlanKey === 'anual'
-          ? '2071724086'   // Plan Anual BIONOVA Academy
-          : '2071691318';  // Plan Mensual BIONOVA Academy
+        const sellingPlanId = selectedPlanKey === 'anual' ? 2071724086 : 2071691318;
 
-        const emailParam = currentEmail
-          ? '&checkout[email]=' + encodeURIComponent(currentEmail)
-          : '';
+        // Paso 1: agregar al carrito usando fetch al Ajax API (desde el dominio Shopify)
+        //   Abrimos un popup a una URL intermedia que hará el add-to-cart
+        const handle = selectedPlanKey === 'anual'
+          ? 'membresia-anual-bionova-academy'
+          : 'membresia-mensual-bionova-academy';
 
-        const checkoutUrl = `https://pfueck-wm.myshopify.com/cart/${currentVariant}:1?selling_plan=${sellingPlanId}${emailParam}`;
+        // URL mágica de Shopify: agregar por POST y redirigir a checkout
+        // https://shop.com/cart/add?id=VARIANT&selling_plan=PLAN&return_to=/checkout
+        const params = new URLSearchParams({
+          id: currentVariant,
+          selling_plan: sellingPlanId,
+          quantity: 1,
+          return_to: '/checkout' + (currentEmail ? '?checkout[email]=' + encodeURIComponent(currentEmail) : '')
+        });
+
+        const checkoutUrl = `https://pfueck-wm.myshopify.com/cart/add?${params.toString()}`;
 
         const w = 540, h = 780;
         const left = (screen.width - w) / 2;
