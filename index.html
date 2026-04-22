@@ -1114,27 +1114,46 @@
     // ── ABRIR POPUP SHOPIFY ───────────────────────────────────────────────
     async function abrirShopifyPopup() {
       try {
-        const handle = selectedPlanKey === 'anual'
-          ? 'membresia-anual-bionova-academy'
-          : 'membresia-mensual-bionova-academy';
         const sellingPlanId = selectedPlanKey === 'anual' ? 2071724086 : 2071691318;
-
-        // Ir a la página del producto — Shopify aplica el selling plan automáticamente
-        // cuando es solo-suscripción. Agregamos ?variant y ?selling_plan en query por si acaso
-        const url = `https://pfueck-wm.myshopify.com/products/${handle}?variant=${currentVariant}&selling_plan=${sellingPlanId}`;
+        const STORE = 'https://pfueck-wm.myshopify.com';
 
         const w = 540, h = 780;
         const left = (screen.width - w) / 2;
         const top  = (screen.height - h) / 2;
-        shopifyWindow = window.open(
-          url,
-          'BIONOVA_Shopify',
-          `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`
-        );
+        const features = `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`;
 
+        // Abrir popup y submit form al mismo tiempo (user gesture)
+        shopifyWindow = window.open('', 'BIONOVA_Shopify', features);
         if (!shopifyWindow) {
           throw new Error('El navegador bloqueó la ventana emergente. Permite popups e intenta de nuevo.');
         }
+
+        // Form POST que simula "Comprar ahora" con checkout: true
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `${STORE}/cart/add`;
+        form.target = 'BIONOVA_Shopify';
+        form.style.display = 'none';
+        form.acceptCharset = 'UTF-8';
+
+        const addField = (name, value) => {
+          const i = document.createElement('input');
+          i.type = 'hidden';
+          i.name = name;
+          i.value = value;
+          form.appendChild(i);
+        };
+
+        addField('id', currentVariant);
+        addField('quantity', '1');
+        addField('selling_plan', sellingPlanId);
+        addField('checkout', 'Checkout');  // ← ESTO activa "buy it now" directo al checkout
+        addField('return_to', '/checkout' + (currentEmail ? '?checkout%5Bemail%5D=' + encodeURIComponent(currentEmail) : ''));
+
+        document.body.appendChild(form);
+        form.submit();
+        setTimeout(() => form.remove(), 1500);
+
       } catch (err) {
         modalInfo.innerHTML = `
           <div class="club-modal-info-icon" style="background:#fee2e2;color:#dc2626">⚠️</div>
