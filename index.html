@@ -1112,24 +1112,35 @@
     });
 
     // ── ABRIR POPUP SHOPIFY ───────────────────────────────────────────────
-    // Crea un form POST que agrega al carrito y redirige al checkout con email
     async function abrirShopifyPopup() {
       try {
         const sellingPlanId = selectedPlanKey === 'anual' ? 2071724086 : 2071691318;
 
-        // Construir URL return_to con email y note
-        let returnTo = '/checkout';
+        // 1. Primero vaciar el carrito (en otro tab oculto) para evitar duplicados
+        try {
+          await fetch('https://pfueck-wm.myshopify.com/cart/clear.js', {
+            method: 'POST',
+            mode: 'no-cors',
+            credentials: 'include'
+          });
+        } catch(_) {}
+
+        // 2. Construir URL con return_to al checkout + email en attributes
+        const returnParams = new URLSearchParams();
         if (currentEmail) {
-          returnTo += '?checkout%5Bemail%5D=' + encodeURIComponent(currentEmail);
+          returnParams.set('checkout[email]', currentEmail);
         }
+        const returnTo = '/checkout' + (returnParams.toString() ? '?' + returnParams.toString() : '');
 
         const params = new URLSearchParams({
           id: currentVariant,
           selling_plan: sellingPlanId,
           quantity: 1,
-          'note': currentEmail || '',
           return_to: returnTo
         });
+        if (currentEmail) {
+          params.set('attributes[email]', currentEmail);
+        }
 
         const checkoutUrl = `https://pfueck-wm.myshopify.com/cart/add?${params.toString()}`;
 
