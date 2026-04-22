@@ -584,6 +584,11 @@
           <p class="club-modal-subtitle">Entra con tu cuenta para continuar al pago seguro.</p>
 
           <div class="club-form">
+            <button class="btn btn-google" type="button" id="btn-google-login">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 01-1.8 2.71v2.26h2.92a8.78 8.78 0 002.68-6.61z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.83.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 009 18z"/><path fill="#FBBC05" d="M3.97 10.71A5.41 5.41 0 013.68 9c0-.6.1-1.17.29-1.71V4.96H.96A9 9 0 000 9c0 1.45.35 2.83.96 4.04l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 009 0 9 9 0 00.96 4.96l3.01 2.33C4.68 5.17 6.66 3.58 9 3.58z"/></svg>
+              Continuar con Google
+            </button>
+            <div class="club-divider"><span>o con correo</span></div>
             <label class="club-field">
               <span>Correo electrónico</span>
               <input type="email" id="login-email" autocomplete="email" required placeholder="tu@correo.com">
@@ -610,6 +615,11 @@
           <p class="club-modal-subtitle">Llena tus datos para activar tu membresía PRO.</p>
 
           <div class="club-form">
+            <button class="btn btn-google" type="button" id="btn-google-register">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 01-1.8 2.71v2.26h2.92a8.78 8.78 0 002.68-6.61z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.83.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 009 18z"/><path fill="#FBBC05" d="M3.97 10.71A5.41 5.41 0 013.68 9c0-.6.1-1.17.29-1.71V4.96H.96A9 9 0 000 9c0 1.45.35 2.83.96 4.04l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 009 0 9 9 0 00.96 4.96l3.01 2.33C4.68 5.17 6.66 3.58 9 3.58z"/></svg>
+              Registrarme con Google
+            </button>
+            <div class="club-divider"><span>o con correo</span></div>
             <label class="club-field">
               <span>Nombre completo</span>
               <input type="text" id="reg-nombre" autocomplete="name" required placeholder="Ej. Miguel Carrera">
@@ -767,7 +777,7 @@
        ═══════════════════════════════════════════════════════════════════════════ -->
   <script type="module">
     import { initializeApp }                 from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword }
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup }
                                              from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp }
                                              from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -1064,6 +1074,31 @@
       }
     });
 
+    // ── GOOGLE AUTH (login/registro) ──────────────────────────────────────
+    const googleProvider = new GoogleAuthProvider();
+    async function loginConGoogle() {
+      loginError.hidden = true; regError.hidden = true;
+      try {
+        const cred = await signInWithPopup(auth, googleProvider);
+        const user = cred.user;
+        // ¿Ya existe en Firestore?
+        const existing = await getMemberDoc(user.uid);
+        if (!existing) {
+          // Registro nuevo con Google
+          await procesarPostLogin(user, true, user.displayName || user.email.split('@')[0], '');
+        } else {
+          // Login con Google
+          await procesarPostLogin(user, false);
+        }
+      } catch (err) {
+        const target = viewLogin.hidden ? regError : loginError;
+        target.textContent = 'No se pudo iniciar sesión con Google. Intenta de nuevo.';
+        target.hidden = false;
+      }
+    }
+    document.getElementById('btn-google-login').addEventListener('click', loginConGoogle);
+    document.getElementById('btn-google-register').addEventListener('click', loginConGoogle);
+
     // ── YA ERES MIEMBRO: BOTÓN IR AL PORTAL ───────────────────────────────
     btnGoPortal.addEventListener('click', () => {
       window.location.href = CLUB_CONFIG.portalUrl;
@@ -1077,24 +1112,23 @@
     });
 
     // ── ABRIR POPUP SHOPIFY ───────────────────────────────────────────────
-    // Abre popup en /cart y luego inyecta el item via Ajax API
+    // Crea un form POST que agrega al carrito y redirige al checkout con email
     async function abrirShopifyPopup() {
       try {
         const sellingPlanId = selectedPlanKey === 'anual' ? 2071724086 : 2071691318;
 
-        // Paso 1: agregar al carrito usando fetch al Ajax API (desde el dominio Shopify)
-        //   Abrimos un popup a una URL intermedia que hará el add-to-cart
-        const handle = selectedPlanKey === 'anual'
-          ? 'membresia-anual-bionova-academy'
-          : 'membresia-mensual-bionova-academy';
+        // Construir URL return_to con email y note
+        let returnTo = '/checkout';
+        if (currentEmail) {
+          returnTo += '?checkout%5Bemail%5D=' + encodeURIComponent(currentEmail);
+        }
 
-        // URL mágica de Shopify: agregar por POST y redirigir a checkout
-        // https://shop.com/cart/add?id=VARIANT&selling_plan=PLAN&return_to=/checkout
         const params = new URLSearchParams({
           id: currentVariant,
           selling_plan: sellingPlanId,
           quantity: 1,
-          return_to: '/checkout' + (currentEmail ? '?checkout[email]=' + encodeURIComponent(currentEmail) : '')
+          'note': currentEmail || '',
+          return_to: returnTo
         });
 
         const checkoutUrl = `https://pfueck-wm.myshopify.com/cart/add?${params.toString()}`;

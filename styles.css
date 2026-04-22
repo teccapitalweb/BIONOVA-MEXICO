@@ -970,3 +970,49 @@ img{max-width:100%;display:block}
   .club-modal-stepper .step-label { font-size: .64rem; }
 }
 
+
+/* ── Botón Google ─────────────────────────────────────────────────────── */
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: #fff;
+  color: #3c4043;
+  border: 1.5px solid #dadce0;
+  font-weight: 700;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: all .18s ease;
+}
+.btn-google:hover {
+  background: #f8f9fa;
+  border-color: #2a6df6;
+  box-shadow: 0 4px 12px rgba(42,109,246,.12);
+  transform: translateY(-1px);
+}
+
+/* ── Divider "o con correo" ───────────────────────────────────────────── */
+.club-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0;
+}
+.club-divider::before,
+.club-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+.club-divider span {
+  font-size: .78rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
