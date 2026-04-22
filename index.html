@@ -1148,17 +1148,12 @@
         addField('quantity', '1');
         addField('selling_plan', sellingPlanId);
         addField('checkout', 'Checkout');  // ← ESTO activa "buy it now" directo al checkout
-
-        // Pre-rellenar email en checkout (3 canales simultáneos para garantizar)
-        if (currentEmail) {
-          addField('checkout[email]', currentEmail);
-          addField('checkout[shipping_address][email]', currentEmail);
-          addField('attributes[email]', currentEmail);
-          addField('note_attributes[email]', currentEmail);
-          addField('return_to', '/checkout?checkout%5Bemail%5D=' + encodeURIComponent(currentEmail));
-        } else {
-          addField('return_to', '/checkout');
-        }
+        // return_to apunta al checkout con email pre-rellenado vía query param
+        // (los corchetes NO se encodean — Shopify los necesita literales)
+        const returnTo = currentEmail
+          ? '/checkout?checkout[email]=' + encodeURIComponent(currentEmail)
+          : '/checkout';
+        addField('return_to', returnTo);
 
         document.body.appendChild(form);
         form.submit();
