@@ -1115,40 +1115,15 @@
     async function abrirShopifyPopup() {
       try {
         const sellingPlanId = selectedPlanKey === 'anual' ? 2071724086 : 2071691318;
+        const STORE = 'https://pfueck-wm.myshopify.com';
 
-        // 1. Primero vaciar el carrito (en otro tab oculto) para evitar duplicados
-        try {
-          await fetch('https://pfueck-wm.myshopify.com/cart/clear.js', {
-            method: 'POST',
-            mode: 'no-cors',
-            credentials: 'include'
-          });
-        } catch(_) {}
-
-        // 2. Construir URL con return_to al checkout + email en attributes
-        const returnParams = new URLSearchParams();
-        if (currentEmail) {
-          returnParams.set('checkout[email]', currentEmail);
-        }
-        const returnTo = '/checkout' + (returnParams.toString() ? '?' + returnParams.toString() : '');
-
-        const params = new URLSearchParams({
-          id: currentVariant,
-          selling_plan: sellingPlanId,
-          quantity: 1,
-          return_to: returnTo
-        });
-        if (currentEmail) {
-          params.set('attributes[email]', currentEmail);
-        }
-
-        const checkoutUrl = `https://pfueck-wm.myshopify.com/cart/add?${params.toString()}`;
-
+        // PASO 1: abrir popup en pantalla intermedia que limpia, agrega y redirige
         const w = 540, h = 780;
         const left = (screen.width - w) / 2;
         const top  = (screen.height - h) / 2;
+
         shopifyWindow = window.open(
-          checkoutUrl,
+          'about:blank',
           'BIONOVA_Shopify',
           `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`
         );
@@ -1156,6 +1131,53 @@
         if (!shopifyWindow) {
           throw new Error('El navegador bloqueó la ventana emergente. Permite popups e intenta de nuevo.');
         }
+
+        // Escribir HTML intermedio que hace clear → add → redirect con email
+        const emailForUrl = currentEmail ? encodeURIComponent(currentEmail) : '';
+        const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Procesando tu pago…</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;background:#081225;color:#fff;
+       display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;text-align:center}
+  .box{padding:40px}
+  .spin{width:48px;height:48px;border:4px solid rgba(255,255,255,.15);
+        border-top-color:#69d2ff;border-radius:50%;margin:0 auto 20px;
+        animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  h1{font-size:1.2rem;font-weight:700;margin:0 0 8px}
+  p{color:rgba(255,255,255,.7);margin:0;font-size:.9rem}
+</style></head>
+<body>
+  <div class="box">
+    <div class="spin"></div>
+    <h1>🔬 Preparando tu pago seguro</h1>
+    <p>Conectando con Shopify…</p>
+  </div>
+<script>
+(async function(){
+  try {
+    // 1. Vaciar carrito
+    await fetch('${STORE}/cart/clear.js', { method:'POST', credentials:'include' });
+    // 2. Agregar item con selling plan
+    const fd = new FormData();
+    fd.append('id', '${currentVariant}');
+    fd.append('quantity', '1');
+    fd.append('selling_plan', '${sellingPlanId}');
+    await fetch('${STORE}/cart/add.js', { method:'POST', body:fd, credentials:'include' });
+    // 3. Ir al checkout con email pre-llenado
+    const url = '${STORE}/checkout${emailForUrl ? `?checkout%5Bemail%5D=${emailForUrl}` : ''}';
+    window.location.replace(url);
+  } catch (e) {
+    document.body.innerHTML = '<div style="padding:40px;text-align:center"><h1>Error</h1><p>'+e.message+'</p><p>Intenta de nuevo desde la página principal.</p></div>';
+  }
+})();
+<\/script>
+</body></html>`;
+
+        shopifyWindow.document.open();
+        shopifyWindow.document.write(html);
+        shopifyWindow.document.close();
+
       } catch (err) {
         modalInfo.innerHTML = `
           <div class="club-modal-info-icon" style="background:#fee2e2;color:#dc2626">⚠️</div>
