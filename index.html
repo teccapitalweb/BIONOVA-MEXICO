@@ -1114,14 +1114,14 @@
     // ── ABRIR POPUP SHOPIFY ───────────────────────────────────────────────
     async function abrirShopifyPopup() {
       try {
+        const handle = selectedPlanKey === 'anual'
+          ? 'membresia-anual-bionova-academy'
+          : 'membresia-mensual-bionova-academy';
         const sellingPlanId = selectedPlanKey === 'anual' ? 2071724086 : 2071691318;
 
-        // Cart permalink: Shopify REEMPLAZA el carrito con exactamente lo que pones
-        // Formato: /cart/VARIANT:QTY?selling_plan=ID&checkout[email]=EMAIL
-        let url = `https://pfueck-wm.myshopify.com/cart/${currentVariant}:1?selling_plan=${sellingPlanId}`;
-        if (currentEmail) {
-          url += `&checkout%5Bemail%5D=${encodeURIComponent(currentEmail)}`;
-        }
+        // Ir a la página del producto — Shopify aplica el selling plan automáticamente
+        // cuando es solo-suscripción. Agregamos ?variant y ?selling_plan en query por si acaso
+        const url = `https://pfueck-wm.myshopify.com/products/${handle}?variant=${currentVariant}&selling_plan=${sellingPlanId}`;
 
         const w = 540, h = 780;
         const left = (screen.width - w) / 2;
