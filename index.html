@@ -1114,53 +1114,82 @@
     // ── ABRIR POPUP SHOPIFY ───────────────────────────────────────────────
     async function abrirShopifyPopup() {
       try {
-        const sellingPlanId = selectedPlanKey === 'anual' ? '2071724086' : '2071691318';
+        const sellingPlanId = selectedPlanKey === 'anual' ? 2071724086 : 2071691318;
+        const STORE = 'https://pfueck-wm.myshopify.com';
 
         const w = 540, h = 780;
         const left = (screen.width - w) / 2;
         const top  = (screen.height - h) / 2;
         const features = `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`;
 
-        // Abrir popup INMEDIATAMENTE (user gesture) con loader
-        shopifyWindow = window.open('about:blank', 'BIONOVA_Shopify', features);
+        // ⚡ COPIAR EMAIL AL PORTAPAPELES antes de abrir (mientras hay user gesture)
+        let emailCopiado = false;
+        if (currentEmail && navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(currentEmail);
+            emailCopiado = true;
+          } catch (e) {
+            // Fallback silencioso si el navegador bloquea
+            try {
+              const ta = document.createElement('textarea');
+              ta.value = currentEmail;
+              ta.style.position = 'fixed';
+              ta.style.opacity = '0';
+              document.body.appendChild(ta);
+              ta.select();
+              document.execCommand('copy');
+              document.body.removeChild(ta);
+              emailCopiado = true;
+            } catch(_) {}
+          }
+        }
+
+        // Abrir popup y submit form al mismo tiempo (user gesture)
+        shopifyWindow = window.open('', 'BIONOVA_Shopify', features);
         if (!shopifyWindow) {
           throw new Error('El navegador bloqueó la ventana emergente. Permite popups e intenta de nuevo.');
         }
 
-        // Loader mientras Railway genera el checkout
-        shopifyWindow.document.write(`
-          <html><head><title>Generando pago seguro...</title></head>
-          <body style="background:#0b2f68;color:#fff;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;flex-direction:column;gap:20px;">
-            <div style="font-size:48px;">🔬</div>
-            <div style="font-size:18px;">Preparando tu pago seguro...</div>
-            <div style="width:40px;height:40px;border:4px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;"></div>
-            <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
-          </body></html>
-        `);
+        // Form POST que simula "Comprar ahora" con checkout: true
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `${STORE}/cart/add`;
+        form.target = 'BIONOVA_Shopify';
+        form.style.display = 'none';
+        form.acceptCharset = 'UTF-8';
 
-        // Pedir checkout a Railway con email pre-rellenado
-        const response = await fetch(`${CLUB_CONFIG.railwayUrl}/crear-checkout`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            variantId: currentVariant,
-            sellingPlanId: sellingPlanId,
-            email: currentEmail
-          })
-        });
+        const addField = (name, value) => {
+          const i = document.createElement('input');
+          i.type = 'hidden';
+          i.name = name;
+          i.value = value;
+          form.appendChild(i);
+        };
 
-        const data = await response.json();
-        if (!response.ok || !data.checkoutUrl) {
-          throw new Error(data.error || 'No se pudo generar el checkout');
+        addField('id', currentVariant);
+        addField('quantity', '1');
+        addField('selling_plan', sellingPlanId);
+        addField('checkout', 'Checkout');  // ← ESTO activa "buy it now" directo al checkout
+        addField('return_to', '/checkout');
+
+        document.body.appendChild(form);
+        form.submit();
+        setTimeout(() => form.remove(), 1500);
+
+        // 📋 AVISO VISUAL: email copiado → pega con Ctrl+V
+        if (emailCopiado) {
+          modalInfo.innerHTML = `
+            <div class="club-modal-info-icon" style="background:#dbeafe;color:#2563eb">📋</div>
+            <div class="club-modal-info-text">
+              <strong>Tu correo ya está copiado</strong>
+              <small>Pégalo con <b>Ctrl+V</b> (o Cmd+V en Mac) en el campo <b>"Correo electrónico"</b> de Shopify. Detectaremos tu pago automáticamente.</small>
+            </div>
+          `;
+          modalInfo.style.background = '#eff6ff';
+          modalInfo.style.borderColor = '#2563eb';
         }
-
-        // Redirigir popup al checkout real (ya con email pre-rellenado)
-        shopifyWindow.location.href = data.checkoutUrl;
 
       } catch (err) {
-        if (shopifyWindow && !shopifyWindow.closed) {
-          try { shopifyWindow.close(); } catch(_) {}
-        }
         modalInfo.innerHTML = `
           <div class="club-modal-info-icon" style="background:#fee2e2;color:#dc2626">⚠️</div>
           <div class="club-modal-info-text">
