@@ -1077,24 +1077,29 @@
     });
 
     // ── ABRIR POPUP SHOPIFY ───────────────────────────────────────────────
+    // Usa cart permalink directo (no requiere API ni Storefront token)
     async function abrirShopifyPopup() {
       try {
-        const res = await fetch(`${CLUB_CONFIG.railwayUrl}/crear-checkout`, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ variantId: currentVariant, email: currentEmail })
-        });
-        const data = await res.json();
-        if (!data.checkoutUrl) throw new Error(data.error || 'Sin URL');
+        const shopifyStore = 'pfueck-wm.myshopify.com';
+        // Cart permalink con email pre-llenado
+        // Formato: /cart/VARIANT:QTY?checkout[email]=EMAIL
+        const emailParam = currentEmail
+          ? '?checkout[email]=' + encodeURIComponent(currentEmail)
+          : '';
+        const checkoutUrl = `https://${shopifyStore}/cart/${currentVariant}:1${emailParam}`;
 
         const w = 540, h = 780;
         const left = (screen.width - w) / 2;
         const top  = (screen.height - h) / 2;
         shopifyWindow = window.open(
-          data.checkoutUrl,
+          checkoutUrl,
           'BIONOVA_Shopify',
           `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`
         );
+
+        if (!shopifyWindow) {
+          throw new Error('El navegador bloqueó la ventana emergente. Permite popups e intenta de nuevo.');
+        }
       } catch (err) {
         modalInfo.innerHTML = `
           <div class="club-modal-info-icon" style="background:#fee2e2;color:#dc2626">⚠️</div>
