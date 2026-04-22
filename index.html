@@ -1077,13 +1077,18 @@
     });
 
     // ── ABRIR POPUP SHOPIFY ───────────────────────────────────────────────
-    // Usa la página del producto (Shopify aplica selling plan automáticamente)
+    // Cart permalink con selling_plan y email pre-llenado → va directo al checkout
     async function abrirShopifyPopup() {
       try {
-        const handle = selectedPlanKey === 'anual'
-          ? 'membresia-anual-bionova-academy'
-          : 'membresia-mensual-bionova-academy';
-        const checkoutUrl = `https://pfueck-wm.myshopify.com/products/${handle}`;
+        const sellingPlanId = selectedPlanKey === 'anual'
+          ? '2071724086'   // Plan Anual BIONOVA Academy
+          : '2071691318';  // Plan Mensual BIONOVA Academy
+
+        const emailParam = currentEmail
+          ? '&checkout[email]=' + encodeURIComponent(currentEmail)
+          : '';
+
+        const checkoutUrl = `https://pfueck-wm.myshopify.com/cart/${currentVariant}:1?selling_plan=${sellingPlanId}${emailParam}`;
 
         const w = 540, h = 780;
         const left = (screen.width - w) / 2;
