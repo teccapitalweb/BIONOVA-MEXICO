@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso de miembros · BioNova VIP</title>
+<meta name="description" content="Inicia sesión o crea tu cuenta en la plataforma VIP de BioNova: biomedicina, microbiología y medicina general.">
+<link rel="icon" type="image/png" href="assets/logo-bionova.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   BioNova VIP · vip-auth · tokens
+   Modo OSCURO por defecto · modo día = body.modo-dia
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --bg-deep:#050a16; --bg:#081225; --surface:#0b1530; --surface-2:#0f1e3a;
+  --line:rgba(105,210,255,.12); --line-soft:rgba(255,255,255,.06);
+  --primary:#2a6df6; --primary-soft:#69d2ff; --primary-deep:#1d4ed8;
+  --accent:#10b981; --accent-soft:#34d399;
+  --text:#eaf2ff; --muted:#94a3b8; --faint:#5b6b86;
+  --danger:#f87171; --danger-bg:rgba(248,113,113,.12);
+  --ok:#10b981; --ok-bg:rgba(16,185,129,.12);
+  --glass:rgba(13,26,52,.55); --glass-brd:rgba(105,210,255,.14);
+  --glow-blue:rgba(42,109,246,.45); --glow-green:rgba(16,185,129,.32);
+  --radius:18px; --radius-sm:12px;
+  --font-display:'Sora',sans-serif; --font-body:'Manrope',sans-serif; --font-mono:'JetBrains Mono',monospace;
+}
+body.modo-dia{
+  --bg-deep:#e6eefb; --bg:#f5f9ff; --surface:#ffffff; --surface-2:#f1f6ff;
+  --line:rgba(15,23,42,.10); --line-soft:rgba(15,23,42,.06);
+  --text:#0f172a; --muted:#52617a; --faint:#94a3b8;
+  --danger:#dc2626; --danger-bg:rgba(220,38,38,.08);
+  --ok:#0f9d58; --ok-bg:rgba(15,157,88,.10);
+  --glass:rgba(255,255,255,.72); --glass-brd:rgba(42,109,246,.18);
+  --glow-blue:rgba(42,109,246,.22); --glow-green:rgba(16,185,129,.18);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body); background:var(--bg); color:var(--text);
+  min-height:100vh; display:flex; flex-direction:column;
+  overflow-x:hidden; transition:background .5s ease,color .4s ease;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(60vw 60vw at 12% -10%, var(--glow-blue), transparent 60%),
+    radial-gradient(50vw 50vw at 100% 0%, var(--glow-green), transparent 55%),
+    radial-gradient(40vw 40vw at 80% 110%, var(--glow-blue), transparent 60%);
+  opacity:.9; transition:opacity .5s;
+}
+body::after{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.04;
+  background-image:linear-gradient(var(--text) 1px,transparent 1px),linear-gradient(90deg,var(--text) 1px,transparent 1px);
+  background-size:44px 44px; mask-image:radial-gradient(circle at 50% 28%,#000,transparent 78%);
+}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--primary),var(--accent));border-radius:9px;border:2px solid var(--bg)}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+
+/* ── topbar ─────────────────────────────────────────── */
+.topbar{
+  position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);
+  background:linear-gradient(180deg,var(--bg) 30%,transparent);
+  border-bottom:1px solid var(--line);
+}
+.topbar .inner{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;max-width:1180px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-display);font-weight:800;font-size:1.18rem;letter-spacing:-.02em;text-decoration:none;color:var(--text)}
+.brand .mark{width:36px;height:36px;filter:drop-shadow(0 4px 14px var(--glow-blue))}
+.brand .vip{font-size:.62rem;font-weight:700;letter-spacing:.16em;color:#fff;background:linear-gradient(120deg,var(--primary),var(--accent));padding:3px 8px;border-radius:6px;margin-left:2px;font-family:var(--font-body)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.back{color:var(--muted);text-decoration:none;font-size:.84rem;font-weight:600;padding:8px 13px;border-radius:10px;transition:.2s;display:flex;align-items:center;gap:6px}
+.back:hover{color:var(--text);background:var(--surface-2)}
+.back svg{width:15px;height:15px}
+.theme-btn{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--surface-2);color:var(--text);cursor:pointer;display:grid;place-items:center;transition:.2s;flex:none}
+.theme-btn:hover{border-color:var(--primary);box-shadow:0 0 0 3px var(--glow-blue)}
+.theme-btn svg{width:18px;height:18px}
+
+/* ── layout ─────────────────────────────────────────── */
+.shell{flex:1;display:flex;align-items:center;justify-content:center;padding:42px 22px 60px}
+.auth-card{
+  width:100%;max-width:430px;background:var(--glass);border:1px solid var(--glass-brd);
+  border-radius:var(--radius);backdrop-filter:blur(22px);position:relative;overflow:hidden;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05);
+  padding:30px 28px 28px; animation:rise .7s cubic-bezier(.2,.8,.3,1) both;
+}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.auth-card::before{content:"";position:absolute;top:-1px;left:16%;right:16%;height:1px;background:linear-gradient(90deg,transparent,var(--primary-soft),transparent)}
+
+.head{text-align:center;margin-bottom:22px}
+.head .logo-ring{width:58px;height:58px;margin:0 auto 14px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(42,109,246,.16),rgba(16,185,129,.14));border:1px solid var(--line)}
+.head .logo-ring svg{width:32px;height:32px}
+.head h1{font-family:var(--font-display);font-weight:700;font-size:1.42rem;letter-spacing:-.02em}
+.head p{color:var(--muted);font-size:.86rem;margin-top:5px}
+
+/* ── tabs ───────────────────────────────────────────── */
+.tabs{display:flex;gap:5px;background:var(--surface-2);border:1px solid var(--line);border-radius:13px;padding:5px;margin-bottom:22px}
+.tab{flex:1;border:none;background:none;color:var(--muted);font-family:var(--font-display);font-weight:600;font-size:.9rem;padding:11px;border-radius:9px;cursor:pointer;transition:.22s}
+.tab.is-active{color:#fff;background:linear-gradient(110deg,var(--primary),var(--primary-deep));box-shadow:0 8px 22px -10px var(--glow-blue)}
+
+.pane{display:none;animation:fade .35s ease}
+.pane.is-active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── fields ─────────────────────────────────────────── */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:.74rem;font-weight:700;letter-spacing:.04em;color:var(--muted);text-transform:uppercase;margin-bottom:7px}
+.field .inp{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:0 13px;transition:.2s}
+.field .inp:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px var(--glow-blue)}
+.field .inp>svg{width:17px;height:17px;color:var(--faint);flex:none}
+.field input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--font-body);font-size:.94rem;padding:13px 0;min-width:0}
+.field input::placeholder{color:var(--faint)}
+.toggle-pass{background:none;border:none;color:var(--faint);cursor:pointer;padding:4px;display:grid;place-items:center;transition:.2s}
+.toggle-pass:hover{color:var(--primary-soft)}
+.toggle-pass svg{width:17px;height:17px}
+
+.row-between{display:flex;align-items:center;justify-content:space-between;margin:-2px 0 16px}
+.forgot{color:var(--primary-soft);font-size:.82rem;font-weight:600;text-decoration:none}
+.forgot:hover{text-decoration:underline}
+
+/* checkbox custom (no nativo) */
+.check{display:flex;align-items:flex-start;gap:10px;margin:2px 0 18px;cursor:pointer;user-select:none}
+.check input{position:absolute;opacity:0;width:0;height:0}
+.check .box{width:20px;height:20px;flex:none;border-radius:6px;border:1.5px solid var(--line);background:var(--surface-2);display:grid;place-items:center;transition:.2s;margin-top:1px}
+.check .box svg{width:12px;height:12px;color:#fff;opacity:0;transform:scale(.5);transition:.2s}
+.check input:checked+.box{background:linear-gradient(135deg,var(--primary),var(--accent));border-color:transparent}
+.check input:checked+.box svg{opacity:1;transform:scale(1)}
+.check span{font-size:.82rem;color:var(--muted);line-height:1.45}
+.check a{color:var(--primary-soft);text-decoration:none}
+.check a:hover{text-decoration:underline}
+
+/* ── buttons ────────────────────────────────────────── */
+.btn{width:100%;border:none;border-radius:var(--radius-sm);padding:14px;font-family:var(--font-display);font-weight:700;font-size:.95rem;cursor:pointer;transition:.22s;display:flex;align-items:center;justify-content:center;gap:9px}
+.btn:disabled{opacity:.7;cursor:wait}
+.btn.primary{color:#fff;background:linear-gradient(110deg,var(--primary),var(--primary-deep));box-shadow:0 12px 30px -10px var(--glow-blue)}
+.btn.primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 18px 40px -10px var(--glow-blue)}
+.btn.primary .btn-arrow{width:18px;height:18px}
+.btn.google{background:var(--surface-2);color:var(--text);border:1px solid var(--line)}
+.btn.google:hover:not(:disabled){border-color:var(--primary)}
+.btn.google svg{width:18px;height:18px}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.sep{display:flex;align-items:center;gap:12px;color:var(--faint);font-size:.74rem;margin:18px 0}
+.sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ── alerts ─────────────────────────────────────────── */
+#alert-zone{margin-bottom:14px}
+#alert-zone:empty{margin-bottom:0}
+.alert{display:flex;gap:11px;align-items:flex-start;border-radius:var(--radius-sm);padding:13px 14px;font-size:.86rem;line-height:1.45;animation:fade .3s ease}
+.alert svg{width:18px;height:18px;flex:none;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.alert--error{background:var(--danger-bg);color:var(--danger);border:1px solid rgba(248,113,113,.25)}
+.alert--success{background:var(--ok-bg);color:var(--ok);border:1px solid rgba(16,185,129,.25)}
+.alert__msg strong{font-weight:700;font-family:var(--font-display)}
+
+footer{text-align:center;padding:22px;color:var(--faint);font-size:.78rem}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--primary-soft)}
+
+@media(max-width:520px){
+  .auth-card{padding:26px 20px 24px}
+  .back span{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="inner">
+    <a class="brand" href="index.html">
+      <svg class="mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="bn" x1="0" y1="48" x2="48" y2="0">
+          <stop offset="0" stop-color="#10b981"/><stop offset="1" stop-color="#2a6df6"/>
+        </linearGradient></defs>
+        <path d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20" stroke="url(#bn)" stroke-width="4" stroke-linecap="round"/>
+        <path d="M18 34V18a6 6 0 0 1 12 0v16a6 6 0 0 1-12 0" stroke="url(#bn)" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <span><b>Bio</b>Nova<span class="vip">VIP</span></span>
+    </a>
+    <div class="topbar-right">
+      <a class="back" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        <span>Volver al sitio</span>
+      </a>
+      <button class="theme-btn" id="theme-toggle" aria-label="Cambiar tema"></button>
+    </div>
+  </div>
+</header>
+
+<!-- AUTH CARD -->
+<main class="shell">
+  <section class="auth-card">
+
+    <div class="head">
+      <div class="logo-ring">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="bn2" x1="0" y1="48" x2="48" y2="0">
+            <stop offset="0" stop-color="#10b981"/><stop offset="1" stop-color="#2a6df6"/>
+          </linearGradient></defs>
+          <path d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20" stroke="url(#bn2)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M18 34V18a6 6 0 0 1 12 0v16a6 6 0 0 1-12 0" stroke="url(#bn2)" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1 id="login-title">Acceso de miembros</h1>
+      <p id="login-sub">Entra a tu panel VIP de BioNova</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab is-active" data-tab="login">Iniciar sesión</button>
+      <button class="tab" data-tab="register">Crear cuenta</button>
+    </div>
+
+    <div id="alert-zone"></div>
+
+    <!-- LOGIN -->
+    <div class="pane is-active" id="pane-login">
+      <div class="field">
+        <label for="li-email">Correo</label>
+        <div class="inp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+          <input type="email" id="li-email" placeholder="tu@correo.com" autocomplete="email">
+        </div>
+      </div>
+      <div class="field">
+        <label for="li-pass">Contraseña</label>
+        <div class="inp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" id="li-pass" placeholder="••••••••" autocomplete="current-password">
+          <button class="toggle-pass" data-target="li-pass" type="button" aria-label="Mostrar contraseña">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="row-between">
+        <span></span>
+        <a class="forgot" id="forgot-link" href="#">¿Olvidaste tu contraseña?</a>
+      </div>
+      <button class="btn primary" id="btn-login">
+        <span class="btn-label">Iniciar sesión</span>
+        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <div class="sep">o continúa con</div>
+      <button class="btn google" data-google type="button">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
+        <span class="btn-label">Google</span>
+      </button>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="pane" id="pane-register">
+      <div class="field">
+        <label for="re-name">Nombre completo</label>
+        <div class="inp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input type="text" id="re-name" placeholder="Tu nombre" autocomplete="name">
+        </div>
+      </div>
+      <div class="field">
+        <label for="re-email">Correo</label>
+        <div class="inp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+          <input type="email" id="re-email" placeholder="tu@correo.com" autocomplete="email">
+        </div>
+      </div>
+      <div class="field">
+        <label for="re-pass">Contraseña</label>
+        <div class="inp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" id="re-pass" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+          <button class="toggle-pass" data-target="re-pass" type="button" aria-label="Mostrar contraseña">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="re-terms">
+        <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <span>Acepto los <a href="#" target="_blank" rel="noopener">términos y la política de privacidad</a> de BioNova.</span>
+      </label>
+      <button class="btn primary" id="btn-register">
+        <span class="btn-label">Crear cuenta</span>
+        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <div class="sep">o regístrate con</div>
+      <button class="btn google" data-google type="button">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
+        <span class="btn-label">Google</span>
+      </button>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  BioNova · Biomedicina · Microbiología · Medicina general &nbsp;·&nbsp; <a href="index.html">bionovamexico.com</a>
+</footer>
+
+<!-- ═══ UI (tema, tabs, alerts, helpers) ═══ -->
+<script>
+/* ===== Tema · oscuro por defecto, día = body.modo-dia ===== */
+const Theme = {
+  init(){
+    const s = localStorage.getItem('bionova-auth:theme') || 'night';
+    if (s === 'day') document.body.classList.add('modo-dia');
+    this.updateIcon();
+  },
+  toggle(){
+    document.body.classList.toggle('modo-dia');
+    localStorage.setItem('bionova-auth:theme', document.body.classList.contains('modo-dia') ? 'day' : 'night');
+    this.updateIcon();
+  },
+  updateIcon(){
+    const isDay = document.body.classList.contains('modo-dia');
+    document.getElementById('theme-toggle').innerHTML = isDay
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  }
+};
+Theme.init();
+document.getElementById('theme-toggle').addEventListener('click', () => Theme.toggle());
+
+/* ===== Tabs ===== */
+document.querySelectorAll('[data-tab]').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('is-active'));
+    b.classList.add('is-active');
+    document.querySelectorAll('.pane').forEach(p => p.classList.remove('is-active'));
+    document.getElementById('pane-' + b.dataset.tab).classList.add('is-active');
+    document.getElementById('alert-zone').innerHTML = '';
+  });
+});
+
+/* ===== Mostrar/ocultar contraseña ===== */
+document.querySelectorAll('.toggle-pass').forEach(b => {
+  b.addEventListener('click', () => {
+    const i = document.getElementById(b.dataset.target);
+    i.type = i.type === 'password' ? 'text' : 'password';
+  });
+});
+
+/* ===== Alerts (compartidos con el módulo Firebase) ===== */
+const ICON_ERR = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+const ICON_OK  = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+window.showAlert = function(type, title, msg){
+  const z = document.getElementById('alert-zone');
+  z.innerHTML = `<div class="alert alert--${type}">${type==='error'?ICON_ERR:ICON_OK}<div class="alert__msg"><strong>${title}</strong>${msg?'<br>'+msg:''}</div></div>`;
+};
+window.clearAlert = function(){ document.getElementById('alert-zone').innerHTML = ''; };
+
+/* ===== Loading state (compartido) ===== */
+window.setLoading = function(btn, isLoading, originalLabel){
+  btn.disabled = isLoading;
+  const label = btn.querySelector('.btn-label');
+  const arrow = btn.querySelector('.btn-arrow');
+  if (isLoading){
+    if (label) label.textContent = 'Procesando…';
+    if (arrow) arrow.style.display = 'none';
+    if (!btn.querySelector('.spinner')) btn.appendChild(Object.assign(document.createElement('span'), {className:'spinner'}));
+  } else {
+    if (label) label.textContent = originalLabel;
+    if (arrow) arrow.style.display = '';
+    btn.querySelector('.spinner')?.remove();
+  }
+};
+
+/* ===== "Hola de nuevo" · reconocer a quien ya entró antes ===== */
+(function(){
+  try{
+    const last = JSON.parse(localStorage.getItem('bionova_last_user') || 'null');
+    if (last && last.email){
+      const em = document.getElementById('li-email');
+      if (em && !em.value) em.value = last.email;
+      const first = (last.nombre || '').trim().split(' ')[0];
+      const t = document.getElementById('login-title');
+      const s = document.getElementById('login-sub');
+      if (first && t) t.textContent = 'Hola de nuevo, ' + first;
+      if (s) s.textContent = 'Tu acceso VIP te está esperando.';
+      const pass = document.getElementById('li-pass');
+      if (em && em.value && pass) setTimeout(() => pass.focus(), 200);
+    }
+  }catch(e){}
+})();
+</script>
+
+<!-- ═══ Firebase Auth (módulo) ═══ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  updateProfile,
+  setPersistence,
+  browserLocalPersistence,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* =========================================================
+   CONFIG · Firebase BioNova
+   ========================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyDNZijSLGkbCM6-H_x_vT_OWDfucqplXYs",
+  authDomain: "bionova-academy.firebaseapp.com",
+  projectId: "bionova-academy",
+  storageBucket: "bionova-academy.firebasestorage.app",
+  messagingSenderId: "452419284431",
+  appId: "1:452419284431:web:5b1f7ef567b9fe9582f6ba",
+  measurementId: "G-N56E8NYP4K"
+};
+
+/* Admins · emails con acceso al panel admin */
+const ADMINS = [
+  "teccapitalweb@gmail.com",
+  "fisiotec25@gmail.com"
+];
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+setPersistence(auth, browserLocalPersistence);
+
+/* =========================================================
+   Crear o asegurar el documento del miembro en Firestore.
+   Se llama al REGISTRARSE (crear) y al hacer LOGIN (crear si no existe).
+   Estructura inicial (registrado sin pagar):
+     { uid, email, nombre, displayName, activa:false, plan:null,
+       source:'bionova', fechaRegistro, origen }
+   El webhook de Stripe lo actualizará al pagar:
+     { activa:true, plan:'mensual'|'anual', activadoEn, expiraEn, ... }
+   ========================================================= */
+async function ensureMiembroDoc(user, displayName, origen){
+  if (!user || !user.uid) return { ok:false, reason:'no-user' };
+  try{
+    const ref  = doc(db, 'miembros', user.uid);
+    const snap = await getDoc(ref);
+    if (snap.exists()){
+      const data = snap.data();
+      // Si ya es miembro activo NO tocar nada. Solo completar nombre si falta.
+      if (data.activa !== true && displayName && !data.nombre){
+        await setDoc(ref, {
+          nombre: displayName,
+          displayName: displayName,
+          lastUpdatedAt: serverTimestamp()
+        }, { merge:true });
+      }
+      console.log('[ensureMiembroDoc] ya existía:', user.uid);
+      return { ok:true, action:'exists', uid:user.uid };
+    }
+    // No existe · crear doc inicial (activa:false para pasar las reglas Firestore)
+    await setDoc(ref, {
+      uid: user.uid,
+      email: (user.email || '').toLowerCase(),
+      nombre: displayName || user.displayName || (user.email || '').split('@')[0] || 'Sin nombre',
+      displayName: displayName || user.displayName || '',
+      activa: false,
+      plan: null,
+      source: 'bionova',
+      fechaRegistro: serverTimestamp(),
+      createdAt: serverTimestamp(),
+      lastUpdatedAt: serverTimestamp(),
+      origen: origen || 'login-web'
+    });
+    console.log('[ensureMiembroDoc] ✅ doc creado en miembros/' + user.uid);
+    return { ok:true, action:'created', uid:user.uid };
+  }catch(e){
+    console.error('[ensureMiembroDoc] ❌ Error:', e.code, '·', e.message);
+    if (e.code === 'permission-denied'){
+      console.error('  ⚠️ Reglas Firestore bloqueando: permite que cada usuario cree miembros/{uid} con activa:false');
+    }
+    return { ok:false, reason: e.code || e.message };
+  }
+}
+
+/* Si ya hay sesión, asegura el doc y redirige */
+onAuthStateChanged(auth, async (user) => {
+  if (user){
+    await ensureMiembroDoc(user, user.displayName, 'login-web');
+    try{ localStorage.setItem('bionova_last_user', JSON.stringify({ email:user.email||'', nombre:user.displayName||'' })); }catch(e){}
+    const isAdmin = ADMINS.includes((user.email || '').toLowerCase());
+    window.location.href = isAdmin ? 'vip-admin.html' : 'vip-panel.html';
+  }
+});
+
+/* ===== Traducir errores de Firebase ===== */
+function translateError(code){
+  const map = {
+    'auth/invalid-email': 'El correo no es válido.',
+    'auth/user-disabled': 'Esta cuenta está deshabilitada. Contacta soporte.',
+    'auth/user-not-found': 'No existe una cuenta con ese correo.',
+    'auth/wrong-password': 'Contraseña incorrecta.',
+    'auth/invalid-credential': 'Correo o contraseña incorrectos.',
+    'auth/email-already-in-use': 'Ya existe una cuenta con ese correo. Inicia sesión.',
+    'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
+    'auth/too-many-requests': 'Demasiados intentos. Espera unos minutos.',
+    'auth/network-request-failed': 'Sin conexión. Revisa tu internet.',
+    'auth/missing-password': 'Escribe una contraseña.',
+    'auth/missing-email': 'Escribe tu correo electrónico.',
+    'auth/popup-blocked': 'El navegador bloqueó la ventana de Google. Permite las ventanas emergentes e intenta de nuevo.',
+    'auth/popup-closed-by-user': 'Cerraste la ventana de Google antes de terminar.',
+    'auth/account-exists-with-different-credential': 'Ya tienes una cuenta con ese correo usando contraseña. Inicia sesión con tu correo.',
+    'auth/unauthorized-domain': 'Este dominio no está autorizado para Google. El admin debe agregarlo en Firebase → Authentication → Settings → Dominios autorizados.'
+  };
+  return map[code] || 'Algo salió mal. Intenta de nuevo.';
+}
+
+/* ===== LOGIN ===== */
+document.getElementById('btn-login').addEventListener('click', async () => {
+  clearAlert();
+  const email = document.getElementById('li-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('li-pass').value;
+  if (!email || !pass){ showAlert('error', 'Faltan datos', 'Llena ambos campos.'); return; }
+  const btn = document.getElementById('btn-login');
+  setLoading(btn, true);
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+    const isAdmin = ADMINS.includes(email);
+    showAlert('success', '¡Bienvenido!', 'Redirigiendo…');
+    setTimeout(() => { window.location.href = isAdmin ? 'vip-admin.html' : 'vip-panel.html'; }, 600);
+  }catch(e){
+    setLoading(btn, false, 'Iniciar sesión');
+    showAlert('error', 'No pudimos iniciar sesión', translateError(e.code));
+  }
+});
+
+/* ===== REGISTER ===== */
+document.getElementById('btn-register').addEventListener('click', async () => {
+  clearAlert();
+  const name  = document.getElementById('re-name').value.trim();
+  const email = document.getElementById('re-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('re-pass').value;
+  const terms = document.getElementById('re-terms').checked;
+  if (!name){ showAlert('error', 'Falta tu nombre'); return; }
+  if (!email || !pass){ showAlert('error', 'Faltan datos', 'Correo y contraseña son obligatorios.'); return; }
+  if (pass.length < 6){ showAlert('error', 'Contraseña muy corta', 'Mínimo 6 caracteres.'); return; }
+  if (!terms){ showAlert('error', 'Debes aceptar los términos'); return; }
+  const btn = document.getElementById('btn-register');
+  setLoading(btn, true);
+  try{
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: name });
+
+    // Crear doc en `miembros` con activa:false → el admin ve a TODOS los registrados
+    const docResult = await ensureMiembroDoc(cred.user, name, 'registro-web');
+    const isAdmin = ADMINS.includes(email);
+
+    // Diagnóstico visible si NO se creó el doc (ayuda a detectar reglas Firestore)
+    if (docResult && docResult.ok === false){
+      const motivo = docResult.reason || 'desconocido';
+      console.error('❌ DIAGNÓSTICO: doc miembro NO se creó. Razón:', motivo);
+      const txt = motivo === 'permission-denied'
+        ? 'Tu cuenta SÍ se creó, pero falta actualizar las reglas Firestore para guardar tu perfil. Entrando a tu panel…'
+        : `Tu cuenta se creó pero hubo un problema al guardar tu perfil (${motivo}). Entrando a tu panel…`;
+      showAlert('error', '⚠️ Cuenta creada · advertencia', txt);
+      setTimeout(() => { window.location.href = isAdmin ? 'vip-admin.html' : 'vip-panel.html'; }, 4000);
+      return;
+    }
+
+    // Camino feliz
+    showAlert('success', '¡Cuenta creada!',
+      isAdmin ? 'Redirigiendo al panel admin…'
+              : (docResult && docResult.action === 'created'
+                  ? '✅ Perfil guardado · entrando a tu panel…'
+                  : 'Entrando a tu panel…'));
+    setTimeout(() => { window.location.href = isAdmin ? 'vip-admin.html' : 'vip-panel.html'; }, 900);
+  }catch(e){
+    setLoading(btn, false, 'Crear cuenta');
+    showAlert('error', 'No pudimos crear tu cuenta', translateError(e.code));
+  }
+});
+
+/* ===== GOOGLE SIGN-IN ===== */
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+document.querySelectorAll('[data-google]').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    clearAlert();
+    btn.disabled = true;
+    try{
+      // El popup hace login/registro; onAuthStateChanged crea el doc y redirige.
+      await signInWithPopup(auth, googleProvider);
+      showAlert('success', '¡Listo!', 'Entrando con Google…');
+    }catch(e){
+      btn.disabled = false;
+      if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return;
+      showAlert('error', 'No pudimos entrar con Google', translateError(e.code));
+    }
+  });
+});
+
+/* ===== FORGOT PASSWORD ===== */
+document.getElementById('forgot-link').addEventListener('click', async (e) => {
+  e.preventDefault();
+  clearAlert();
+  const email = document.getElementById('li-email').value.trim().toLowerCase();
+  if (!email){
+    showAlert('error', 'Escribe tu correo primero', 'Para enviarte el enlace de recuperación.');
+    document.getElementById('li-email').focus();
+    return;
+  }
+  try{
+    await sendPasswordResetEmail(auth, email);
+    showAlert('success', 'Enlace enviado', 'Revisa tu bandeja de entrada (y la carpeta de spam).');
+  }catch(e){
+    showAlert('error', 'No pudimos enviar el correo', translateError(e.code));
+  }
+});
+
+/* ===== Enter para enviar ===== */
+['li-email','li-pass'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-login').click(); });
+});
+['re-name','re-email','re-pass'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-register').click(); });
+});
+</script>
+</body>
+</html>
