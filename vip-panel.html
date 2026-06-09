@@ -3585,7 +3585,6 @@ window.__setDisplayName = async (nombre) => {
       <a class="nav-item" data-tool="molaridad"><svg class="ic"><use href="#i-bn-flask"/></svg>Molaridad ↔ g/L</a>
       <a class="nav-item" data-tool="beer"><svg class="ic"><use href="#i-chart-bar"/></svg>Ley de Beer</a>
       <a class="nav-item" data-tool="reporte"><svg class="ic"><use href="#i-clipboard-check"/></svg>Reporte de lab</a>
-      <a class="nav-item" data-tool="logistica"><svg class="ic"><use href="#i-chart-bar"/></svg>Indicadores log.</a>
     </div>
 
     <div class="nav-section">
@@ -3984,42 +3983,88 @@ function toolRequiereVIP(nombreHerramienta){
   if (document.getElementById('bn-tools-css')) return;
   const s = document.createElement('style'); s.id='bn-tools-css';
   s.textContent = `
+  /* ===== Recuadros de herramientas · diseño premium (dark + day) ===== */
   .bn-tool{display:flex;flex-direction:column;gap:18px}
-  .bn-card{background:var(--surface);border:0.5px solid var(--border-2);border-radius:16px;padding:20px 20px 22px}
-  .bn-card__t{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.2px;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+
+  /* Tarjeta contenedora */
+  .bn-card{position:relative;background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 94%,var(--primary)) 0%,var(--surface) 55%);border:1px solid var(--border-2);border-radius:18px;padding:22px;box-shadow:0 1px 2px rgba(0,0,0,.16),0 10px 26px -16px rgba(0,0,0,.30)}
+  .bn-card__t{font-size:12px;font-weight:700;color:var(--text);letter-spacing:.4px;margin:0 0 16px;display:flex;align-items:center;gap:9px;text-transform:uppercase}
   .bn-card__t .ic{width:16px;height:16px;color:var(--primary)}
-  .bn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
-  .bn-field{display:flex;flex-direction:column;gap:6px}
-  .bn-field>label{font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:.2px}
-  .bn-field .input{width:100%}
-  .bn-field__hint{font-size:10.5px;color:var(--text-3);line-height:1.4}
-  .bn-select{width:100%;appearance:none;-webkit-appearance:none;background:var(--surface-2);border:0.5px solid var(--border-2);color:var(--text);border-radius:10px;padding:11px 12px;font-size:13px;font-family:inherit;cursor:pointer}
-  .bn-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-glow)}
-  .bn-seg{display:inline-flex;background:var(--surface-2);border:0.5px solid var(--border-2);border-radius:10px;padding:3px;gap:3px;flex-wrap:wrap}
-  .bn-seg button{border:none;background:transparent;color:var(--text-2);font-size:12px;font-weight:600;font-family:inherit;padding:7px 12px;border-radius:8px;cursor:pointer;transition:.15s}
-  .bn-seg button.is-on{background:var(--primary);color:#fff}
-  .bn-result{background:linear-gradient(135deg,color-mix(in srgb,var(--primary) 14%,var(--surface)),color-mix(in srgb,var(--highlight) 8%,var(--surface)));border:0.5px solid color-mix(in srgb,var(--primary) 28%,transparent);border-radius:16px;padding:22px;text-align:center}
-  .bn-result__lbl{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--primary);margin-bottom:6px}
-  .bn-result__val{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:800;color:var(--text);letter-spacing:-1px;line-height:1.05;font-feature-settings:"tnum" 1;word-break:break-word}
+
+  /* Campos */
+  .bn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px}
+  .bn-field{display:flex;flex-direction:column;gap:7px}
+  .bn-field>label{font-size:11px;font-weight:700;color:var(--text-2);letter-spacing:.3px;text-transform:uppercase}
+  .bn-field__hint{font-size:10.5px;color:var(--text-3);line-height:1.45}
+
+  /* INPUTS · texto legible e integrados al panel oscuro */
+  .bn-tool .input,.bn-tool .bn-select{
+    width:100%;box-sizing:border-box;min-height:48px;
+    background:var(--surface-2);color:var(--text);
+    border:1px solid var(--border-2);border-radius:13px;
+    padding:13px 15px;font-size:14.5px;font-family:inherit;font-weight:500;letter-spacing:.1px;
+    transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+    box-shadow:inset 0 1px 1px rgba(0,0,0,.10);
+  }
+  .bn-tool .input::placeholder{color:var(--text-3);opacity:1;font-weight:400}
+  .bn-tool .input:hover,.bn-tool .bn-select:hover{border-color:color-mix(in srgb,var(--primary) 42%,var(--border-2))}
+  .bn-tool .input:focus,.bn-tool .bn-select:focus{
+    outline:none;border-color:var(--primary);
+    background:color-mix(in srgb,var(--primary) 7%,var(--surface-2));
+    box-shadow:0 0 0 4px var(--primary-glow),inset 0 1px 1px rgba(0,0,0,.10);
+  }
+  .bn-tool .input::-webkit-outer-spin-button,.bn-tool .input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .bn-tool .input[type=number]{-moz-appearance:textfield}
+
+  /* Select con flecha propia */
+  .bn-select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:40px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7a99' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center}
+
+  /* Control segmentado */
+  .bn-seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--border-2);border-radius:13px;padding:4px;gap:4px;flex-wrap:wrap}
+  .bn-seg button{border:none;background:transparent;color:var(--text-2);font-size:12.5px;font-weight:600;font-family:inherit;padding:9px 14px;border-radius:9px;cursor:pointer;transition:.18s}
+  .bn-seg button:hover{color:var(--text)}
+  .bn-seg button.is-on{background:var(--primary);color:#fff;box-shadow:0 4px 12px -2px var(--primary-glow)}
+
+  /* Caja de resultado · destacada con glow */
+  .bn-result{position:relative;overflow:hidden;
+    background:radial-gradient(120% 100% at 50% 0%,color-mix(in srgb,var(--primary) 16%,transparent) 0%,transparent 60%),linear-gradient(180deg,var(--surface-2),var(--surface));
+    border:1px solid color-mix(in srgb,var(--primary) 30%,var(--border-2));border-radius:18px;padding:24px;text-align:center;
+    box-shadow:0 12px 34px -18px var(--primary-glow)}
+  .bn-result__lbl{font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--primary);margin-bottom:8px}
+  .bn-result__val{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:800;color:var(--text);letter-spacing:-1px;line-height:1.05;font-feature-settings:"tnum" 1;word-break:break-word;transition:color .2s ease}
   .bn-result__unit{font-size:16px;font-weight:600;color:var(--text-2);margin-left:4px}
-  .bn-result__note{font-size:12px;color:var(--text-3);margin-top:10px;line-height:1.45}
-  .bn-formula{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-2);background:var(--surface-2);border:0.5px solid var(--border-2);border-radius:10px;padding:10px 12px;margin-top:14px;text-align:center}
-  .bn-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
-  .bn-mini__c{background:var(--surface-2);border:0.5px solid var(--border-2);border-radius:12px;padding:12px 14px}
-  .bn-mini__l{font-size:10.5px;color:var(--text-3);letter-spacing:.4px;text-transform:uppercase;font-weight:600}
-  .bn-mini__v{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--text);margin-top:3px}
-  .bn-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
-  .bn-tbl th{text-align:left;color:var(--text-3);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;padding:8px 8px;border-bottom:0.5px solid var(--border-2)}
-  .bn-tbl td{padding:7px 8px;border-bottom:0.5px solid var(--border);color:var(--text)}
-  .bn-tbl .input{padding:8px 9px;font-size:12.5px}
-  .bn-rowdel{border:none;background:transparent;color:var(--text-3);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px;border-radius:6px}
+  .bn-result__note{font-size:12px;color:var(--text-3);margin-top:12px;line-height:1.5}
+
+  /* Recuadro de fórmula · chip de código */
+  .bn-formula{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-2);background:color-mix(in srgb,var(--primary) 6%,var(--surface-2));border:1px solid var(--border-2);border-left:3px solid var(--primary);border-radius:12px;padding:12px 14px;margin-top:16px;text-align:center;letter-spacing:.2px}
+
+  /* Mini-tarjetas de valores */
+  .bn-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:16px}
+  .bn-mini__c{background:var(--surface-2);border:1px solid var(--border-2);border-radius:14px;padding:14px 16px;transition:border-color .18s ease,transform .18s ease}
+  .bn-mini__c:hover{border-color:color-mix(in srgb,var(--primary) 38%,var(--border-2));transform:translateY(-1px)}
+  .bn-mini__l{font-size:10.5px;color:var(--text-3);letter-spacing:.5px;text-transform:uppercase;font-weight:700}
+  .bn-mini__v{font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;color:var(--text);margin-top:4px}
+
+  /* Tabla de resultados */
+  .bn-tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
+  .bn-tbl th{text-align:left;color:var(--text-3);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:0 8px 10px}
+  .bn-tbl td{padding:6px 8px;border-top:1px solid var(--border);color:var(--text);vertical-align:middle}
+  .bn-tbl tbody tr:hover td{background:color-mix(in srgb,var(--primary) 4%,transparent)}
+  .bn-tbl .input{min-height:42px;padding:9px 11px;font-size:13px;border-radius:10px}
+
+  .bn-rowdel{border:none;background:transparent;color:var(--text-3);cursor:pointer;font-size:18px;line-height:1;padding:4px 8px;border-radius:8px;transition:.15s}
   .bn-rowdel:hover{color:var(--danger);background:color-mix(in srgb,var(--danger) 12%,transparent)}
-  .bn-badge{display:inline-block;font-size:10px;font-weight:800;padding:2px 7px;border-radius:6px;font-family:'JetBrains Mono',monospace}
+
+  .bn-badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 9px;border-radius:7px;font-family:'JetBrains Mono',monospace;letter-spacing:.4px}
   .bn-badge--hi{background:color-mix(in srgb,var(--danger) 16%,transparent);color:var(--danger)}
   .bn-badge--lo{background:color-mix(in srgb,var(--primary) 16%,transparent);color:var(--primary)}
   .bn-badge--ok{background:color-mix(in srgb,var(--success) 16%,transparent);color:var(--success)}
-  @media(max-width:600px){ .bn-result__val{font-size:30px} .tool-section__actions{width:100%} .tool-section__actions .btn{flex:1} }
-  `;
+
+  @media(max-width:600px){ .bn-result__val{font-size:30px} .bn-card{padding:18px} .tool-section__actions{width:100%} .tool-section__actions .btn{flex:1} }
+  
+`;
   document.head.appendChild(s);
 })();
 
