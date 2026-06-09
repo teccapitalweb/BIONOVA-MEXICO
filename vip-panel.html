@@ -3351,7 +3351,7 @@ window.__showWelcomeSplash = function(opts) {
     { ic:'📚', t:'Cursos premium',   d:'Catálogo completo con clases reales que se desbloquean a tu ritmo.' },
     { ic:'🎥', t:'Clases en vivo',   d:'Webinars con expertos y acceso a las grabaciones cuando quieras.' },
     { ic:'📂', t:'PDFs y material',  d:'Plantillas, formatos y recursos descargables listos para usar.' },
-    { ic:'🛠️', t:'Herramientas pro', d:'IPER, OEE, generador de ATS y tablas NOM-STPS a la mano.' },
+    { ic:'🛠️', t:'Herramientas pro', d:'Calculadoras de laboratorio: diluciones, UFC/mL, dosis, TFG, Ley de Beer, conversor clínico y reporte PDF.' },
     { ic:'🎓', t:'Certificados',     d:'Con folio oficial BioNova para respaldar lo que aprendes.' }
   ];
 
@@ -3577,10 +3577,14 @@ window.__setDisplayName = async (nombre) => {
 
     <div class="nav-section">
       <div class="nav-label">Herramientas pro</div>
-      <a class="nav-item" data-tool="iper"><svg class="ic"><use href="#i-shield-check"/></svg>Matriz IPER</a>
-      <a class="nav-item" data-tool="oee"><svg class="ic"><use href="#i-gauge"/></svg>Calculadora OEE</a>
-      <a class="nav-item" data-tool="ats"><svg class="ic"><use href="#i-clipboard-check"/></svg>Generador ATS</a>
-      <a class="nav-item" data-tool="noms"><svg class="ic"><use href="#i-book-2"/></svg>Tabla NOM-STPS</a>
+      <a class="nav-item" data-tool="diluciones"><svg class="ic"><use href="#i-bn-flask"/></svg>Diluciones C₁V₁</a>
+      <a class="nav-item" data-tool="ufc"><svg class="ic"><use href="#i-bn-microbe"/></svg>UFC/mL</a>
+      <a class="nav-item" data-tool="conversor"><svg class="ic"><use href="#i-bn-droplet"/></svg>Conversor clínico</a>
+      <a class="nav-item" data-tool="dosis"><svg class="ic"><use href="#i-bn-pill"/></svg>Dosis por peso</a>
+      <a class="nav-item" data-tool="tfg"><svg class="ic"><use href="#i-gauge"/></svg>TFG / eGFR</a>
+      <a class="nav-item" data-tool="molaridad"><svg class="ic"><use href="#i-bn-flask"/></svg>Molaridad ↔ g/L</a>
+      <a class="nav-item" data-tool="beer"><svg class="ic"><use href="#i-chart-bar"/></svg>Ley de Beer</a>
+      <a class="nav-item" data-tool="reporte"><svg class="ic"><use href="#i-clipboard-check"/></svg>Reporte de lab</a>
       <a class="nav-item" data-tool="logistica"><svg class="ic"><use href="#i-chart-bar"/></svg>Indicadores log.</a>
     </div>
 
@@ -3636,7 +3640,7 @@ window.__setDisplayName = async (nombre) => {
           <div class="banner__stat" data-section="cursos" style="cursor:pointer"><div class="banner__stat-lbl">Cursos</div><div class="banner__stat-val" id="bn-stat-cursos">0</div></div>
           <div class="banner__stat" data-section="webinars" style="cursor:pointer"><div class="banner__stat-lbl">Clases</div><div class="banner__stat-val" id="bn-stat-clases">0</div></div>
           <div class="banner__stat" data-section="pdfs" style="cursor:pointer"><div class="banner__stat-lbl">PDFs</div><div class="banner__stat-val" id="bn-stat-pdfs">0</div></div>
-          <div class="banner__stat" style="cursor:default"><div class="banner__stat-lbl">Pro</div><div class="banner__stat-val" id="bn-stat-pro">6</div></div>
+          <div class="banner__stat" style="cursor:default"><div class="banner__stat-lbl">Pro</div><div class="banner__stat-val" id="bn-stat-pro">8</div></div>
         </div>
       </section>
 
@@ -3759,10 +3763,14 @@ window.__setDisplayName = async (nombre) => {
 
       <div class="mobile-drawer__section">
         <div class="mobile-drawer__label">Herramientas pro</div>
-        <a class="mobile-drawer__item" data-tool="iper"><svg class="ic"><use href="#i-shield-check"/></svg>Matriz IPER</a>
-        <a class="mobile-drawer__item" data-tool="oee"><svg class="ic"><use href="#i-gauge"/></svg>Calculadora OEE</a>
-        <a class="mobile-drawer__item" data-tool="ats"><svg class="ic"><use href="#i-tools"/></svg>Generador ATS</a>
-        <a class="mobile-drawer__item" data-tool="noms"><svg class="ic"><use href="#i-news"/></svg>Tabla NOM-STPS</a>
+        <a class="mobile-drawer__item" data-tool="diluciones"><svg class="ic"><use href="#i-bn-flask"/></svg>Diluciones C₁V₁</a>
+        <a class="mobile-drawer__item" data-tool="ufc"><svg class="ic"><use href="#i-bn-microbe"/></svg>UFC/mL</a>
+        <a class="mobile-drawer__item" data-tool="conversor"><svg class="ic"><use href="#i-bn-droplet"/></svg>Conversor clínico</a>
+        <a class="mobile-drawer__item" data-tool="dosis"><svg class="ic"><use href="#i-bn-pill"/></svg>Dosis por peso</a>
+        <a class="mobile-drawer__item" data-tool="tfg"><svg class="ic"><use href="#i-gauge"/></svg>TFG / eGFR</a>
+        <a class="mobile-drawer__item" data-tool="molaridad"><svg class="ic"><use href="#i-bn-flask"/></svg>Molaridad ↔ g/L</a>
+        <a class="mobile-drawer__item" data-tool="beer"><svg class="ic"><use href="#i-chart-bar"/></svg>Ley de Beer</a>
+        <a class="mobile-drawer__item" data-tool="reporte"><svg class="ic"><use href="#i-clipboard-check"/></svg>Reporte de lab</a>
       </div>
 
       <div class="mobile-drawer__section">
@@ -3942,89 +3950,28 @@ function openToolPlaceholder(slug,name,desc,icon,detail){
     footer:`<button class="btn btn--ghost" onclick="Modal.close('${slug}-tool')">Cerrar</button>`});
 }
 
-const Tools={
-  iper:{open(){IPERTool.open();}},
-  oee:{open(){OEETool.open();}},
-  ats:{open(){navigateToSection('tool-ats');}},
-  noms:{open(){navigateToSection('tool-noms');}},
-  logistica:{open(){navigateToSection('tool-logistica');}}
-};
-
-/* =========================================================
-   HERRAMIENTA IPER · funcional
-   Metodología P × S (Probabilidad × Severidad)
-   Escalas 1-5 · Matriz 5×5 · Clasificación STPS
-   Persistencia en localStorage · PDF con folio
-   ========================================================= */
-/* =========================================================
-   TABLA PDF SIN PLUGIN · dibuja tablas con jsPDF base
-   (no depende de autoTable, que puede no cargar desde CDN)
-   Devuelve la Y final tras la tabla.
-   ========================================================= */
-function pdfTablaSimple(pdf, opts){
-  const { startY, margin, head, body, colWidths, headFill=[255,122,45], headText=[255,255,255], fontSize=8, cellPad=2.5, rowFill=[250,245,238], lineColor=[220,212,200] } = opts;
-  const W = pdf.internal.pageSize.getWidth();
-  const H = pdf.internal.pageSize.getHeight();
-  const M = margin != null ? margin : 16;
-  const totalW = W - 2*M;
-  // anchos de columna: usar los dados o repartir equitativo
-  const ncol = head.length;
-  let widths = colWidths && colWidths.length===ncol ? colWidths.slice() : new Array(ncol).fill(totalW/ncol);
-  // escalar para que sumen totalW
-  const sum = widths.reduce((a,b)=>a+b,0);
-  if (Math.abs(sum-totalW) > 0.5) widths = widths.map(w => w*totalW/sum);
-  let y = startY;
-  const lineH = fontSize*0.5 + cellPad*2;
-
-  function drawRow(cells, isHead){
-    // calcular alto necesario (wrap de texto)
-    const wrapped = cells.map((c,i)=>{
-      pdf.setFontSize(fontSize);
-      return pdf.splitTextToSize(String(c==null?'':c), widths[i]-2*cellPad);
-    });
-    const maxLines = Math.max(1, ...wrapped.map(w=>w.length));
-    const rowH = maxLines*(fontSize*0.42) + cellPad*2;
-    // salto de página
-    if (y + rowH > H - 18){ pdf.addPage(); y = M; }
-    let x = M;
-    cells.forEach((c,i)=>{
-      if (isHead){ pdf.setFillColor(headFill[0],headFill[1],headFill[2]); pdf.rect(x,y,widths[i],rowH,'F'); }
-      else { pdf.setDrawColor(lineColor[0],lineColor[1],lineColor[2]); pdf.rect(x,y,widths[i],rowH,'S'); }
-      pdf.setFontSize(fontSize);
-      pdf.setTextColor(isHead?headText[0]:40, isHead?headText[1]:30, isHead?headText[2]:20);
-      pdf.setFont(undefined, isHead?'bold':'normal');
-      pdf.text(wrapped[i], x+cellPad, y+cellPad+fontSize*0.35);
-      x += widths[i];
-    });
-    pdf.setFont(undefined,'normal');
-    y += rowH;
-  }
-  drawRow(head, true);
-  body.forEach((row)=>drawRow(row, false));
-  return y;
-}
-
-/* =========================================================
-   PAYWALL DE HERRAMIENTAS PRO
-   Los registrados sin pagar pueden CAPTURAR datos, pero al pedir
-   RESULTADO o PDF se les muestra el paywall. Solo VIP/admin obtienen salida.
-   ========================================================= */
+/* ============================================================
+   HERRAMIENTAS DE LABORATORIO · BioNova
+   8 herramientas: Diluciones, UFC/mL, Conversor clínico,
+   Dosis por peso, TFG (CKD-EPI 2021), Molaridad↔g/L,
+   Ley de Beer, Reporte de resultados (PDF con jsPDF directo).
+   Diseño calcado del sistema (tool-section), paywall VIP,
+   cálculo en vivo, persistencia opcional, PDF profesional.
+   ============================================================ */
 function toolEsVIP(){
   const S = window.UserState;
   if (!S) return false;
   if (S.modo === 'vip') return true;
-  // admin real
   if (typeof esAdminReal === 'function' && esAdminReal()) return true;
   if (S.isAdmin) return true;
   return false;
 }
-// Devuelve true si puede continuar; si NO es VIP, muestra paywall y devuelve false
 function toolRequiereVIP(nombreHerramienta){
   if (toolEsVIP()) return true;
   if (typeof window.__showPaywallModal === 'function'){
     window.__showPaywallModal({
       title: 'Función exclusiva para miembros VIP',
-      sub: 'Captura tus datos cuando quieras, pero generar resultados y reportes de ' + (nombreHerramienta||'las Herramientas Pro') + ' requiere una membresía activa. Hazte VIP y desbloquea todas las herramientas.'
+      sub: 'Usa la calculadora cuando quieras, pero descargar el reporte PDF de ' + (nombreHerramienta||'las Herramientas Pro') + ' requiere una membresía activa. Hazte VIP y desbloquea todas las herramientas.'
     });
   } else if (typeof Toast !== 'undefined') {
     Toast.info('Solo VIP','Activa tu membresía para usar esta función.');
@@ -4032,1724 +3979,554 @@ function toolRequiereVIP(nombreHerramienta){
   return false;
 }
 
-const IPERTool = (function(){
-  const STORAGE_KEY = 'imdiil:iper:current';
-  let state = {
-    folio: null,
-    setup: {empresa:'',area:'',actividad:'',evaluador:'Miembro',fecha:new Date().toISOString().slice(0,10)},
-    peligros: [],
-    tab: 'setup',
-    draft: {desc:'',cat:'Mecánico',P:null,S:null}
-  };
-
-  /* Catálogo de peligros frecuentes para autocompletar */
-  const CAT_PELIGROS = [
-    {cat:'Mecánico',icon:'i-tools',ejemplos:['Atrapamiento por partes móviles','Caída de objetos','Proyección de partículas','Corte con herramienta','Aprisionamiento entre máquinas']},
-    {cat:'Eléctrico',icon:'i-bolt',ejemplos:['Contacto directo con conductor energizado','Contacto indirecto por falla aislamiento','Arco eléctrico','Sobrecarga de circuito']},
-    {cat:'Físico',icon:'i-broadcast',ejemplos:['Ruido continuo >85 dB','Vibración mano-brazo','Temperatura elevada','Radiación UV','Iluminación deficiente']},
-    {cat:'Químico',icon:'i-alert-circle',ejemplos:['Exposición a polvos','Vapores de solventes','Manejo de ácidos','Inhalación de gases']},
-    {cat:'Ergonómico',icon:'i-user',ejemplos:['Postura forzada prolongada','Levantamiento manual de cargas','Movimientos repetitivos','Aplicación de fuerza']},
-    {cat:'Locativo',icon:'i-home',ejemplos:['Piso resbaladizo','Caída a distinto nivel','Espacio confinado','Orden y limpieza deficiente']},
-    {cat:'Psicosocial',icon:'i-messages',ejemplos:['Jornadas extensas','Carga mental alta','Acoso laboral','Violencia externa']},
-    {cat:'Biológico',icon:'i-shield-check',ejemplos:['Exposición a virus','Bacterias en superficies','Hongos en ambientes húmedos','Vectores (insectos)']}
-  ];
-
-  const ESCALA_P = [
-    {v:1,nombre:'Raro',desc:'Casi nunca ocurre · 1 vez en 10+ años'},
-    {v:2,nombre:'Improbable',desc:'Ha ocurrido pocas veces · 1 vez en 5 años'},
-    {v:3,nombre:'Ocasional',desc:'Puede ocurrir alguna vez · 1 vez/año'},
-    {v:4,nombre:'Probable',desc:'Probable que ocurra · varias veces al año'},
-    {v:5,nombre:'Frecuente',desc:'Ocurre habitualmente · mensual o más'}
-  ];
-  const ESCALA_S = [
-    {v:1,nombre:'Insignificante',desc:'Sin lesión / molestia leve'},
-    {v:2,nombre:'Leve',desc:'Primeros auxilios · sin incapacidad'},
-    {v:3,nombre:'Moderada',desc:'Lesión con incapacidad temporal'},
-    {v:4,nombre:'Grave',desc:'Lesión permanente · incapacidad permanente'},
-    {v:5,nombre:'Catastrófica',desc:'Muerte o invalidez total'}
-  ];
-
-  function clasificar(score){
-    if (score <= 3) return {key:'trivial',nombre:'Trivial',accion:'No requiere acción específica',color:'#10B981'};
-    if (score <= 8) return {key:'tolerable',nombre:'Tolerable',accion:'Monitorear · mejora cuando sea posible',color:'#84CC16'};
-    if (score <= 12) return {key:'moderado',nombre:'Moderado',accion:'Reducir riesgo · plazo definido',color:'#FBBF24'};
-    if (score <= 20) return {key:'importante',nombre:'Importante',accion:'Acción inmediata · no continuar hasta mitigar',color:'#FB923C'};
-    return {key:'intolerable',nombre:'Intolerable',accion:'DETENER actividad · eliminar peligro',color:'#EF4444'};
-  }
-
-  /* Jerarquía de controles según ISO 45001 + STPS */
-  function controlesRecomendados(nivel){
-    const controles = {
-      trivial:[
-        {tipo:'Monitoreo',desc:'Mantener condiciones actuales y verificar periódicamente.'}
-      ],
-      tolerable:[
-        {tipo:'Administrativos',desc:'Definir procedimiento de trabajo seguro y capacitar al personal.'},
-        {tipo:'EPP',desc:'Asegurar uso correcto del equipo de protección personal básico.'}
-      ],
-      moderado:[
-        {tipo:'Ingeniería',desc:'Implementar barreras o sistemas de protección colectiva.'},
-        {tipo:'Administrativos',desc:'Permisos de trabajo, señalización y supervisión específica.'},
-        {tipo:'EPP',desc:'EPP especializado certificado para el riesgo identificado.'}
-      ],
-      importante:[
-        {tipo:'Sustitución',desc:'Considerar sustituir el material, proceso o equipo por uno más seguro.'},
-        {tipo:'Ingeniería',desc:'Aislamiento, enclavamientos, ventilación localizada según aplique.'},
-        {tipo:'Administrativos',desc:'LOTO, permiso de trabajo de alto riesgo, supervisión continua.'},
-        {tipo:'EPP',desc:'EPP de máxima protección certificado NOM aplicable.'},
-        {tipo:'Capacitación',desc:'Capacitación específica documentada y evaluación de competencias.'}
-      ],
-      intolerable:[
-        {tipo:'Eliminación',desc:'⚠ DETENER LA ACTIVIDAD. Eliminar el peligro en su origen antes de continuar.'},
-        {tipo:'Rediseño',desc:'Replantear el proceso completo · análisis causa-raíz obligatorio.'},
-        {tipo:'Aprobación',desc:'Autorización formal de la dirección para reanudar con plan documentado.'}
-      ]
-    };
-    return controles[nivel] || [];
-  }
-
-  function generarFolio(){
-    return 'BioNova-IPER-' + Math.floor(10000 + Math.random()*89999);
-  }
-
-  function save(){
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
-  }
-  function load(){
-    try {
-      const v = localStorage.getItem(STORAGE_KEY);
-      if (v) {
-        const parsed = JSON.parse(v);
-        if (parsed && parsed.folio) state = {...state, ...parsed, draft:{desc:'',cat:'Mecánico',P:null,S:null}};
-      }
-    } catch(e){}
-  }
-
-  function open(){
-    load();
-    if (!state.folio) state.folio = generarFolio();
-    save();
-
-    const body = `<div class="iper" id="iper-root"></div>`;
-    const footer = document.createElement('div');
-    footer.innerHTML = `
-      <button class="btn btn--ghost" id="iper-reset">Nuevo análisis</button>
-      <button class="btn btn--ghost" id="iper-close">Cerrar</button>
-      <button class="btn btn--accent" id="iper-pdf">Descargar PDF<svg class="ic"><use href="#i-download"/></svg></button>
-    `;
-    const m = Modal.open({
-      id:'iper-tool',
-      title:'Matriz IPER',
-      subtitle:state.folio,
-      icon:'i-shield-check',
-      size:'lg',
-      body,
-      footer,
-      onClose(){ save(); }
-    });
-
-    footer.querySelector('#iper-close').addEventListener('click', () => m.close());
-    footer.querySelector('#iper-reset').addEventListener('click', () => {
-      if (state.peligros.length > 0 && !confirm('¿Iniciar un nuevo análisis IPER? Se perderá el actual.')) return;
-      state = {folio:generarFolio(),setup:{empresa:'',area:'',actividad:'',evaluador:'Miembro',fecha:new Date().toISOString().slice(0,10)},peligros:[],tab:'setup',draft:{desc:'',cat:'Mecánico',P:null,S:null}};
-      save();
-      const stEl = document.querySelector('#iper-tool .modal__subtitle'); if (stEl) stEl.textContent = state.folio;
-      render();
-      Toast.info('Nuevo análisis','Folio: '+state.folio);
-    });
-    footer.querySelector('#iper-pdf').addEventListener('click', () => generarPDF());
-
-    render();
-  }
-
-  function mount(container){
-    load();
-    if (!state.folio) state.folio = generarFolio();
-    save();
-    container.innerHTML = `
-      <div class="tool-section">
-        <div class="tool-section__head">
-          <div class="tool-section__title">
-            <div class="tool-section__icon"><svg class="ic"><use href="#i-shield-check"/></svg></div>
-            <div>
-              <h1>Matriz IPER</h1>
-              <p>Identificación de Peligros y Evaluación de Riesgos</p>
-            </div>
-          </div>
-          <div class="tool-section__actions">
-            <button class="btn btn--ghost btn--sm" id="iper-reset">Nuevo análisis</button>
-            <button class="btn btn--accent btn--sm" id="iper-pdf">Descargar PDF<svg class="ic"><use href="#i-download"/></svg></button>
-          </div>
-        </div>
-        <div class="iper" id="iper-root"></div>
-      </div>
-    `;
-    container.querySelector('#iper-reset').addEventListener('click', () => {
-      if (state.peligros.length > 0 && !confirm('¿Iniciar un nuevo análisis IPER? Se perderá el actual.')) return;
-      state = {folio:generarFolio(),setup:{empresa:'',area:'',actividad:'',evaluador:'Miembro',fecha:new Date().toISOString().slice(0,10)},peligros:[],tab:'setup',draft:{desc:'',cat:'Mecánico',P:null,S:null}};
-      save();
-      render();
-      Toast.info('Nuevo análisis','Folio: '+state.folio);
-    });
-    container.querySelector('#iper-pdf').addEventListener('click', () => generarPDF());
-    render();
-  }
-
-  function render(){
-    const root = document.getElementById('iper-root');
-    if (!root) return;
-    root.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-        <span class="iper__folio">${state.folio}</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-3);font-weight:500;">${state.peligros.length} peligros · actualizado ${new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'short'})}</span>
-      </div>
-      <div class="iper-tabs">
-        <button class="iper-tab ${state.tab==='setup'?'is-active':''}" data-itab="setup"><svg class="ic"><use href="#i-clipboard-check"/></svg>Datos</button>
-        <button class="iper-tab ${state.tab==='peligros'?'is-active':''}" data-itab="peligros"><svg class="ic"><use href="#i-alert-circle"/></svg>Peligros<span class="iper-tab__num">${state.peligros.length}</span></button>
-        <button class="iper-tab ${state.tab==='matriz'?'is-active':''}" data-itab="matriz"><svg class="ic"><use href="#i-chart-bar"/></svg>Matriz</button>
-        <button class="iper-tab ${state.tab==='controles'?'is-active':''}" data-itab="controles"><svg class="ic"><use href="#i-shield-check"/></svg>Controles</button>
-      </div>
-      <div class="iper-pane ${state.tab==='setup'?'is-active':''}" id="pane-setup"></div>
-      <div class="iper-pane ${state.tab==='peligros'?'is-active':''}" id="pane-peligros"></div>
-      <div class="iper-pane ${state.tab==='matriz'?'is-active':''}" id="pane-matriz"></div>
-      <div class="iper-pane ${state.tab==='controles'?'is-active':''}" id="pane-controles"></div>
-    `;
-    root.querySelectorAll('[data-itab]').forEach(b => b.addEventListener('click', () => { state.tab = b.dataset.itab; save(); render(); }));
-    if (state.tab === 'setup') renderSetup();
-    else if (state.tab === 'peligros') renderPeligros();
-    else if (state.tab === 'matriz') renderMatriz();
-    else if (state.tab === 'controles') renderControles();
-  }
-
-  function renderSetup(){
-    const p = document.getElementById('pane-setup');
-    p.innerHTML = `
-      <div class="iper-card">
-        <div class="iper-card__head">
-          <h2 class="iper-card__title">Datos generales de la evaluación</h2>
-          <p class="iper-card__sub">Completa la información base antes de registrar los peligros.</p>
-        </div>
-        <div class="iper-form">
-          <div class="iper-form__field iper-form__field--full">
-            <label class="iper-form__label">Empresa o centro de trabajo</label>
-            <input type="text" class="input" id="iper-empresa" value="${state.setup.empresa.replace(/"/g,'&quot;')}" placeholder="Ej: Industrias del Centro SA de CV">
-          </div>
-          <div class="iper-form__field">
-            <label class="iper-form__label">Área evaluada</label>
-            <input type="text" class="input" id="iper-area" value="${state.setup.area.replace(/"/g,'&quot;')}" placeholder="Ej: Producción línea 3">
-          </div>
-          <div class="iper-form__field">
-            <label class="iper-form__label">Actividad / proceso</label>
-            <input type="text" class="input" id="iper-actividad" value="${state.setup.actividad.replace(/"/g,'&quot;')}" placeholder="Ej: Soldadura MIG en mesa">
-          </div>
-          <div class="iper-form__field">
-            <label class="iper-form__label">Evaluador</label>
-            <input type="text" class="input" id="iper-evaluador" value="${state.setup.evaluador.replace(/"/g,'&quot;')}" placeholder="Nombre del responsable">
-          </div>
-          <div class="iper-form__field">
-            <label class="iper-form__label">Fecha de evaluación</label>
-            <input type="date" class="input" id="iper-fecha" value="${state.setup.fecha}">
-          </div>
-        </div>
-        <div class="iper-card__foot">
-          <button class="btn btn--accent" id="iper-next">Siguiente: agregar peligros<svg class="ic"><use href="#i-arrow-right"/></svg></button>
-        </div>
-      </div>
-    `;
-    ['empresa','area','actividad','evaluador','fecha'].forEach(k=>{
-      p.querySelector('#iper-'+k).addEventListener('input', e => { state.setup[k] = e.target.value; save(); });
-    });
-    p.querySelector('#iper-next').addEventListener('click', () => { state.tab = 'peligros'; save(); render(); });
-  }
-
-  function renderPeligros(){
-    const p = document.getElementById('pane-peligros');
-    const d = state.draft;
-    const score = (d.P && d.S) ? d.P*d.S : null;
-    const cls = score ? clasificar(score) : null;
-
-    p.innerHTML = `
-      <div class="iper-add">
-        <div class="iper-add__header">
-          <div class="iper-add__icon"><svg class="ic"><use href="#i-alert-circle"/></svg></div>
-          <div><div class="iper-add__title">Agregar nuevo peligro</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);font-weight:500;letter-spacing:.4px;margin-top:1px;">Metodología P × S · escala 1-5</div></div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div class="iper-form__field">
-            <label class="iper-form__label">Descripción del peligro</label>
-            <textarea class="textarea" id="d-desc" placeholder="Describe el peligro identificado…" style="min-height:60px;">${d.desc.replace(/</g,'&lt;')}</textarea>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;" id="d-suggest"></div>
-          </div>
-          <div class="iper-form__field">
-            <label class="iper-form__label">Categoría</label>
-            <select class="select" id="d-cat">
-              ${CAT_PELIGROS.map(c => `<option value="${c.cat}" ${d.cat===c.cat?'selected':''}>${c.cat}</option>`).join('')}
-            </select>
-          </div>
-          <div class="iper-add__grid">
-            <div class="iper-scale">
-              <div class="iper-scale__label">Probabilidad (P)</div>
-              <div class="iper-scale__row" id="d-P">
-                ${[1,2,3,4,5].map(v => `<button class="iper-scale__btn ${d.P===v?'is-active':''}" data-p="${v}" title="${ESCALA_P[v-1].nombre}: ${ESCALA_P[v-1].desc}">${v}</button>`).join('')}
-              </div>
-              ${d.P ? `<div style="font-size:11px;color:var(--text-2);margin-top:6px;line-height:1.4;"><strong style="color:var(--primary);">${ESCALA_P[d.P-1].nombre}:</strong> ${ESCALA_P[d.P-1].desc}</div>` : '<div style="font-size:10.5px;color:var(--text-3);margin-top:6px;font-family:JetBrains Mono,monospace;letter-spacing:.3px;">Selecciona del 1 al 5</div>'}
-            </div>
-            <div class="iper-scale">
-              <div class="iper-scale__label">Severidad (S)</div>
-              <div class="iper-scale__row" id="d-S">
-                ${[1,2,3,4,5].map(v => `<button class="iper-scale__btn ${d.S===v?'is-active':''}" data-s="${v}" title="${ESCALA_S[v-1].nombre}: ${ESCALA_S[v-1].desc}">${v}</button>`).join('')}
-              </div>
-              ${d.S ? `<div style="font-size:11px;color:var(--text-2);margin-top:6px;line-height:1.4;"><strong style="color:var(--primary);">${ESCALA_S[d.S-1].nombre}:</strong> ${ESCALA_S[d.S-1].desc}</div>` : '<div style="font-size:10.5px;color:var(--text-3);margin-top:6px;font-family:JetBrains Mono,monospace;letter-spacing:.3px;">Selecciona del 1 al 5</div>'}
-            </div>
-          </div>
-          ${score ? `
-            <div class="iper-result-preview riesgo-${cls.key}">
-              <div class="iper-result-preview__score" style="color:${cls.color};">${score}</div>
-              <div class="iper-result-preview__info">
-                <div class="iper-result-preview__level">Nivel ${cls.nombre}</div>
-                <div class="iper-result-preview__cat">P:${d.P} × S:${d.S} · ${cls.accion}</div>
-              </div>
-              <span class="iper-result-pill">${cls.nombre}</span>
-            </div>
-            <button class="btn btn--accent" id="d-add" style="margin-top:4px;">Agregar a la lista<svg class="ic"><use href="#i-check"/></svg></button>
-          ` : ''}
-        </div>
-      </div>
-
-      ${state.peligros.length === 0 ? `
-        <div class="iper-empty">
-          <div class="iper-empty__icon"><svg class="ic ic--xl"><use href="#i-shield-check"/></svg></div>
-          <h4>Sin peligros aún</h4>
-          <p>Empieza describiendo el primer peligro identificado en el área.</p>
-        </div>
-      ` : `
-        <div class="iper-list" id="iper-list">
-          ${state.peligros.map((peligro,i) => {
-            const c = clasificar(peligro.score);
-            return `
-              <div class="iper-row riesgo-${c.key}" style="--level-color:${c.color};">
-                <div class="iper-row__num">${i+1}</div>
-                <div class="iper-row__body">
-                  <div class="iper-row__title">${peligro.desc.replace(/</g,'&lt;')}</div>
-                  <div class="iper-row__meta">
-                    <span>${peligro.cat}</span>
-                    <span>P:${peligro.P} × S:${peligro.S}</span>
-                    <span style="color:${c.color};font-weight:700;">${c.nombre.toUpperCase()}</span>
-                  </div>
-                </div>
-                <div class="iper-row__score" style="color:${c.color};">${peligro.score}</div>
-                <button class="iper-row__del" data-del="${i}" aria-label="Eliminar"><svg class="ic"><use href="#i-close"/></svg></button>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `}
-    `;
-
-    // Sugerencias
-    const sg = p.querySelector('#d-suggest');
-    const ejemplos = CAT_PELIGROS.find(c => c.cat === d.cat)?.ejemplos || [];
-    sg.innerHTML = ejemplos.slice(0,4).map(ej => `<button class="iper-chip" data-ej="${ej.replace(/"/g,'&quot;')}">${ej}</button>`).join('');
-    sg.querySelectorAll('[data-ej]').forEach(b => b.addEventListener('click', () => { state.draft.desc = b.dataset.ej; save(); renderPeligros(); }));
-
-    // Inputs
-    p.querySelector('#d-desc').addEventListener('input', e => { state.draft.desc = e.target.value; save(); });
-    p.querySelector('#d-cat').addEventListener('change', e => { state.draft.cat = e.target.value; save(); renderPeligros(); });
-    p.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => { state.draft.P = parseInt(b.dataset.p); save(); renderPeligros(); }));
-    p.querySelectorAll('[data-s]').forEach(b => b.addEventListener('click', () => { state.draft.S = parseInt(b.dataset.s); save(); renderPeligros(); }));
-
-    const addBtn = p.querySelector('#d-add');
-    if (addBtn) {
-      addBtn.addEventListener('click', () => {
-        const d = state.draft;
-        if (!d.desc.trim()) { Toast.error('Falta descripción','Describe el peligro antes de agregar.'); return; }
-        if (!d.P || !d.S) { Toast.error('Faltan valores','Selecciona P y S del 1 al 5.'); return; }
-        state.peligros.push({desc:d.desc.trim(),cat:d.cat,P:d.P,S:d.S,score:d.P*d.S,fecha:new Date().toISOString()});
-        state.draft = {desc:'',cat:d.cat,P:null,S:null};
-        save();
-        Toast.success('Peligro agregado','#'+state.peligros.length+' · '+clasificar(d.P*d.S).nombre);
-        renderPeligros();
-      });
-    }
-
-    // Eliminar
-    p.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
-      const i = parseInt(b.dataset.del);
-      if (confirm('¿Eliminar peligro #'+(i+1)+'?')) {
-        state.peligros.splice(i,1); save(); renderPeligros();
-        Toast.info('Peligro eliminado','Quedan '+state.peligros.length+' peligros');
-      }
-    }));
-  }
-
-  function renderMatriz(){
-    const p = document.getElementById('pane-matriz');
-    if (!toolEsVIP()){
-      p.innerHTML = `
-        <div class="tool-paywall">
-          <div class="tool-paywall__ic"><svg class="ic ic--xl"><use href="#i-crown"/></svg></div>
-          <h3>Matriz de riesgos para miembros VIP</h3>
-          <p>Registra todos los peligros que quieras. Para ver la matriz 5×5 consolidada y descargar el reporte, activa tu membresía.</p>
-          <button class="btn btn--accent" id="iper-unlock-m">Hazte VIP y desbloquea</button>
-        </div>`;
-      p.querySelector('#iper-unlock-m')?.addEventListener('click', ()=>toolRequiereVIP('la Matriz IPER'));
-      return;
-    }
-    // Conteo por celda (P, S)
-    const grid = {};
-    state.peligros.forEach(pe => {
-      const k = pe.P+'-'+pe.S;
-      grid[k] = (grid[k] || 0) + 1;
-    });
-
-    // Resumen por nivel
-    const niveles = {trivial:0,tolerable:0,moderado:0,importante:0,intolerable:0};
-    state.peligros.forEach(pe => { niveles[clasificar(pe.score).key]++; });
-
-    let matrizHTML = '<div class="matriz">';
-    matrizHTML += `<div class="matriz__corner"><small>P↓<br>S→</small></div>`;
-    for (let s = 1; s <= 5; s++) matrizHTML += `<div class="matriz__col-label">${s}<br><small style="font-size:7.5px;color:var(--text-3);">${ESCALA_S[s-1].nombre.slice(0,5)}</small></div>`;
-    for (let pp = 5; pp >= 1; pp--){
-      matrizHTML += `<div class="matriz__row-label">${pp}<br><small style="font-size:7.5px;color:var(--text-3);">${ESCALA_P[pp-1].nombre.slice(0,5)}</small></div>`;
-      for (let s = 1; s <= 5; s++){
-        const score = pp*s;
-        const c = clasificar(score);
-        const count = grid[pp+'-'+s] || 0;
-        matrizHTML += `<div class="matriz__cell riesgo-${c.key} ${count?'matriz__cell--has':''}" title="P:${pp} × S:${s} = ${score} (${c.nombre})${count?' · '+count+' peligros':''}">${score}${count?`<span class="matriz__cell-count">${count}</span>`:''}</div>`;
-      }
-    }
-    matrizHTML += '</div>';
-
-    p.innerHTML = `
-      <div class="iper-summary">
-        <div class="iper-stat riesgo-trivial"><div class="iper-stat__lbl">Trivial</div><div class="iper-stat__val">${niveles.trivial}</div></div>
-        <div class="iper-stat riesgo-tolerable"><div class="iper-stat__lbl">Tolerable</div><div class="iper-stat__val">${niveles.tolerable}</div></div>
-        <div class="iper-stat riesgo-moderado"><div class="iper-stat__lbl">Moderado</div><div class="iper-stat__val">${niveles.moderado}</div></div>
-        <div class="iper-stat riesgo-importante"><div class="iper-stat__lbl">Importante</div><div class="iper-stat__val">${niveles.importante}</div></div>
-        <div class="iper-stat riesgo-intolerable"><div class="iper-stat__lbl">Intolerable</div><div class="iper-stat__val">${niveles.intolerable}</div></div>
-      </div>
-      <div class="matriz-wrap">
-        <div class="matriz-legend">
-          <span>Probabilidad ↑ × Severidad →</span>
-          <span>${state.peligros.length} peligros plotteados</span>
-        </div>
-        ${matrizHTML}
-        <div class="matriz-key">
-          <div class="matriz-key__item riesgo-trivial"><span class="matriz-key__dot"></span>Trivial <span class="matriz-key__range">1-3</span></div>
-          <div class="matriz-key__item riesgo-tolerable"><span class="matriz-key__dot"></span>Tolerable <span class="matriz-key__range">4-8</span></div>
-          <div class="matriz-key__item riesgo-moderado"><span class="matriz-key__dot"></span>Moderado <span class="matriz-key__range">9-12</span></div>
-          <div class="matriz-key__item riesgo-importante"><span class="matriz-key__dot"></span>Importante <span class="matriz-key__range">15-20</span></div>
-          <div class="matriz-key__item riesgo-intolerable"><span class="matriz-key__dot"></span>Intolerable <span class="matriz-key__range">25</span></div>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderControles(){
-    const p = document.getElementById('pane-controles');
-    if (!toolEsVIP()){
-      p.innerHTML = `
-        <div class="tool-paywall">
-          <div class="tool-paywall__ic"><svg class="ic ic--xl"><use href="#i-crown"/></svg></div>
-          <h3>Controles recomendados para miembros VIP</h3>
-          <p>La jerarquía de controles STPS para cada peligro está disponible con tu membresía VIP.</p>
-          <button class="btn btn--accent" id="iper-unlock-c">Hazte VIP y desbloquea</button>
-        </div>`;
-      p.querySelector('#iper-unlock-c')?.addEventListener('click', ()=>toolRequiereVIP('la Matriz IPER'));
-      return;
-    }
-    if (state.peligros.length === 0){
-      p.innerHTML = `<div class="iper-empty"><div class="iper-empty__icon"><svg class="ic ic--xl"><use href="#i-shield-check"/></svg></div><h4>Sin peligros para evaluar</h4><p>Agrega peligros primero para ver los controles recomendados según la jerarquía STPS.</p></div>`;
-      return;
-    }
-    // Agrupar peligros por nivel de riesgo
-    const grupos = {trivial:[],tolerable:[],moderado:[],importante:[],intolerable:[]};
-    state.peligros.forEach((pe,i) => grupos[clasificar(pe.score).key].push({...pe,idx:i+1}));
-    const niveles = ['intolerable','importante','moderado','tolerable','trivial'];
-    let html = '';
-    niveles.forEach(nivel => {
-      const lista = grupos[nivel];
-      if (lista.length === 0) return;
-      const c = clasificar(nivel==='trivial'?1:nivel==='tolerable'?4:nivel==='moderado'?9:nivel==='importante'?15:25);
-      const ctrls = controlesRecomendados(nivel);
-      html += `
-        <div style="margin-bottom:18px;" class="riesgo-${nivel}">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:${c.color};margin-bottom:8px;display:flex;align-items:center;gap:8px;">
-            <span style="width:6px;height:6px;border-radius:50%;background:${c.color};animation:pulseDotSmall 1.6s ease-out infinite;"></span>
-            ${c.nombre} · ${lista.length} peligro${lista.length>1?'s':''}
-          </div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);margin-bottom:10px;padding:8px 12px;background:var(--level-bg);border-radius:8px;border:0.5px solid color-mix(in srgb,${c.color} 25%,transparent);">
-            ${lista.map(pe => `<span style="display:inline-block;margin-right:10px;"><strong>#${pe.idx}</strong> ${pe.desc.slice(0,38)}${pe.desc.length>38?'…':''}</span>`).join('')}
-          </div>
-          <div class="iper-controls">
-            ${ctrls.map(ct => `
-              <div class="control-row" style="--level-color:${c.color};--level-bg:color-mix(in srgb,${c.color} 12%,transparent);">
-                <div class="control-row__icon"><svg class="ic ic--lg"><use href="#i-shield-check"/></svg></div>
-                <div class="control-row__body">
-                  <div class="control-row__title">${ct.tipo}<span class="control-row__count">jerarquía STPS</span></div>
-                  <div class="control-row__desc">${ct.desc}</div>
-                  <div class="control-row__plan">Aplicar a ${lista.length} peligro${lista.length>1?'s':''} clasificado${lista.length>1?'s':''} como ${c.nombre.toLowerCase()}</div>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    });
-    p.innerHTML = html;
-  }
-
-  function generarPDF(){
-    if (state.peligros.length === 0) {
-      Toast.error('Sin datos','Agrega al menos un peligro antes de generar el PDF.');
-      return;
-    }
-    if (!toolRequiereVIP('la Matriz IPER')) return;
-    if (!window.jspdf) { Toast.error('Generador no disponible','Verifica conexión.'); return; }
-    try {
-      const {jsPDF} = window.jspdf;
-      const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-      const W = 210, H = 297, MARGIN = 16;
-      let y = MARGIN;
-
-      // Header
-      pdf.setFillColor(255,122,45); pdf.rect(0,0,W,6,'F');
-      pdf.setFillColor(26,20,16); pdf.rect(0,6,W,3,'F');
-      y = 20;
-      pdf.setFontSize(14); pdf.setTextColor(26,20,16); pdf.setFont(undefined,'bold');
-      pdf.text('MATRIZ IPER · Identificación de Peligros y Evaluación de Riesgos', MARGIN, y);
-      pdf.setFont(undefined,'normal');
-      y += 6;
-      pdf.setFontSize(9); pdf.setTextColor(120,108,90);
-      pdf.text('BioNova · Biomedicina · Microbiología · Medicina general', MARGIN, y);
-      y += 4;
-      pdf.text('Folio: '+state.folio+' · Generado: '+new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'}), MARGIN, y);
-
-      // Datos
-      y += 9;
-      pdf.setFontSize(10); pdf.setTextColor(26,20,16); pdf.setFont(undefined,'bold');
-      pdf.text('DATOS GENERALES', MARGIN, y);
-      pdf.setFont(undefined,'normal'); pdf.setFontSize(9);
-      y += 6;
-      const datos = [
-        ['Empresa', state.setup.empresa || '—'],
-        ['Área', state.setup.area || '—'],
-        ['Actividad', state.setup.actividad || '—'],
-        ['Evaluador', state.setup.evaluador || '—'],
-        ['Fecha', state.setup.fecha || '—']
-      ];
-      datos.forEach(([l,v]) => {
-        pdf.setTextColor(120,108,90); pdf.text(l+':', MARGIN, y);
-        pdf.setTextColor(26,20,16); pdf.text(v, MARGIN+30, y);
-        y += 5;
-      });
-
-      // Resumen
-      y += 4;
-      pdf.setFont(undefined,'bold'); pdf.setFontSize(10);
-      pdf.text('RESUMEN POR NIVEL DE RIESGO', MARGIN, y);
-      pdf.setFont(undefined,'normal'); pdf.setFontSize(9);
-      y += 6;
-      const niv = {trivial:0,tolerable:0,moderado:0,importante:0,intolerable:0};
-      state.peligros.forEach(pe => niv[clasificar(pe.score).key]++);
-      const nivLabels = [
-        ['Trivial',niv.trivial,[16,185,129]],
-        ['Tolerable',niv.tolerable,[132,204,22]],
-        ['Moderado',niv.moderado,[251,191,36]],
-        ['Importante',niv.importante,[251,146,60]],
-        ['Intolerable',niv.intolerable,[239,68,68]]
-      ];
-      let x = MARGIN;
-      const boxW = (W - 2*MARGIN) / 5 - 2;
-      nivLabels.forEach(([lbl,cnt,rgb]) => {
-        // Fondo claro del color (mezcla con blanco ~14%) sin usar alpha (jsPDF trata 4 args como CMYK)
-        const tint = rgb.map(ch => Math.round(ch + (255-ch)*0.86));
-        pdf.setFillColor(tint[0],tint[1],tint[2]);
-        pdf.setDrawColor(rgb[0],rgb[1],rgb[2]);
-        pdf.roundedRect(x,y,boxW,16,2,2,'FD');
-        pdf.setFontSize(8); pdf.setTextColor(rgb[0],rgb[1],rgb[2]);
-        pdf.text(lbl.toUpperCase(), x+boxW/2, y+5, {align:'center'});
-        pdf.setFontSize(14); pdf.setFont(undefined,'bold');
-        pdf.text(String(cnt), x+boxW/2, y+13, {align:'center'});
-        pdf.setFont(undefined,'normal');
-        x += boxW+2;
-      });
-      y += 22;
-
-      // Tabla peligros
-      pdf.setFont(undefined,'bold'); pdf.setFontSize(10); pdf.setTextColor(26,20,16);
-      pdf.text('PELIGROS IDENTIFICADOS ('+state.peligros.length+')', MARGIN, y);
-      pdf.setFont(undefined,'normal'); pdf.setFontSize(8);
-      y += 6;
-
-      const rows = state.peligros.map((pe,i) => {
-        const c = clasificar(pe.score);
-        return [String(i+1),pe.desc.slice(0,55),pe.cat,String(pe.P),String(pe.S),String(pe.score),c.nombre];
-      });
-
-      y = pdfTablaSimple(pdf, {
-        startY: y, margin: MARGIN,
-        head: ['#','Peligro','Categoría','P','S','Score','Nivel'],
-        body: rows,
-        colWidths: [8, 60, 32, 8, 8, 14, 28],
-        headFill:[26,20,16], fontSize:8
-      });
-      y += 8;
-      if (y > H - 30) { pdf.addPage(); y = MARGIN; }
-
-      // Controles
-      pdf.setFont(undefined,'bold'); pdf.setFontSize(10); pdf.setTextColor(26,20,16);
-      pdf.text('CONTROLES RECOMENDADOS · Jerarquía STPS', MARGIN, y);
-      pdf.setFont(undefined,'normal'); pdf.setFontSize(8);
-      y += 5;
-      const nivelesOrdenados = ['intolerable','importante','moderado','tolerable','trivial'];
-      const grupos = {trivial:[],tolerable:[],moderado:[],importante:[],intolerable:[]};
-      state.peligros.forEach((pe,i) => grupos[clasificar(pe.score).key].push(i+1));
-
-      nivelesOrdenados.forEach(n => {
-        if (grupos[n].length === 0) return;
-        if (y > H - 50) { pdf.addPage(); y = MARGIN; }
-        const c = clasificar(n==='trivial'?1:n==='tolerable'?4:n==='moderado'?9:n==='importante'?15:25);
-        const rgb = n==='trivial'?[16,185,129]:n==='tolerable'?[132,204,22]:n==='moderado'?[251,191,36]:n==='importante'?[251,146,60]:[239,68,68];
-        pdf.setFontSize(9); pdf.setFont(undefined,'bold'); pdf.setTextColor(rgb[0],rgb[1],rgb[2]);
-        pdf.text(c.nombre.toUpperCase()+' · peligros #'+grupos[n].join(', #'), MARGIN, y+5);
-        y += 8;
-        pdf.setFont(undefined,'normal'); pdf.setFontSize(8); pdf.setTextColor(60,52,42);
-        controlesRecomendados(n).forEach(ct => {
-          const lines = pdf.splitTextToSize('• '+ct.tipo+': '+ct.desc, W - 2*MARGIN);
-          pdf.text(lines, MARGIN, y);
-          y += lines.length*4 + 1;
-        });
-        y += 3;
-      });
-
-      // Footer
-      const pageCount = pdf.internal.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        pdf.setPage(i);
-        pdf.setFontSize(7); pdf.setTextColor(160,148,130);
-        pdf.text('BioNova · '+state.folio+' · Página '+i+' de '+pageCount, W/2, H-8, {align:'center'});
-        pdf.text('Verifica en bionovamexico.com/verificar', W-MARGIN, H-8, {align:'right'});
-      }
-
-      pdf.save('iper-'+state.folio+'.pdf');
-      Toast.success('PDF descargado',state.folio);
-    } catch(e) {
-      console.error(e);
-      Toast.error('Error generando PDF',e.message||'Intenta de nuevo');
-    }
-  }
-
-  return {open, mount};
+/* CSS de las herramientas (una sola vez) */
+(function(){
+  if (document.getElementById('bn-tools-css')) return;
+  const s = document.createElement('style'); s.id='bn-tools-css';
+  s.textContent = `
+  .bn-tool{display:flex;flex-direction:column;gap:18px}
+  .bn-card{background:var(--surface);border:0.5px solid var(--border-2);border-radius:16px;padding:20px 20px 22px}
+  .bn-card__t{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.2px;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+  .bn-card__t .ic{width:16px;height:16px;color:var(--primary)}
+  .bn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+  .bn-field{display:flex;flex-direction:column;gap:6px}
+  .bn-field>label{font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:.2px}
+  .bn-field .input{width:100%}
+  .bn-field__hint{font-size:10.5px;color:var(--text-3);line-height:1.4}
+  .bn-select{width:100%;appearance:none;-webkit-appearance:none;background:var(--surface-2);border:0.5px solid var(--border-2);color:var(--text);border-radius:10px;padding:11px 12px;font-size:13px;font-family:inherit;cursor:pointer}
+  .bn-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-glow)}
+  .bn-seg{display:inline-flex;background:var(--surface-2);border:0.5px solid var(--border-2);border-radius:10px;padding:3px;gap:3px;flex-wrap:wrap}
+  .bn-seg button{border:none;background:transparent;color:var(--text-2);font-size:12px;font-weight:600;font-family:inherit;padding:7px 12px;border-radius:8px;cursor:pointer;transition:.15s}
+  .bn-seg button.is-on{background:var(--primary);color:#fff}
+  .bn-result{background:linear-gradient(135deg,color-mix(in srgb,var(--primary) 14%,var(--surface)),color-mix(in srgb,var(--highlight) 8%,var(--surface)));border:0.5px solid color-mix(in srgb,var(--primary) 28%,transparent);border-radius:16px;padding:22px;text-align:center}
+  .bn-result__lbl{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--primary);margin-bottom:6px}
+  .bn-result__val{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:800;color:var(--text);letter-spacing:-1px;line-height:1.05;font-feature-settings:"tnum" 1;word-break:break-word}
+  .bn-result__unit{font-size:16px;font-weight:600;color:var(--text-2);margin-left:4px}
+  .bn-result__note{font-size:12px;color:var(--text-3);margin-top:10px;line-height:1.45}
+  .bn-formula{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-2);background:var(--surface-2);border:0.5px solid var(--border-2);border-radius:10px;padding:10px 12px;margin-top:14px;text-align:center}
+  .bn-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
+  .bn-mini__c{background:var(--surface-2);border:0.5px solid var(--border-2);border-radius:12px;padding:12px 14px}
+  .bn-mini__l{font-size:10.5px;color:var(--text-3);letter-spacing:.4px;text-transform:uppercase;font-weight:600}
+  .bn-mini__v{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--text);margin-top:3px}
+  .bn-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+  .bn-tbl th{text-align:left;color:var(--text-3);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;padding:8px 8px;border-bottom:0.5px solid var(--border-2)}
+  .bn-tbl td{padding:7px 8px;border-bottom:0.5px solid var(--border);color:var(--text)}
+  .bn-tbl .input{padding:8px 9px;font-size:12.5px}
+  .bn-rowdel{border:none;background:transparent;color:var(--text-3);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px;border-radius:6px}
+  .bn-rowdel:hover{color:var(--danger);background:color-mix(in srgb,var(--danger) 12%,transparent)}
+  .bn-badge{display:inline-block;font-size:10px;font-weight:800;padding:2px 7px;border-radius:6px;font-family:'JetBrains Mono',monospace}
+  .bn-badge--hi{background:color-mix(in srgb,var(--danger) 16%,transparent);color:var(--danger)}
+  .bn-badge--lo{background:color-mix(in srgb,var(--primary) 16%,transparent);color:var(--primary)}
+  .bn-badge--ok{background:color-mix(in srgb,var(--success) 16%,transparent);color:var(--success)}
+  @media(max-width:600px){ .bn-result__val{font-size:30px} .tool-section__actions{width:100%} .tool-section__actions .btn{flex:1} }
+  `;
+  document.head.appendChild(s);
 })();
 
-/* =========================================================
-   HERRAMIENTA OEE · Overall Equipment Effectiveness
-   OEE = Disponibilidad × Rendimiento × Calidad
-   Gauges SVG animados · clasificación World-Class · PDF
-   Persistencia en localStorage · diseño futurista
-   ========================================================= */
-const OEETool = (function(){
-  const STORAGE_KEY = 'imdiil:oee:current';
-  let state = {
-    folio: null,
-    setup: { empresa:'', equipo:'', turno:'', fecha:new Date().toISOString().slice(0,10) },
-    tiempoPlaneado: '',
-    paros: '',
-    tiempoCicloIdeal: '',
-    piezasTotales: '',
-    piezasDefectuosas: ''
-  };
+/* Folio corto BioNova */
+function bnFolio(pref){
+  const d=new Date();
+  const r=Math.random().toString(36).slice(2,5).toUpperCase();
+  return (pref||'BN')+'-'+d.getFullYear()+(''+(d.getMonth()+1)).padStart(2,'0')+(''+d.getDate()).padStart(2,'0')+'-'+r;
+}
+/* num helper */
+function bnNum(v){ const n=parseFloat(String(v).replace(',','.')); return isFinite(n)?n:null; }
+function bnFmt(n,dec){
+  if(n===null||n===undefined||!isFinite(n)) return '—';
+  if(Math.abs(n)!==0 && (Math.abs(n)>=1e6 || Math.abs(n)<1e-4)) return n.toExponential(dec===undefined?3:dec);
+  return Number(n.toFixed(dec===undefined?3:dec)).toLocaleString('es-MX',{maximumFractionDigits:dec===undefined?3:dec});
+}
+/* Cabecera PDF BioNova (azul) + pie. Devuelve y inicial de contenido. */
+function bnPdfHeader(pdf, titulo, sub){
+  const W=210, M=16;
+  pdf.setFillColor(42,109,246); pdf.rect(0,0,W,6,'F');
+  pdf.setFillColor(16,185,129); pdf.rect(0,6,W,2,'F');
+  let y=20;
+  pdf.setFontSize(15); pdf.setTextColor(15,23,42); pdf.setFont(undefined,'bold');
+  pdf.text(titulo, M, y); pdf.setFont(undefined,'normal'); y+=6;
+  pdf.setFontSize(9); pdf.setTextColor(110,120,140);
+  pdf.text('BioNova · Biomedicina · Microbiología · Medicina general', M, y); y+=4;
+  if(sub){ pdf.text(sub, M, y); y+=4; }
+  pdf.setDrawColor(225,232,245); pdf.line(M,y+2,W-M,y+2); y+=10;
+  return y;
+}
+function bnPdfFooter(pdf){
+  const W=210,H=297,M=16;
+  pdf.setFontSize(8); pdf.setTextColor(150,160,178);
+  pdf.text('Generado con BioNova VIP · bionovamexico.com · '+new Date().toLocaleDateString('es-MX'), M, H-10);
+}
 
-  function load(){
-    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) state = {...state, ...JSON.parse(raw)}; } catch(e){}
-  }
-  function save(){
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
-  }
-  function generarFolio(){
-    return 'BioNova-OEE-' + Math.floor(10000 + Math.random()*89999);
-  }
+/* Registro */
+const Tools = {
+  diluciones:{open(){navigateToSection('tool-diluciones');}},
+  ufc:{open(){navigateToSection('tool-ufc');}},
+  conversor:{open(){navigateToSection('tool-conversor');}},
+  dosis:{open(){navigateToSection('tool-dosis');}},
+  tfg:{open(){navigateToSection('tool-tfg');}},
+  molaridad:{open(){navigateToSection('tool-molaridad');}},
+  beer:{open(){navigateToSection('tool-beer');}},
+  reporte:{open(){navigateToSection('tool-reporte');}}
+};
 
-  function calcular(){
-    const tp = parseFloat(state.tiempoPlaneado) || 0;
-    const paros = parseFloat(state.paros) || 0;
-    const tci = parseFloat(state.tiempoCicloIdeal) || 0;
-    const tot = parseFloat(state.piezasTotales) || 0;
-    const def = parseFloat(state.piezasDefectuosas) || 0;
-    const tiempoOperativo = Math.max(0, tp - paros);
-    const disponibilidad = tp > 0 ? (tiempoOperativo / tp) : 0;
-    const tiempoNetoMin = (tci * tot) / 60;
-    const rendimiento = tiempoOperativo > 0 ? Math.min(1, tiempoNetoMin / tiempoOperativo) : 0;
-    const buenas = Math.max(0, tot - def);
-    const calidad = tot > 0 ? (buenas / tot) : 0;
-    const oee = disponibilidad * rendimiento * calidad;
-    return { disponibilidad, rendimiento, calidad, oee, tiempoOperativo, buenas, valido: tp > 0 && tci > 0 && tot > 0 };
-  }
+/* Shell común de cada herramienta-sección */
+function bnToolShell(container, cfg){
+  container.innerHTML = `
+    <div class="bn-tool fade-up">
+      <div class="tool-section__head">
+        <div class="tool-section__title">
+          <div class="tool-section__icon"><svg class="ic"><use href="#${cfg.icon}"/></svg></div>
+          <div>
+            <h1>${cfg.title}</h1>
+            <p>${cfg.sub}</p>
+          </div>
+        </div>
+        <div class="tool-section__actions">${cfg.actions||''}</div>
+      </div>
+      ${cfg.body}
+    </div>`;
+  return container.querySelector('.bn-tool');
+}
 
-  function clasificar(oee){
-    const pct = oee * 100;
-    if (pct >= 85) return { key:'world', label:'World-Class', color:[16,185,129], hex:'#10B981', desc:'Excelencia operativa. Estás en el top mundial.' };
-    if (pct >= 60) return { key:'aceptable', label:'Aceptable', color:[132,204,22], hex:'#84CC16', desc:'Buen nivel, típico de plantas competitivas. Hay margen de mejora.' };
-    if (pct >= 40) return { key:'bajo', label:'Bajo', color:[251,191,36], hex:'#FBBF24', desc:'Pérdidas significativas. Requiere plan de acción.' };
-    return { key:'critico', label:'Crítico', color:[239,68,68], hex:'#EF4444', desc:'Pérdidas severas. Intervención urgente necesaria.' };
-  }
-
-  function diagnostico(r){
-    const items = [];
-    const d = r.disponibilidad*100, p = r.rendimiento*100, c = r.calidad*100;
-    const factores = [
-      { n:'Disponibilidad', v:d, tip:'Reduce paros no planeados: mantenimiento preventivo, cambios rápidos (SMED), disponibilidad de materiales.' },
-      { n:'Rendimiento', v:p, tip:'Ataca micro-paros y velocidad reducida: ajusta velocidad a estándar, elimina pequeñas detenciones, capacita operadores.' },
-      { n:'Calidad', v:c, tip:'Disminuye defectos y retrabajos: control estadístico de proceso (SPC), poka-yoke, revisión de arranques.' }
-    ].sort((a,b)=>a.v-b.v);
-    items.push({ tipo:'cuello', texto:`Tu mayor oportunidad está en <strong>${factores[0].n}</strong> (${factores[0].v.toFixed(1)}%).`, tip:factores[0].tip });
-    if (factores[0].v < 60) items.push({ tipo:'alerta', texto:`${factores[0].n} está por debajo del 60%, arrastrando todo tu OEE.`, tip:'' });
-    return items;
-  }
-
-  function open(){
-    load();
-    if (!state.folio) state.folio = generarFolio();
-    save();
-    const body = `<div class="oee" id="oee-root"></div>`;
-    const footer = document.createElement('div');
-    footer.innerHTML = `
-      <button class="btn btn--ghost" id="oee-reset">Nuevo cálculo</button>
-      <button class="btn btn--ghost" id="oee-close">Cerrar</button>
-      <button class="btn btn--accent" id="oee-pdf">Descargar PDF<svg class="ic"><use href="#i-download"/></svg></button>
-    `;
-    const m = Modal.open({ id:'oee-tool', title:'Calculadora OEE', subtitle:state.folio, icon:'i-gauge', size:'lg', body, footer, onClose(){ save(); } });
-    footer.querySelector('#oee-close').addEventListener('click', () => m.close());
-    footer.querySelector('#oee-reset').addEventListener('click', () => {
-      if (!confirm('¿Iniciar un nuevo cálculo OEE? Se perderán los datos actuales.')) return;
-      state = { folio:generarFolio(), setup:{empresa:'',equipo:'',turno:'',fecha:new Date().toISOString().slice(0,10)}, tiempoPlaneado:'', paros:'', tiempoCicloIdeal:'', piezasTotales:'', piezasDefectuosas:'' };
-      save();
-      const st = document.querySelector('#oee-tool .modal__subtitle'); if (st) st.textContent = state.folio;
-      render();
-      if (typeof Toast!=='undefined') Toast.info('Nuevo cálculo','Folio: '+state.folio);
+/* 1 ─ DILUCIONES C1·V1 = C2·V2 ─────────────────────────── */
+const ToolDiluciones = (function(){
+  function mount(c){
+    bnToolShell(c,{icon:'i-bn-flask',title:'Diluciones (C₁V₁ = C₂V₂)',
+      sub:'Calcula el volumen de stock y diluyente para preparar una solución. Deja vacío el dato que quieres calcular.',
+      actions:`<button class="btn btn--accent btn--sm" id="dil-pdf">Reporte PDF<svg class="ic"><use href="#i-download"/></svg></button>`,
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-flask"/></svg>Datos (llena 3, deja 1 vacío)</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>C₁ · concentración stock</label><input class="input" id="dil-c1" placeholder="ej. 1000" inputmode="decimal"><div class="bn-field__hint">Unidad libre (mg/mL, M, %…)</div></div>
+          <div class="bn-field"><label>V₁ · volumen de stock</label><input class="input" id="dil-v1" placeholder="se calcula…" inputmode="decimal"><div class="bn-field__hint">mL</div></div>
+          <div class="bn-field"><label>C₂ · concentración final</label><input class="input" id="dil-c2" placeholder="ej. 50" inputmode="decimal"></div>
+          <div class="bn-field"><label>V₂ · volumen final</label><input class="input" id="dil-v2" placeholder="ej. 100" inputmode="decimal"><div class="bn-field__hint">mL</div></div>
+        </div>
+        <div class="bn-result" id="dil-out" style="margin-top:18px">
+          <div class="bn-result__lbl">Resultado</div>
+          <div class="bn-result__val" id="dil-val">—</div>
+          <div class="bn-result__note" id="dil-note">Completa 3 campos para calcular el cuarto.</div>
+        </div>
+        <div class="bn-mini" id="dil-mini" style="display:none">
+          <div class="bn-mini__c"><div class="bn-mini__l">Volumen de stock (V₁)</div><div class="bn-mini__v" id="dil-m-v1">—</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Diluyente a agregar</div><div class="bn-mini__v" id="dil-m-dil">—</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Factor de dilución</div><div class="bn-mini__v" id="dil-m-fd">—</div></div>
+        </div>
+        <div class="bn-formula">C₁ · V₁ = C₂ · V₂</div>
+      </div>`});
+    const q=id=>c.querySelector('#'+id);
+    const ids=['dil-c1','dil-v1','dil-c2','dil-v2'];
+    let last={};
+    function calc(){
+      const c1=bnNum(q('dil-c1').value),v1=bnNum(q('dil-v1').value),c2=bnNum(q('dil-c2').value),v2=bnNum(q('dil-v2').value);
+      const vals={c1,v1,c2,v2}; const blanks=Object.keys(vals).filter(k=>vals[k]===null);
+      const val=q('dil-val'),note=q('dil-note'),mini=q('dil-mini');
+      mini.style.display='none';
+      if(blanks.length!==1){ val.textContent='—'; note.textContent=blanks.length>1?'Faltan datos: llena 3 campos.':'Hay 4 datos: deja vacío el que quieres calcular.'; return; }
+      let r,lbl;
+      const b=blanks[0];
+      try{
+        if(b==='v1'){ r=(c2*v2)/c1; lbl='V₁ = '+bnFmt(r)+' mL'; q('dil-v1').setAttribute('data-calc',r); }
+        else if(b==='c1'){ r=(c2*v2)/v1; lbl='C₁ = '+bnFmt(r); }
+        else if(b==='c2'){ r=(c1*v1)/v2; lbl='C₂ = '+bnFmt(r); }
+        else { r=(c1*v1)/c2; lbl='V₂ = '+bnFmt(r)+' mL'; }
+      }catch(e){ r=null; }
+      if(r===null||!isFinite(r)){ val.textContent='—'; note.textContent='Revisa que los valores no sean cero.'; return; }
+      val.textContent=lbl;
+      // panel de preparación si tenemos C1,C2,V2
+      const C1=c1, C2=c2, V2=(b==='v2'?r:v2);
+      if(C1&&C2&&V2&&C1>=C2){
+        const V1=(C2*V2)/C1; const dilv=V2-V1; const fd=C1/C2;
+        q('dil-m-v1').textContent=bnFmt(V1)+' mL'; q('dil-m-dil').textContent=bnFmt(dilv)+' mL'; q('dil-m-fd').textContent='1:'+bnFmt(fd,2);
+        note.textContent='Toma '+bnFmt(V1)+' mL de stock y afora con '+bnFmt(dilv)+' mL de diluyente hasta '+bnFmt(V2)+' mL.';
+        mini.style.display='';
+      } else { note.textContent='Resultado calculado.'; }
+      last={c1,v1:(b==='v1'?r:v1),c2,v2:V2,lbl};
+    }
+    ids.forEach(id=>q(id).addEventListener('input',calc));
+    q('dil-pdf').addEventListener('click',()=>{
+      if(!toolRequiereVIP('Diluciones')) return;
+      if(!window.jspdf){ Toast.error('PDF no disponible','Revisa tu conexión.'); return; }
+      const {jsPDF}=window.jspdf; const pdf=new jsPDF({unit:'mm',format:'a4'});
+      let y=bnPdfHeader(pdf,'Reporte de dilución', 'Folio: '+bnFolio('DIL'));
+      pdf.setFontSize(10); pdf.setTextColor(15,23,42);
+      [['C₁ (stock)',last.c1],['V₁ (stock)',last.v1!=null?last.v1+' mL':'—'],['C₂ (final)',last.c2],['V₂ (final)',last.v2!=null?last.v2+' mL':'—']].forEach(([l,v])=>{
+        pdf.setTextColor(110,120,140); pdf.text(l+':',16,y); pdf.setTextColor(15,23,42); pdf.text(String(v??'—'),70,y); y+=7;
+      });
+      y+=4; pdf.setFont(undefined,'bold'); pdf.text('Resultado: '+(last.lbl||'—'),16,y); pdf.setFont(undefined,'normal');
+      bnPdfFooter(pdf); pdf.save('dilucion-'+Date.now()+'.pdf'); Toast.success('PDF generado','Reporte de dilución');
     });
-    footer.querySelector('#oee-pdf').addEventListener('click', () => generarPDF());
-    render();
+    calc();
   }
-
-  function mount(container){
-    load();
-    if (!state.folio) state.folio = generarFolio();
-    save();
-    container.innerHTML = `
-      <div class="tool-section">
-        <div class="tool-section__head">
-          <div class="tool-section__title">
-            <div class="tool-section__icon"><svg class="ic"><use href="#i-gauge"/></svg></div>
-            <div>
-              <h1>Calculadora OEE</h1>
-              <p>Eficiencia General de Equipos · Disponibilidad × Rendimiento × Calidad</p>
-            </div>
-          </div>
-          <div class="tool-section__actions">
-            <button class="btn btn--ghost btn--sm" id="oee-reset">Nuevo cálculo</button>
-            <button class="btn btn--accent btn--sm" id="oee-pdf">Descargar PDF<svg class="ic"><use href="#i-download"/></svg></button>
-          </div>
-        </div>
-        <div class="oee" id="oee-root"></div>
-      </div>
-    `;
-    container.querySelector('#oee-reset').addEventListener('click', () => {
-      if (!confirm('¿Iniciar un nuevo cálculo OEE? Se perderán los datos actuales.')) return;
-      state = { folio:generarFolio(), setup:{empresa:'',equipo:'',turno:'',fecha:new Date().toISOString().slice(0,10)}, tiempoPlaneado:'', paros:'', tiempoCicloIdeal:'', piezasTotales:'', piezasDefectuosas:'' };
-      save();
-      render();
-      if (typeof Toast!=='undefined') Toast.info('Nuevo cálculo','Folio: '+state.folio);
-    });
-    container.querySelector('#oee-pdf').addEventListener('click', () => generarPDF());
-    render();
-  }
-
-  function render(){
-    const root = document.getElementById('oee-root');
-    if (!root) return;
-    root.innerHTML = `
-      <div class="oee-head">
-        <span class="oee-folio">${state.folio}</span>
-        <span class="oee-meta">OEE = Disponibilidad × Rendimiento × Calidad</span>
-      </div>
-      <div class="oee-grid">
-        <div class="oee-inputs">
-          <div class="oee-card">
-            <div class="oee-card__title"><span class="oee-dot"></span>Datos del equipo</div>
-            <div class="oee-field">
-              <label>Empresa</label>
-              <input type="text" class="input" id="oee-empresa" value="${(state.setup.empresa||'').replace(/"/g,'&quot;')}" placeholder="Industrias del Centro">
-            </div>
-            <div class="oee-field-row">
-              <div class="oee-field">
-                <label>Equipo / línea</label>
-                <input type="text" class="input" id="oee-equipo" value="${(state.setup.equipo||'').replace(/"/g,'&quot;')}" placeholder="Línea 3">
-              </div>
-              <div class="oee-field">
-                <label>Turno</label>
-                <input type="text" class="input" id="oee-turno" value="${(state.setup.turno||'').replace(/"/g,'&quot;')}" placeholder="Matutino">
-              </div>
-            </div>
-          </div>
-          <div class="oee-card">
-            <div class="oee-card__title"><span class="oee-dot oee-dot--a"></span>Disponibilidad</div>
-            <div class="oee-field-row">
-              <div class="oee-field">
-                <label>Tiempo planeado <span>(min)</span></label>
-                <input type="number" inputmode="numeric" class="input" id="oee-tp" value="${state.tiempoPlaneado}" placeholder="480">
-              </div>
-              <div class="oee-field">
-                <label>Paros no planeados <span>(min)</span></label>
-                <input type="number" inputmode="numeric" class="input" id="oee-paros" value="${state.paros}" placeholder="60">
-              </div>
-            </div>
-          </div>
-          <div class="oee-card">
-            <div class="oee-card__title"><span class="oee-dot oee-dot--r"></span>Rendimiento</div>
-            <div class="oee-field-row">
-              <div class="oee-field">
-                <label>Tiempo ciclo ideal <span>(seg/pza)</span></label>
-                <input type="number" inputmode="decimal" class="input" id="oee-tci" value="${state.tiempoCicloIdeal}" placeholder="30">
-              </div>
-              <div class="oee-field">
-                <label>Piezas totales</label>
-                <input type="number" inputmode="numeric" class="input" id="oee-tot" value="${state.piezasTotales}" placeholder="700">
-              </div>
-            </div>
-          </div>
-          <div class="oee-card">
-            <div class="oee-card__title"><span class="oee-dot oee-dot--c"></span>Calidad</div>
-            <div class="oee-field">
-              <label>Piezas defectuosas / rechazadas</label>
-              <input type="number" inputmode="numeric" class="input" id="oee-def" value="${state.piezasDefectuosas}" placeholder="20">
-            </div>
-          </div>
-        </div>
-        <div class="oee-results" id="oee-results"></div>
-      </div>
-    `;
-    const bind = (id, key, isSetup) => {
-      const el = root.querySelector('#'+id);
-      if (!el) return;
-      el.addEventListener('input', () => {
-        if (isSetup) state.setup[key] = el.value; else state[key] = el.value;
-        save();
-        renderResults();
-      });
-    };
-    bind('oee-empresa','empresa',true);
-    bind('oee-equipo','equipo',true);
-    bind('oee-turno','turno',true);
-    bind('oee-tp','tiempoPlaneado',false);
-    bind('oee-paros','paros',false);
-    bind('oee-tci','tiempoCicloIdeal',false);
-    bind('oee-tot','piezasTotales',false);
-    bind('oee-def','piezasDefectuosas',false);
-    renderResults();
-  }
-
-  function gaugeSVG(value, color, label, sub){
-    const pct = Math.round(value*100);
-    const R = 52, C = 2*Math.PI*R;
-    const offset = C * (1 - value);
-    return `
-      <div class="oee-gauge">
-        <svg viewBox="0 0 130 130" class="oee-gauge__svg">
-          <circle cx="65" cy="65" r="${R}" class="oee-gauge__track"/>
-          <circle cx="65" cy="65" r="${R}" class="oee-gauge__fill"
-            stroke="${color}" stroke-dasharray="${C}" stroke-dashoffset="${C}"
-            style="--target-offset:${offset};"/>
-        </svg>
-        <div class="oee-gauge__center">
-          <div class="oee-gauge__pct" style="color:${color};">${pct}<span>%</span></div>
-          <div class="oee-gauge__lbl">${label}</div>
-        </div>
-        <div class="oee-gauge__sub">${sub}</div>
-      </div>
-    `;
-  }
-
-  function renderResults(){
-    const wrap = document.getElementById('oee-results');
-    if (!wrap) return;
-    const r = calcular();
-    if (!r.valido){
-      wrap.innerHTML = `
-        <div class="oee-empty">
-          <div class="oee-empty__ring">
-            <svg viewBox="0 0 130 130"><circle cx="65" cy="65" r="52" class="oee-gauge__track"/></svg>
-            <div class="oee-empty__icon"><svg class="ic ic--xl"><use href="#i-gauge"/></svg></div>
-          </div>
-          <h3>Esperando datos</h3>
-          <p>Captura tiempo planeado, tiempo de ciclo ideal y piezas producidas para calcular tu OEE en tiempo real.</p>
-        </div>`;
-      return;
-    }
-    if (!toolEsVIP()){
-      wrap.innerHTML = `
-        <div class="tool-paywall">
-          <div class="tool-paywall__ic"><svg class="ic ic--xl"><use href="#i-crown"/></svg></div>
-          <h3>Resultado disponible para miembros VIP</h3>
-          <p>Ya capturaste tus datos. Activa tu membresía para ver el OEE calculado, el diagnóstico y descargar el reporte.</p>
-          <button class="btn btn--accent" id="oee-unlock">Hazte VIP y desbloquea</button>
-        </div>`;
-      wrap.querySelector('#oee-unlock')?.addEventListener('click', ()=>toolRequiereVIP('la Calculadora OEE'));
-      return;
-    }
-    const cls = clasificar(r.oee);
-    const diag = diagnostico(r);
-    wrap.innerHTML = `
-      <div class="oee-hero" style="--oee-color:${cls.hex};">
-        <div class="oee-hero__badge" style="background:${cls.hex}1f;color:${cls.hex};border-color:${cls.hex}55;">${cls.label}</div>
-        ${gaugeSVG(r.oee, cls.hex, 'OEE', 'Eficiencia global')}
-        <p class="oee-hero__desc">${cls.desc}</p>
-      </div>
-      <div class="oee-subgauges">
-        ${gaugeSVG(r.disponibilidad, '#2a6df6', 'Disponib.', 'Tiempo útil')}
-        ${gaugeSVG(r.rendimiento, '#10b981', 'Rendim.', 'Velocidad')}
-        ${gaugeSVG(r.calidad, '#10B981', 'Calidad', 'Sin defectos')}
-      </div>
-      <div class="oee-diag">
-        <div class="oee-diag__title"><svg class="ic"><use href="#i-alert-circle"/></svg>Diagnóstico</div>
-        ${diag.map(d => `
-          <div class="oee-diag__item">
-            <p>${d.texto}</p>
-            ${d.tip ? `<span class="oee-diag__tip">${d.tip}</span>` : ''}
-          </div>
-        `).join('')}
-        <div class="oee-diag__stats">
-          <div><span>${r.tiempoOperativo.toFixed(0)}</span>min operativos</div>
-          <div><span>${r.buenas.toFixed(0)}</span>piezas buenas</div>
-        </div>
-      </div>
-    `;
-    requestAnimationFrame(() => {
-      wrap.querySelectorAll('.oee-gauge__fill').forEach(c => {
-        const off = c.style.getPropertyValue('--target-offset');
-        c.style.strokeDashoffset = off;
-      });
-    });
-  }
-
-  function generarPDF(){
-    const r = calcular();
-    if (!r.valido){
-      if (typeof Toast!=='undefined') Toast.error('Sin datos','Captura los datos del equipo antes de generar el PDF.');
-      return;
-    }
-    if (!toolRequiereVIP('la Calculadora OEE')) return;
-    if (!window.jspdf){ if (typeof Toast!=='undefined') Toast.error('Generador no disponible','Verifica conexión.'); return; }
-    try {
-      const {jsPDF} = window.jspdf;
-      const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-      const W=210, MARGIN=16; let y=MARGIN;
-      const cls = clasificar(r.oee);
-      pdf.setFillColor(255,122,45); pdf.rect(0,0,W,6,'F');
-      pdf.setFillColor(26,20,16); pdf.rect(0,6,W,3,'F');
-      y=20;
-      pdf.setFontSize(14); pdf.setTextColor(26,20,16); pdf.setFont(undefined,'bold');
-      pdf.text('REPORTE OEE · Eficiencia General de Equipos', MARGIN, y);
-      pdf.setFont(undefined,'normal'); y+=6;
-      pdf.setFontSize(9); pdf.setTextColor(120,108,90);
-      pdf.text('BioNova · Biomedicina · Microbiología · Medicina general', MARGIN, y); y+=4;
-      pdf.text('Folio: '+state.folio+' · Generado: '+new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'}), MARGIN, y);
-      y+=10;
-      pdf.setFontSize(10); pdf.setTextColor(26,20,16); pdf.setFont(undefined,'bold');
-      pdf.text('DATOS GENERALES', MARGIN, y);
-      pdf.setFont(undefined,'normal'); pdf.setFontSize(9); y+=6;
-      [['Empresa',state.setup.empresa||'—'],['Equipo/línea',state.setup.equipo||'—'],['Turno',state.setup.turno||'—'],['Fecha',state.setup.fecha||'—']].forEach(([l,v])=>{
-        pdf.setTextColor(120,108,90); pdf.text(l+':', MARGIN, y);
-        pdf.setTextColor(26,20,16); pdf.text(String(v), MARGIN+34, y); y+=5;
-      });
-      y+=6;
-      pdf.setFillColor(...cls.color); pdf.roundedRect(MARGIN, y, W-2*MARGIN, 22, 2, 2, 'F');
-      pdf.setTextColor(255,255,255); pdf.setFont(undefined,'bold'); pdf.setFontSize(22);
-      pdf.text((r.oee*100).toFixed(1)+'%', MARGIN+6, y+14);
-      pdf.setFontSize(11); pdf.text('OEE · '+cls.label, MARGIN+44, y+9);
-      pdf.setFont(undefined,'normal'); pdf.setFontSize(8);
-      pdf.text(cls.desc, MARGIN+44, y+15, {maxWidth:W-2*MARGIN-50});
-      y+=30;
-      pdf.setFont(undefined,'bold'); pdf.setFontSize(10); pdf.setTextColor(26,20,16);
-      pdf.text('DESGLOSE DE FACTORES', MARGIN, y); y+=7;
-      const facts = [
-        ['Disponibilidad', r.disponibilidad, 'Tiempo operativo / tiempo planeado'],
-        ['Rendimiento', r.rendimiento, 'Velocidad real vs. ideal'],
-        ['Calidad', r.calidad, 'Piezas buenas / piezas totales']
-      ];
-      facts.forEach(([n,v,d])=>{
-        pdf.setFont(undefined,'bold'); pdf.setFontSize(9); pdf.setTextColor(26,20,16);
-        pdf.text(n, MARGIN, y);
-        pdf.setTextColor(255,122,45); pdf.text((v*100).toFixed(1)+'%', MARGIN+50, y);
-        pdf.setFont(undefined,'normal'); pdf.setFontSize(8); pdf.setTextColor(120,108,90);
-        pdf.text(d, MARGIN+70, y);
-        y+=2.5;
-        pdf.setFillColor(230,225,215); pdf.roundedRect(MARGIN, y, W-2*MARGIN, 2.5, 1, 1, 'F');
-        pdf.setFillColor(255,122,45); pdf.roundedRect(MARGIN, y, (W-2*MARGIN)*Math.min(1,v), 2.5, 1, 1, 'F');
-        y+=8;
-      });
-      y+=2;
-      pdf.setFont(undefined,'bold'); pdf.setFontSize(10); pdf.setTextColor(26,20,16);
-      pdf.text('DIAGNÓSTICO Y RECOMENDACIONES', MARGIN, y); y+=6;
-      pdf.setFont(undefined,'normal'); pdf.setFontSize(9);
-      diagnostico(r).forEach(d=>{
-        const txt = d.texto.replace(/<[^>]+>/g,'');
-        pdf.setTextColor(26,20,16);
-        const lines = pdf.splitTextToSize('• '+txt, W-2*MARGIN); pdf.text(lines, MARGIN, y); y+=lines.length*4.5;
-        if (d.tip){ pdf.setTextColor(120,108,90); const tl=pdf.splitTextToSize('  '+d.tip, W-2*MARGIN-4); pdf.text(tl, MARGIN+2, y); y+=tl.length*4.5; }
-        y+=2;
-      });
-      pdf.setFontSize(7.5); pdf.setTextColor(150,140,125);
-      pdf.text('Documento generado por la Calculadora OEE de BioNova · Herramienta Pro VIP', MARGIN, 287);
-      pdf.save(state.folio+'.pdf');
-      if (typeof Toast!=='undefined') Toast.success('PDF generado', state.folio);
-    } catch(e){
-      console.error('[OEE] PDF error:', e);
-      if (typeof Toast!=='undefined') Toast.error('Error al generar PDF', e.message||'Intenta de nuevo');
-    }
-  }
-
-  return {open, mount};
+  return {open(){navigateToSection('tool-diluciones');}, mount};
 })();
 
-/* =========================================================
-   HERRAMIENTA ATS · Análisis de Trabajo Seguro
-   3 pestañas: Datos + EPP · Pasos (paso→peligro→control) · Resumen/PDF
-   Sección (no popup) · persistencia localStorage · PDF formato STPS
-   ========================================================= */
-const ATSTool = (function(){
-  const STORAGE_KEY = 'imdiil:ats:current';
-  const EPP_LISTA = [
-    {id:'casco', label:'Casco de seguridad'},
-    {id:'lentes', label:'Lentes de protección'},
-    {id:'guantes', label:'Guantes'},
-    {id:'botas', label:'Botas de seguridad'},
-    {id:'auditiva', label:'Protección auditiva'},
-    {id:'respiratoria', label:'Protección respiratoria'},
-    {id:'arnes', label:'Arnés / anticaídas'},
-    {id:'chaleco', label:'Chaleco reflejante'},
-    {id:'careta', label:'Careta facial'},
-    {id:'mandil', label:'Mandil / ropa especial'}
-  ];
-  let state = {
-    folio:null, tab:'setup',
-    setup:{empresa:'',area:'',tarea:'',responsable:'',fecha:new Date().toISOString().slice(0,10)},
-    epp:[],
-    pasos:[],
-    draft:{paso:'',peligro:'',control:''}
-  };
-
-  function load(){ try{const r=localStorage.getItem(STORAGE_KEY);if(r)state={...state,...JSON.parse(r)};}catch(e){} }
-  function save(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){} }
-  function folioNuevo(){ return 'BioNova-ATS-'+Math.floor(10000+Math.random()*89999); }
-
-  function mount(container){
-    load();
-    if(!state.folio) state.folio=folioNuevo();
-    save();
-    container.innerHTML = `
-      <div class="tool-section">
-        <div class="tool-section__head">
-          <div class="tool-section__title">
-            <div class="tool-section__icon"><svg class="ic"><use href="#i-clipboard-check"/></svg></div>
-            <div>
-              <h1>Generador ATS</h1>
-              <p>Análisis de Trabajo Seguro · paso a paso con peligros y controles</p>
-            </div>
-          </div>
-          <div class="tool-section__actions">
-            <button class="btn btn--ghost btn--sm" id="ats-reset">Nuevo ATS</button>
-            <button class="btn btn--accent btn--sm" id="ats-pdf">Descargar PDF<svg class="ic"><use href="#i-download"/></svg></button>
-          </div>
+/* 2 ─ UFC/mL (conteo en placa) ─────────────────────────── */
+const ToolUFC = (function(){
+  function mount(c){
+    bnToolShell(c,{icon:'i-bn-microbe',title:'UFC/mL · conteo en placa',
+      sub:'Unidades Formadoras de Colonias por mililitro a partir del conteo y la dilución sembrada.',
+      actions:`<button class="btn btn--accent btn--sm" id="ufc-pdf">Reporte PDF<svg class="ic"><use href="#i-download"/></svg></button>`,
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-microbe"/></svg>Datos de la placa</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>Colonias contadas</label><input class="input" id="ufc-col" placeholder="ej. 156" inputmode="numeric"><div class="bn-field__hint">Rango contable ideal: 30–300</div></div>
+          <div class="bn-field"><label>Dilución sembrada (10⁻ⁿ)</label><input class="input" id="ufc-dil" placeholder="ej. 4" inputmode="numeric"><div class="bn-field__hint">Escribe sólo n (10⁻⁴ → 4)</div></div>
+          <div class="bn-field"><label>Volumen sembrado</label><input class="input" id="ufc-vol" placeholder="ej. 0.1" inputmode="decimal" value="0.1"><div class="bn-field__hint">mL</div></div>
         </div>
-        <div class="ats" id="ats-root"></div>
-      </div>
-    `;
-    container.querySelector('#ats-reset').addEventListener('click',()=>{
-      if(state.pasos.length>0 && !confirm('¿Iniciar un nuevo ATS? Se perderá el actual.')) return;
-      state={folio:folioNuevo(),tab:'setup',setup:{empresa:'',area:'',tarea:'',responsable:'',fecha:new Date().toISOString().slice(0,10)},epp:[],pasos:[],draft:{paso:'',peligro:'',control:''}};
-      save(); render(); if(typeof Toast!=='undefined')Toast.info('Nuevo ATS','Folio: '+state.folio);
-    });
-    container.querySelector('#ats-pdf').addEventListener('click',()=>generarPDF());
-    render();
-  }
-
-  function render(){
-    const root=document.getElementById('ats-root');
-    if(!root) return;
-    root.innerHTML = `
-      <div class="ats-head">
-        <span class="ats-folio">${state.folio}</span>
-        <span class="ats-meta">${state.pasos.length} paso${state.pasos.length!==1?'s':''} · ${state.epp.length} EPP</span>
-      </div>
-      <div class="ats-tabs">
-        <button class="ats-tab ${state.tab==='setup'?'is-active':''}" data-atab="setup"><svg class="ic"><use href="#i-clipboard-check"/></svg>Datos y EPP</button>
-        <button class="ats-tab ${state.tab==='pasos'?'is-active':''}" data-atab="pasos"><svg class="ic"><use href="#i-tools"/></svg>Pasos<span class="ats-tab__badge">${state.pasos.length}</span></button>
-        <button class="ats-tab ${state.tab==='resumen'?'is-active':''}" data-atab="resumen"><svg class="ic"><use href="#i-check-circle"/></svg>Resumen</button>
-      </div>
-      <div class="ats-pane" id="ats-pane"></div>
-    `;
-    root.querySelectorAll('[data-atab]').forEach(t=>t.addEventListener('click',()=>{state.tab=t.dataset.atab;save();render();}));
-    if(state.tab==='setup') renderSetup();
-    else if(state.tab==='pasos') renderPasos();
-    else renderResumen();
-  }
-
-  function renderSetup(){
-    const p=document.getElementById('ats-pane');
-    p.innerHTML = `
-      <div class="ats-card">
-        <div class="ats-card__head">
-          <h2 class="ats-card__title">Datos generales de la tarea</h2>
-          <p class="ats-card__sub">Define la actividad a analizar y el equipo de protección requerido.</p>
+        <div class="bn-result" style="margin-top:18px">
+          <div class="bn-result__lbl">Concentración</div>
+          <div class="bn-result__val"><span id="ufc-val">—</span><span class="bn-result__unit">UFC/mL</span></div>
+          <div class="bn-result__note" id="ufc-note">Captura los tres datos.</div>
         </div>
-        <div class="ats-form">
-          <div class="ats-form__field ats-form__field--full">
-            <label class="ats-label">Empresa o centro de trabajo</label>
-            <input type="text" class="input" id="ats-empresa" value="${state.setup.empresa.replace(/"/g,'&quot;')}" placeholder="Ej: Industrias del Centro SA de CV">
-          </div>
-          <div class="ats-form__field">
-            <label class="ats-label">Área</label>
-            <input type="text" class="input" id="ats-area" value="${state.setup.area.replace(/"/g,'&quot;')}" placeholder="Ej: Mantenimiento">
-          </div>
-          <div class="ats-form__field">
-            <label class="ats-label">Responsable</label>
-            <input type="text" class="input" id="ats-responsable" value="${state.setup.responsable.replace(/"/g,'&quot;')}" placeholder="Nombre del responsable">
-          </div>
-          <div class="ats-form__field ats-form__field--full">
-            <label class="ats-label">Tarea / actividad a realizar</label>
-            <input type="text" class="input" id="ats-tarea" value="${state.setup.tarea.replace(/"/g,'&quot;')}" placeholder="Ej: Cambio de banda transportadora en línea 3">
-          </div>
-          <div class="ats-form__field">
-            <label class="ats-label">Fecha</label>
-            <input type="date" class="input" id="ats-fecha" value="${state.setup.fecha}">
-          </div>
-        </div>
-        <div class="ats-epp">
-          <div class="ats-epp__label">Equipo de Protección Personal (EPP) requerido</div>
-          <div class="ats-epp__grid">
-            ${EPP_LISTA.map(e=>`
-              <button class="ats-epp__item ${state.epp.includes(e.id)?'is-active':''}" data-epp="${e.id}">
-                <span class="ats-epp__check"><svg class="ic"><use href="#i-check"/></svg></span>${e.label}
-              </button>`).join('')}
-          </div>
-        </div>
-        <div class="ats-card__foot">
-          <button class="btn btn--accent" id="ats-next">Siguiente: agregar pasos<svg class="ic"><use href="#i-arrow-right"/></svg></button>
-        </div>
-      </div>
-    `;
-    ['empresa','area','responsable','tarea','fecha'].forEach(k=>{
-      p.querySelector('#ats-'+k).addEventListener('input',e=>{state.setup[k]=e.target.value;save();});
-    });
-    p.querySelectorAll('[data-epp]').forEach(b=>b.addEventListener('click',()=>{
-      const id=b.dataset.epp;
-      if(state.epp.includes(id)) state.epp=state.epp.filter(x=>x!==id);
-      else state.epp.push(id);
-      save(); renderSetup();
-    }));
-    p.querySelector('#ats-next').addEventListener('click',()=>{state.tab='pasos';save();render();});
-  }
-
-  function renderPasos(){
-    const p=document.getElementById('ats-pane');
-    const d=state.draft;
-    p.innerHTML = `
-      <div class="ats-add">
-        <div class="ats-add__header">
-          <div class="ats-add__icon"><svg class="ic"><use href="#i-tools"/></svg></div>
-          <div><div class="ats-add__title">Agregar paso de la tarea</div><div class="ats-add__sub">Describe el paso, su peligro y la medida de control</div></div>
-        </div>
-        <div class="ats-add__body">
-          <div class="ats-form__field">
-            <label class="ats-label">Paso de la tarea <span class="ats-num">${state.pasos.length+1}</span></label>
-            <input type="text" class="input" id="ats-d-paso" value="${d.paso.replace(/"/g,'&quot;')}" placeholder="Ej: Bloquear y etiquetar fuente de energía (LOTO)">
-          </div>
-          <div class="ats-form__field">
-            <label class="ats-label">Peligro asociado</label>
-            <input type="text" class="input" id="ats-d-peligro" value="${d.peligro.replace(/"/g,'&quot;')}" placeholder="Ej: Energización accidental del equipo">
-          </div>
-          <div class="ats-form__field">
-            <label class="ats-label">Medida de control</label>
-            <input type="text" class="input" id="ats-d-control" value="${d.control.replace(/"/g,'&quot;')}" placeholder="Ej: Candado y tarjeta de bloqueo personal">
-          </div>
-          <button class="btn btn--accent" id="ats-d-add" style="align-self:flex-start;">Agregar paso<svg class="ic"><use href="#i-check"/></svg></button>
-        </div>
-      </div>
-      ${state.pasos.length===0 ? `
-        <div class="ats-empty">
-          <div class="ats-empty__icon"><svg class="ic ic--xl"><use href="#i-tools"/></svg></div>
-          <h4>Sin pasos aún</h4>
-          <p>Descompón la tarea en pasos secuenciales. Cada paso con su peligro y control.</p>
-        </div>` : `
-        <div class="ats-list">
-          ${state.pasos.map((s,i)=>`
-            <div class="ats-step">
-              <div class="ats-step__num">${i+1}</div>
-              <div class="ats-step__body">
-                <div class="ats-step__paso">${s.paso.replace(/</g,'&lt;')}</div>
-                <div class="ats-step__cols">
-                  <div class="ats-step__col">
-                    <span class="ats-step__tag ats-step__tag--peligro">Peligro</span>
-                    <span>${s.peligro? s.peligro.replace(/</g,'&lt;') : '—'}</span>
-                  </div>
-                  <div class="ats-step__col">
-                    <span class="ats-step__tag ats-step__tag--control">Control</span>
-                    <span>${s.control? s.control.replace(/</g,'&lt;') : '—'}</span>
-                  </div>
-                </div>
-              </div>
-              <button class="ats-step__del" data-del="${i}" title="Eliminar paso"><svg class="ic"><use href="#i-x"/></svg></button>
-            </div>`).join('')}
-        </div>`}
-    `;
-    p.querySelector('#ats-d-paso').addEventListener('input',e=>{state.draft.paso=e.target.value;save();});
-    p.querySelector('#ats-d-peligro').addEventListener('input',e=>{state.draft.peligro=e.target.value;save();});
-    p.querySelector('#ats-d-control').addEventListener('input',e=>{state.draft.control=e.target.value;save();});
-    p.querySelector('#ats-d-add').addEventListener('click',()=>{
-      if(!state.draft.paso.trim()){ if(typeof Toast!=='undefined')Toast.error('Falta el paso','Describe el paso de la tarea.'); return; }
-      state.pasos.push({...state.draft});
-      state.draft={paso:'',peligro:'',control:''};
-      save(); render();
-      if(typeof Toast!=='undefined')Toast.success('Paso agregado','Paso '+state.pasos.length);
-    });
-    p.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{
-      state.pasos.splice(parseInt(b.dataset.del),1); save(); render();
-    }));
-  }
-
-  function renderResumen(){
-    const p=document.getElementById('ats-pane');
-    if(!toolEsVIP()){
-      p.innerHTML = `
-        <div class="ats-card">
-          <div class="tool-paywall">
-            <div class="tool-paywall__ic"><svg class="ic ic--xl"><use href="#i-crown"/></svg></div>
-            <h3>Resumen y PDF para miembros VIP</h3>
-            <p>Captura los pasos de tu análisis cuando quieras. Para ver el resumen completo y descargar el ATS en PDF formato STPS, activa tu membresía.</p>
-            <button class="btn btn--accent" id="ats-unlock">Hazte VIP y desbloquea</button>
-          </div>
-        </div>`;
-      p.querySelector('#ats-unlock')?.addEventListener('click', ()=>toolRequiereVIP('el Generador ATS'));
-      return;
+        <div class="bn-formula">UFC/mL = colonias ÷ (volumen × dilución)</div>
+      </div>`});
+    const q=id=>c.querySelector('#'+id); let last={};
+    function calc(){
+      const col=bnNum(q('ufc-col').value), n=bnNum(q('ufc-dil').value), vol=bnNum(q('ufc-vol').value);
+      const val=q('ufc-val'), note=q('ufc-note');
+      if(col===null||n===null||vol===null||vol===0){ val.textContent='—'; note.textContent='Captura colonias, dilución y volumen.'; return; }
+      const ufc = col / (vol * Math.pow(10,-n));
+      val.textContent=bnFmt(ufc,2);
+      let aviso='';
+      if(col<30) aviso=' · Conteo bajo (<30): resultado poco confiable, reporta como estimado.';
+      else if(col>300) aviso=' · Conteo alto (>300): incontable, usa una dilución mayor.';
+      note.textContent='= '+bnFmt(col)+' ÷ ('+vol+' × 10⁻'+n+')'+aviso;
+      last={col,n,vol,ufc};
     }
-    const eppLabels = state.epp.map(id=>EPP_LISTA.find(e=>e.id===id)?.label).filter(Boolean);
-    p.innerHTML = `
-      <div class="ats-card">
-        <div class="ats-card__head">
-          <h2 class="ats-card__title">Resumen del análisis</h2>
-          <p class="ats-card__sub">Revisa el ATS completo antes de descargar el PDF.</p>
+    ['ufc-col','ufc-dil','ufc-vol'].forEach(id=>q(id).addEventListener('input',calc));
+    q('ufc-pdf').addEventListener('click',()=>{
+      if(!toolRequiereVIP('UFC/mL')) return; if(!window.jspdf){ Toast.error('PDF no disponible'); return; }
+      const {jsPDF}=window.jspdf; const pdf=new jsPDF({unit:'mm',format:'a4'});
+      let y=bnPdfHeader(pdf,'Reporte de recuento microbiano','Folio: '+bnFolio('UFC'));
+      pdf.setFontSize(10);
+      [['Colonias contadas',last.col],['Dilución','10⁻'+last.n],['Volumen sembrado',last.vol+' mL']].forEach(([l,v])=>{
+        pdf.setTextColor(110,120,140); pdf.text(l+':',16,y); pdf.setTextColor(15,23,42); pdf.text(String(v??'—'),70,y); y+=7;});
+      y+=4; pdf.setFont(undefined,'bold'); pdf.setFontSize(12); pdf.text('Resultado: '+bnFmt(last.ufc,2)+' UFC/mL',16,y); pdf.setFont(undefined,'normal');
+      bnPdfFooter(pdf); pdf.save('ufc-'+Date.now()+'.pdf'); Toast.success('PDF generado');
+    });
+    calc();
+  }
+  return {open(){navigateToSection('tool-ufc');}, mount};
+})();
+
+/* 3 ─ CONVERSOR CLÍNICO mg/dL ↔ mmol/L ─────────────────── */
+const ToolConversor = (function(){
+  const AN=[
+    {k:'glucosa',n:'Glucosa',f:0.0555,u:'mmol/L'},
+    {k:'colesterol',n:'Colesterol / HDL / LDL',f:0.02586,u:'mmol/L'},
+    {k:'trigliceridos',n:'Triglicéridos',f:0.01129,u:'mmol/L'},
+    {k:'urea',n:'Urea',f:0.1665,u:'mmol/L'},
+    {k:'bun',n:'Nitrógeno ureico (BUN)',f:0.357,u:'mmol/L'},
+    {k:'creatinina',n:'Creatinina',f:88.4,u:'µmol/L'},
+    {k:'acidourico',n:'Ácido úrico',f:59.48,u:'µmol/L'},
+    {k:'calcio',n:'Calcio',f:0.2495,u:'mmol/L'},
+    {k:'bilirrubina',n:'Bilirrubina',f:17.1,u:'µmol/L'}
+  ];
+  function mount(c){
+    bnToolShell(c,{icon:'i-bn-droplet',title:'Conversor clínico de unidades',
+      sub:'Convierte resultados de química sanguínea entre mg/dL y unidades del SI (mmol/L · µmol/L).',
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-droplet"/></svg>Analito y valor</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>Analito</label>
+            <select class="bn-select" id="cv-an">${AN.map(a=>`<option value="${a.k}">${a.n}</option>`).join('')}</select></div>
+          <div class="bn-field"><label>Dirección</label>
+            <div class="bn-seg" id="cv-dir">
+              <button data-d="to" class="is-on">mg/dL → SI</button>
+              <button data-d="from">SI → mg/dL</button>
+            </div></div>
+          <div class="bn-field"><label>Valor a convertir</label><input class="input" id="cv-val" placeholder="ej. 90" inputmode="decimal"></div>
         </div>
-        <div class="ats-resumen">
-          <div class="ats-resumen__row"><span>Empresa</span><strong>${state.setup.empresa||'—'}</strong></div>
-          <div class="ats-resumen__row"><span>Área</span><strong>${state.setup.area||'—'}</strong></div>
-          <div class="ats-resumen__row"><span>Tarea</span><strong>${state.setup.tarea||'—'}</strong></div>
-          <div class="ats-resumen__row"><span>Responsable</span><strong>${state.setup.responsable||'—'}</strong></div>
-          <div class="ats-resumen__row"><span>Fecha</span><strong>${state.setup.fecha||'—'}</strong></div>
+        <div class="bn-result" style="margin-top:18px">
+          <div class="bn-result__lbl">Equivalente</div>
+          <div class="bn-result__val"><span id="cv-out">—</span><span class="bn-result__unit" id="cv-unit"></span></div>
+          <div class="bn-result__note" id="cv-note">Selecciona analito y captura el valor.</div>
         </div>
-        <div class="ats-resumen__epp">
-          <div class="ats-epp__label">EPP requerido</div>
-          ${eppLabels.length? `<div class="ats-resumen__chips">${eppLabels.map(l=>`<span class="ats-resumen__chip">${l}</span>`).join('')}</div>` : '<p class="ats-card__sub">Ningún EPP seleccionado.</p>'}
+      </div>`});
+    const q=id=>c.querySelector('#'+id); let dir='to';
+    function calc(){
+      const a=AN.find(x=>x.k===q('cv-an').value); const v=bnNum(q('cv-val').value);
+      const out=q('cv-out'),unit=q('cv-unit'),note=q('cv-note');
+      if(!a||v===null){ out.textContent='—'; unit.textContent=''; note.textContent='Captura el valor.'; return; }
+      let r,u;
+      if(dir==='to'){ r=v*a.f; u=a.u; note.textContent=v+' mg/dL × '+a.f+' = '+bnFmt(r,3)+' '+u; }
+      else { r=v/a.f; u='mg/dL'; note.textContent=v+' '+a.u+' ÷ '+a.f+' = '+bnFmt(r,3)+' mg/dL'; }
+      out.textContent=bnFmt(r,3); unit.textContent=' '+u;
+    }
+    q('cv-an').addEventListener('change',calc);
+    q('cv-val').addEventListener('input',calc);
+    q('cv-dir').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      q('cv-dir').querySelectorAll('button').forEach(x=>x.classList.remove('is-on'));
+      b.classList.add('is-on'); dir=b.dataset.d; calc();
+    }));
+    calc();
+  }
+  return {open(){navigateToSection('tool-conversor');}, mount};
+})();
+
+/* 4 ─ DOSIS POR PESO (mg/kg) ───────────────────────────── */
+const ToolDosis = (function(){
+  function mount(c){
+    bnToolShell(c,{icon:'i-bn-pill',title:'Dosis por peso (mg/kg)',
+      sub:'Calcula la dosis total, por toma y el volumen a administrar según el peso del paciente.',
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-pill"/></svg>Parámetros</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>Peso del paciente</label><input class="input" id="ds-peso" placeholder="ej. 70" inputmode="decimal"><div class="bn-field__hint">kg</div></div>
+          <div class="bn-field"><label>Dosis</label><input class="input" id="ds-mgkg" placeholder="ej. 15" inputmode="decimal"><div class="bn-field__hint">mg/kg (por día o por toma)</div></div>
+          <div class="bn-field"><label>Tomas por día</label><input class="input" id="ds-tomas" placeholder="ej. 3" inputmode="numeric" value="1"></div>
+          <div class="bn-field"><label>Concentración (opcional)</label><input class="input" id="ds-conc" placeholder="ej. 250" inputmode="decimal"><div class="bn-field__hint">mg/mL del fármaco</div></div>
         </div>
-        <div class="ats-resumen__pasos">
-          <div class="ats-epp__label">Pasos (${state.pasos.length})</div>
-          ${state.pasos.length? state.pasos.map((s,i)=>`
-            <div class="ats-resumen__step">
-              <span class="ats-resumen__stepnum">${i+1}</span>
-              <div>
-                <div class="ats-resumen__steppaso">${s.paso.replace(/</g,'&lt;')}</div>
-                <div class="ats-resumen__stepmeta"><b>Peligro:</b> ${s.peligro? s.peligro.replace(/</g,'&lt;'):'—'} · <b>Control:</b> ${s.control? s.control.replace(/</g,'&lt;'):'—'}</div>
-              </div>
-            </div>`).join('') : '<p class="ats-card__sub">Aún no agregas pasos.</p>'}
+        <div class="bn-result" style="margin-top:18px">
+          <div class="bn-result__lbl">Dosis total</div>
+          <div class="bn-result__val"><span id="ds-total">—</span><span class="bn-result__unit">mg</span></div>
         </div>
-        <div class="ats-card__foot">
-          <button class="btn btn--accent" id="ats-pdf2">Descargar PDF<svg class="ic"><use href="#i-download"/></svg></button>
+        <div class="bn-mini">
+          <div class="bn-mini__c"><div class="bn-mini__l">Por toma</div><div class="bn-mini__v" id="ds-toma">—</div></div>
+          <div class="bn-mini__c"><div class="bn-mini__l">Volumen por toma</div><div class="bn-mini__v" id="ds-vol">—</div></div>
+        </div>
+        <div class="bn-formula">dosis = peso (kg) × mg/kg</div>
+        <div class="bn-field__hint" style="margin-top:10px">⚠ Herramienta de apoyo de cálculo. La indicación final es responsabilidad del profesional tratante.</div>
+      </div>`});
+    const q=id=>c.querySelector('#'+id);
+    function calc(){
+      const p=bnNum(q('ds-peso').value), mk=bnNum(q('ds-mgkg').value), t=bnNum(q('ds-tomas').value)||1, conc=bnNum(q('ds-conc').value);
+      const tot=q('ds-total'),toma=q('ds-toma'),vol=q('ds-vol');
+      if(p===null||mk===null){ tot.textContent='—'; toma.textContent='—'; vol.textContent='—'; return; }
+      const total=p*mk; tot.textContent=bnFmt(total,2);
+      const porToma=total/(t||1); toma.textContent=bnFmt(porToma,2)+' mg';
+      vol.textContent=(conc&&conc>0)?bnFmt(porToma/conc,2)+' mL':'—';
+    }
+    ['ds-peso','ds-mgkg','ds-tomas','ds-conc'].forEach(id=>q(id).addEventListener('input',calc));
+    calc();
+  }
+  return {open(){navigateToSection('tool-dosis');}, mount};
+})();
+
+/* 5 ─ TFG / eGFR (CKD-EPI 2021, sin raza) ──────────────── */
+const ToolTFG = (function(){
+  function etapa(g){
+    if(g>=90) return {t:'G1 · Normal o alta',c:'ok'};
+    if(g>=60) return {t:'G2 · Ligeramente disminuida',c:'ok'};
+    if(g>=45) return {t:'G3a · Leve-moderada',c:'lo'};
+    if(g>=30) return {t:'G3b · Moderada-grave',c:'lo'};
+    if(g>=15) return {t:'G4 · Grave',c:'hi'};
+    return {t:'G5 · Falla renal',c:'hi'};
+  }
+  function mount(c){
+    bnToolShell(c,{icon:'i-bn-droplet',title:'TFG / eGFR (CKD-EPI 2021)',
+      sub:'Tasa de filtración glomerular estimada con la ecuación CKD-EPI Creatinina 2021 (sin variable de raza).',
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-droplet"/></svg>Datos del paciente</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>Creatinina sérica</label><input class="input" id="tfg-cr" placeholder="ej. 0.9" inputmode="decimal"><div class="bn-field__hint">mg/dL</div></div>
+          <div class="bn-field"><label>Edad</label><input class="input" id="tfg-edad" placeholder="ej. 45" inputmode="numeric"><div class="bn-field__hint">años</div></div>
+          <div class="bn-field"><label>Sexo</label>
+            <div class="bn-seg" id="tfg-sexo"><button data-s="f" class="is-on">Femenino</button><button data-s="m">Masculino</button></div></div>
+        </div>
+        <div class="bn-result" style="margin-top:18px">
+          <div class="bn-result__lbl">TFG estimada</div>
+          <div class="bn-result__val"><span id="tfg-val">—</span><span class="bn-result__unit">mL/min/1.73m²</span></div>
+          <div class="bn-result__note" id="tfg-etapa">Captura creatinina y edad.</div>
+        </div>
+        <div class="bn-formula">CKD-EPI 2021 · 142 × min(Scr/κ,1)^α × max(Scr/κ,1)^⁻¹·² × 0.9938^edad × (1.012 si mujer)</div>
+      </div>`});
+    const q=id=>c.querySelector('#'+id); let sexo='f';
+    function calc(){
+      const scr=bnNum(q('tfg-cr').value), edad=bnNum(q('tfg-edad').value);
+      const val=q('tfg-val'), et=q('tfg-etapa');
+      if(scr===null||edad===null||scr<=0||edad<=0){ val.textContent='—'; et.textContent='Captura creatinina y edad.'; return; }
+      const k = sexo==='f'?0.7:0.9; const a = sexo==='f'?-0.241:-0.302;
+      const r = scr/k;
+      let g = 142 * Math.pow(Math.min(r,1),a) * Math.pow(Math.max(r,1),-1.200) * Math.pow(0.9938,edad);
+      if(sexo==='f') g*=1.012;
+      val.textContent=bnFmt(g,1);
+      const e=etapa(g);
+      et.innerHTML='Estadio: <span class="bn-badge bn-badge--'+e.c+'">'+e.t+'</span>';
+    }
+    ['tfg-cr','tfg-edad'].forEach(id=>q(id).addEventListener('input',calc));
+    q('tfg-sexo').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      q('tfg-sexo').querySelectorAll('button').forEach(x=>x.classList.remove('is-on'));
+      b.classList.add('is-on'); sexo=b.dataset.s; calc();
+    }));
+    calc();
+  }
+  return {open(){navigateToSection('tool-tfg');}, mount};
+})();
+
+/* 6 ─ MOLARIDAD ↔ g/L ──────────────────────────────────── */
+const ToolMolaridad = (function(){
+  function mount(c){
+    bnToolShell(c,{icon:'i-bn-flask',title:'Molaridad ↔ g/L',
+      sub:'Convierte entre molaridad y concentración másica, y calcula los gramos para preparar una solución.',
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-flask"/></svg>Conversión</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>Peso molecular (PM)</label><input class="input" id="mol-pm" placeholder="ej. 58.44 (NaCl)" inputmode="decimal"><div class="bn-field__hint">g/mol</div></div>
+          <div class="bn-field"><label>Molaridad</label><input class="input" id="mol-m" placeholder="ej. 0.5" inputmode="decimal"><div class="bn-field__hint">mol/L (M)</div></div>
+          <div class="bn-field"><label>Concentración másica</label><input class="input" id="mol-gl" placeholder="se calcula…" inputmode="decimal"><div class="bn-field__hint">g/L</div></div>
+        </div>
+        <div class="bn-field__hint" style="margin:4px 0 14px">Llena PM y uno de los dos (M o g/L); el otro se calcula.</div>
+        <div class="bn-card__t" style="margin-top:6px"><svg class="ic"><use href="#i-bn-flask"/></svg>¿Cuántos gramos pesar?</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>Volumen a preparar</label><input class="input" id="mol-v" placeholder="ej. 1" inputmode="decimal"><div class="bn-field__hint">litros</div></div>
+        </div>
+        <div class="bn-result" style="margin-top:18px">
+          <div class="bn-result__lbl">Gramos a pesar</div>
+          <div class="bn-result__val"><span id="mol-g">—</span><span class="bn-result__unit">g</span></div>
+          <div class="bn-result__note" id="mol-note">g = M × V(L) × PM</div>
+        </div>
+        <div class="bn-formula">M = (g/L) ÷ PM   ·   g/L = M × PM</div>
+      </div>`});
+    const q=id=>c.querySelector('#'+id);
+    function calc(src){
+      const pm=bnNum(q('mol-pm').value); let m=bnNum(q('mol-m').value); let gl=bnNum(q('mol-gl').value);
+      if(pm&&pm>0){
+        if(src==='m'&&m!==null){ gl=m*pm; q('mol-gl').value=bnFmt(gl,4); }
+        else if(src==='gl'&&gl!==null){ m=gl/pm; q('mol-m').value=bnFmt(m,4); }
+        else if(m!==null&&gl===null){ gl=m*pm; q('mol-gl').value=bnFmt(gl,4); }
+        else if(gl!==null&&m===null){ m=gl/pm; q('mol-m').value=bnFmt(m,4); }
+      }
+      const v=bnNum(q('mol-v').value);
+      const g=q('mol-g');
+      if(pm&&m!==null&&v!==null){ g.textContent=bnFmt(m*v*pm,4); }
+      else { g.textContent='—'; }
+    }
+    q('mol-m').addEventListener('input',()=>calc('m'));
+    q('mol-gl').addEventListener('input',()=>calc('gl'));
+    q('mol-pm').addEventListener('input',()=>calc());
+    q('mol-v').addEventListener('input',()=>calc());
+    calc();
+  }
+  return {open(){navigateToSection('tool-molaridad');}, mount};
+})();
+
+/* 7 ─ LEY DE BEER (A = ε·b·c) ──────────────────────────── */
+const ToolBeer = (function(){
+  function mount(c){
+    bnToolShell(c,{icon:'i-bn-droplet',title:'Ley de Beer-Lambert (A = ε·b·c)',
+      sub:'Relaciona absorbancia, absortividad molar, paso óptico y concentración. Deja vacío el dato a calcular.',
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-bn-droplet"/></svg>Variables (llena 3, deja 1 vacío)</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>A · absorbancia</label><input class="input" id="be-a" placeholder="ej. 0.45" inputmode="decimal"><div class="bn-field__hint">adimensional</div></div>
+          <div class="bn-field"><label>ε · absortividad molar</label><input class="input" id="be-e" placeholder="ej. 6300" inputmode="decimal"><div class="bn-field__hint">L·mol⁻¹·cm⁻¹</div></div>
+          <div class="bn-field"><label>b · paso óptico</label><input class="input" id="be-b" placeholder="1" inputmode="decimal" value="1"><div class="bn-field__hint">cm</div></div>
+          <div class="bn-field"><label>c · concentración</label><input class="input" id="be-c" placeholder="se calcula…" inputmode="decimal"><div class="bn-field__hint">mol/L</div></div>
+        </div>
+        <div class="bn-result" style="margin-top:18px">
+          <div class="bn-result__lbl">Resultado</div>
+          <div class="bn-result__val" id="be-val">—</div>
+          <div class="bn-result__note" id="be-note">Completa 3 campos para calcular el cuarto.</div>
+        </div>
+        <div class="bn-formula">A = ε · b · c</div>
+      </div>`});
+    const q=id=>c.querySelector('#'+id);
+    function calc(){
+      const A=bnNum(q('be-a').value),E=bnNum(q('be-e').value),B=bnNum(q('be-b').value),C=bnNum(q('be-c').value);
+      const vals={A,E,B,C}; const blanks=Object.keys(vals).filter(k=>vals[k]===null);
+      const val=q('be-val'),note=q('be-note');
+      if(blanks.length!==1){ val.textContent='—'; note.textContent=blanks.length>1?'Faltan datos: llena 3 campos.':'Deja vacío el dato que quieres calcular.'; return; }
+      const b=blanks[0]; let r,lbl;
+      if(b==='A'){ r=E*B*C; lbl='A = '+bnFmt(r,4); }
+      else if(b==='E'){ r=A/(B*C); lbl='ε = '+bnFmt(r,2)+' L·mol⁻¹·cm⁻¹'; }
+      else if(b==='B'){ r=A/(E*C); lbl='b = '+bnFmt(r,4)+' cm'; }
+      else { r=A/(E*B); lbl='c = '+bnFmt(r,6)+' mol/L'; }
+      if(r===null||!isFinite(r)){ val.textContent='—'; note.textContent='Revisa que no haya ceros.'; return; }
+      val.textContent=lbl; note.textContent='Calculado a partir de los otros 3 valores.';
+    }
+    ['be-a','be-e','be-b','be-c'].forEach(id=>q(id).addEventListener('input',calc));
+    calc();
+  }
+  return {open(){navigateToSection('tool-beer');}, mount};
+})();
+
+/* 8 ─ REPORTE DE RESULTADOS DE LAB (PDF) ───────────────── */
+const ToolReporte = (function(){
+  let rows=[];
+  function rowHTML(i,r){
+    return `<tr data-i="${i}">
+      <td><input class="input" data-f="param" placeholder="Parámetro" value="${r.param||''}"></td>
+      <td><input class="input" data-f="res" placeholder="Resultado" value="${r.res||''}" inputmode="decimal" style="max-width:90px"></td>
+      <td><input class="input" data-f="uni" placeholder="Unidad" value="${r.uni||''}" style="max-width:80px"></td>
+      <td><input class="input" data-f="ref" placeholder="ej. 70-110" value="${r.ref||''}" style="max-width:100px"></td>
+      <td id="flag-${i}"></td>
+      <td><button class="bn-rowdel" data-del="${i}" title="Quitar">×</button></td>
+    </tr>`;
+  }
+  function flagFor(res,ref){
+    const v=bnNum(res); if(v===null||!ref) return '';
+    const m=String(ref).match(/(-?\d+\.?\d*)\s*[-–a]\s*(-?\d+\.?\d*)/);
+    if(!m) return '';
+    const lo=parseFloat(m[1]), hi=parseFloat(m[2]);
+    if(v<lo) return '<span class="bn-badge bn-badge--lo">BAJO</span>';
+    if(v>hi) return '<span class="bn-badge bn-badge--hi">ALTO</span>';
+    return '<span class="bn-badge bn-badge--ok">NORMAL</span>';
+  }
+  function mount(c){
+    if(rows.length===0) rows=[{param:'',res:'',uni:'',ref:''}];
+    bnToolShell(c,{icon:'i-edit',title:'Reporte de resultados de laboratorio',
+      sub:'Captura datos del paciente y resultados; genera un PDF profesional con membrete BioNova.',
+      actions:`<button class="btn btn--ghost btn--sm" id="rp-add">+ Analito</button><button class="btn btn--accent btn--sm" id="rp-pdf">Generar PDF<svg class="ic"><use href="#i-download"/></svg></button>`,
+      body:`<div class="bn-card">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-user"/></svg>Datos del paciente</div>
+        <div class="bn-grid">
+          <div class="bn-field"><label>Nombre del paciente</label><input class="input" id="rp-nom" placeholder="Nombre completo"></div>
+          <div class="bn-field"><label>Edad</label><input class="input" id="rp-edad" placeholder="años" inputmode="numeric"></div>
+          <div class="bn-field"><label>Sexo</label><input class="input" id="rp-sexo" placeholder="F / M"></div>
+          <div class="bn-field"><label>ID / Folio interno</label><input class="input" id="rp-id" placeholder="opcional"></div>
+          <div class="bn-field"><label>Médico solicitante</label><input class="input" id="rp-med" placeholder="opcional"></div>
+          <div class="bn-field"><label>Fecha de toma</label><input class="input" id="rp-fecha" placeholder="dd/mm/aaaa"></div>
         </div>
       </div>
-    `;
-    p.querySelector('#ats-pdf2').addEventListener('click',()=>generarPDF());
-  }
-
-  function generarPDF(){
-    if(!state.setup.tarea.trim()){ if(typeof Toast!=='undefined')Toast.error('Falta la tarea','Captura al menos la tarea a analizar.'); return; }
-    if(!toolRequiereVIP('el Generador ATS')) return;
-    if(!window.jspdf){ if(typeof Toast!=='undefined')Toast.error('Generador no disponible','Verifica conexión.'); return; }
-    try{
-      const {jsPDF}=window.jspdf;
-      const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-      const W=210,M=14; let y=M;
-      pdf.setFillColor(255,122,45); pdf.rect(0,0,W,6,'F');
-      pdf.setFillColor(26,20,16); pdf.rect(0,6,W,3,'F');
-      y=20;
-      pdf.setFontSize(14); pdf.setTextColor(26,20,16); pdf.setFont(undefined,'bold');
-      pdf.text('ANÁLISIS DE TRABAJO SEGURO (ATS)', M, y);
-      pdf.setFont(undefined,'normal'); y+=6;
-      pdf.setFontSize(9); pdf.setTextColor(120,108,90);
-      pdf.text('BioNova · Biomedicina · Microbiología · Medicina general', M, y); y+=4;
-      pdf.text('Folio: '+state.folio+' · '+new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'}), M, y);
-      y+=10;
-      pdf.setFontSize(10); pdf.setTextColor(26,20,16); pdf.setFont(undefined,'bold');
-      pdf.text('DATOS GENERALES', M, y); pdf.setFont(undefined,'normal'); pdf.setFontSize(9); y+=6;
-      [['Empresa',state.setup.empresa],['Área',state.setup.area],['Tarea',state.setup.tarea],['Responsable',state.setup.responsable],['Fecha',state.setup.fecha]].forEach(([l,v])=>{
-        pdf.setTextColor(120,108,90); pdf.text(l+':',M,y);
-        pdf.setTextColor(26,20,16); pdf.text(pdf.splitTextToSize(String(v||'—'),W-M-40),M+34,y);
-        y+=5;
+      <div class="bn-card" style="overflow-x:auto">
+        <div class="bn-card__t"><svg class="ic"><use href="#i-clipboard-check"/></svg>Resultados</div>
+        <table class="bn-tbl"><thead><tr><th>Parámetro</th><th>Resultado</th><th>Unidad</th><th>Ref.</th><th>Flag</th><th></th></tr></thead>
+        <tbody id="rp-body">${rows.map((r,i)=>rowHTML(i,r)).join('')}</tbody></table>
+      </div>`});
+    const q=id=>c.querySelector('#'+id);
+    function refreshFlags(){ rows.forEach((r,i)=>{ const f=c.querySelector('#flag-'+i); if(f) f.innerHTML=flagFor(r.res,r.ref); }); }
+    function rebind(){
+      c.querySelectorAll('#rp-body input').forEach(inp=>{
+        inp.addEventListener('input',e=>{ const tr=e.target.closest('tr'); const i=+tr.dataset.i; rows[i][e.target.dataset.f]=e.target.value; if(e.target.dataset.f==='res'||e.target.dataset.f==='ref') refreshFlags(); });
       });
+      c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.del; rows.splice(i,1); if(rows.length===0) rows=[{param:'',res:'',uni:'',ref:''}]; redraw(); }));
+    }
+    function redraw(){ const body=q('rp-body'); body.innerHTML=rows.map((r,i)=>rowHTML(i,r)).join(''); rebind(); refreshFlags(); }
+    rebind(); refreshFlags();
+    q('rp-add').addEventListener('click',()=>{ rows.push({param:'',res:'',uni:'',ref:''}); redraw(); });
+    q('rp-pdf').addEventListener('click',()=>{
+      if(!toolRequiereVIP('Reporte de laboratorio')) return;
+      if(!window.jspdf){ Toast.error('PDF no disponible','Revisa tu conexión.'); return; }
+      const {jsPDF}=window.jspdf; const pdf=new jsPDF({unit:'mm',format:'a4'}); const W=210,M=16;
+      let y=bnPdfHeader(pdf,'Reporte de resultados de laboratorio','Folio: '+(q('rp-id').value||bnFolio('LAB')));
+      pdf.setFontSize(10);
+      const datos=[['Paciente',q('rp-nom').value||'—'],['Edad / Sexo',((q('rp-edad').value||'—')+' / '+(q('rp-sexo').value||'—'))],['Médico',q('rp-med').value||'—'],['Fecha de toma',q('rp-fecha').value||new Date().toLocaleDateString('es-MX')]];
+      datos.forEach(([l,v])=>{ pdf.setTextColor(110,120,140); pdf.text(l+':',M,y); pdf.setTextColor(15,23,42); pdf.text(String(v),M+34,y); y+=6; });
       y+=4;
-      pdf.setFont(undefined,'bold'); pdf.setFontSize(10); pdf.text('EPP REQUERIDO',M,y); y+=6;
-      pdf.setFont(undefined,'normal'); pdf.setFontSize(9); pdf.setTextColor(26,20,16);
-      const eppLabels=state.epp.map(id=>EPP_LISTA.find(e=>e.id===id)?.label).filter(Boolean);
-      pdf.text(eppLabels.length? eppLabels.join(' · ') : 'Ninguno especificado', M, y, {maxWidth:W-2*M}); y+=8;
-
-      pdf.setFont(undefined,'bold'); pdf.setFontSize(10); pdf.text('SECUENCIA DE PASOS',M,y); y+=2;
-      y = pdfTablaSimple(pdf, {
-        startY:y+3, margin:M,
-        head:['#','Paso','Peligro','Control'],
-        body:state.pasos.map((s,i)=>[i+1,s.paso,s.peligro||'—',s.control||'—']),
-        colWidths:[10,57,57,58], fontSize:8
+      // tabla
+      const cols=[M,M+62,M+92,M+118,W-M]; const heads=['Parámetro','Resultado','Unidad','Referencia'];
+      pdf.setFillColor(42,109,246); pdf.rect(M,y-5,W-2*M,8,'F'); pdf.setTextColor(255,255,255); pdf.setFont(undefined,'bold'); pdf.setFontSize(9);
+      pdf.text(heads[0],cols[0]+2,y); pdf.text(heads[1],cols[1]+2,y); pdf.text(heads[2],cols[2]+2,y); pdf.text(heads[3],cols[3]+2,y);
+      y+=6; pdf.setFont(undefined,'normal'); pdf.setTextColor(15,23,42);
+      rows.filter(r=>r.param||r.res).forEach((r,idx)=>{
+        if(y>270){ pdf.addPage(); y=24; }
+        if(idx%2===0){ pdf.setFillColor(244,248,255); pdf.rect(M,y-4,W-2*M,7,'F'); }
+        pdf.setTextColor(15,23,42); pdf.text(String(r.param||''),cols[0]+2,y);
+        const fl=flagFor(r.res,r.ref).includes('ALTO')?' ↑':flagFor(r.res,r.ref).includes('BAJO')?' ↓':'';
+        pdf.text(String(r.res||'')+fl,cols[1]+2,y);
+        pdf.text(String(r.uni||''),cols[2]+2,y);
+        pdf.setTextColor(110,120,140); pdf.text(String(r.ref||''),cols[3]+2,y);
+        y+=7;
       });
-      y += 10;
-      // Firmas
-      if(y>250) {pdf.addPage();y=20;}
-      pdf.setFont(undefined,'normal'); pdf.setFontSize(8); pdf.setTextColor(26,20,16);
-      pdf.line(M,y+10,M+60,y+10); pdf.text('Elaboró',M,y+14);
-      pdf.line(W-M-60,y+10,W-M,y+10); pdf.text('Autorizó',W-M-60,y+14);
-      pdf.setFontSize(7.5); pdf.setTextColor(150,140,125);
-      pdf.text('Documento generado por el Generador ATS de BioNova · Herramienta Pro VIP', M, 287);
-      pdf.save(state.folio+'.pdf');
-      if(typeof Toast!=='undefined')Toast.success('PDF generado',state.folio);
-    }catch(e){
-      console.error('[ATS] PDF error:',e);
-      if(typeof Toast!=='undefined')Toast.error('Error al generar PDF',e.message||'Intenta de nuevo');
-    }
+      y+=8; pdf.setDrawColor(225,232,245); pdf.line(M,y,W-M,y); y+=8;
+      pdf.setFontSize(8); pdf.setTextColor(110,120,140);
+      pdf.text('Resultados de carácter informativo. La interpretación clínica corresponde al profesional tratante.',M,y);
+      bnPdfFooter(pdf); pdf.save('reporte-lab-'+Date.now()+'.pdf'); Toast.success('PDF generado','Reporte de laboratorio');
+    });
   }
-
-  return {open(){navigateToSection('tool-ats');}, mount};
+  return {open(){navigateToSection('tool-reporte');}, mount};
 })();
-
-/* =========================================================
-   HERRAMIENTA INDICADORES LOGÍSTICOS
-   4 KPIs: OTIF · Fill Rate · Rotación inventario · Costo logístico
-   Gauges/medidores · benchmarks · sección (no popup) · PDF
-   ========================================================= */
-const LogiTool = (function(){
-  const STORAGE_KEY = 'imdiil:logi:current';
-  let state = {
-    folio:null,
-    setup:{empresa:'', periodo:'', responsable:'', fecha:new Date().toISOString().slice(0,10)},
-    // OTIF
-    entregasTotales:'', entregasOk:'',
-    // Fill Rate
-    lineasPedidas:'', lineasSurtidas:'',
-    // Rotación
-    costoVentas:'', inventarioPromedio:'',
-    // Costo logístico
-    costoLogistico:'', ventas:''
-  };
-
-  function load(){ try{const r=localStorage.getItem(STORAGE_KEY);if(r)state={...state,...JSON.parse(r)};}catch(e){} }
-  function save(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){} }
-  function folioNuevo(){ return 'BioNova-LOG-'+Math.floor(10000+Math.random()*89999); }
-
-  function num(v){ const n=parseFloat(v); return isNaN(n)?0:n; }
-
-  function calc(){
-    const et=num(state.entregasTotales), eok=num(state.entregasOk);
-    const lp=num(state.lineasPedidas), ls=num(state.lineasSurtidas);
-    const cv=num(state.costoVentas), inv=num(state.inventarioPromedio);
-    const cl=num(state.costoLogistico), vt=num(state.ventas);
-    return {
-      otif: et>0 ? Math.min(1, eok/et) : null,
-      fill: lp>0 ? Math.min(1, ls/lp) : null,
-      rotacion: inv>0 ? cv/inv : null,
-      costoPct: vt>0 ? cl/vt : null
-    };
-  }
-
-  // Cada KPI con su benchmark y clasificación
-  function evalOTIF(v){
-    if(v===null) return null;
-    const p=v*100;
-    if(p>=95) return {label:'Excelente',hex:'#10B981',desc:'Nivel de servicio de clase mundial.'};
-    if(p>=90) return {label:'Bueno',hex:'#84CC16',desc:'Por encima del estándar logístico.'};
-    if(p>=80) return {label:'Regular',hex:'#FBBF24',desc:'Margen de mejora en cumplimiento.'};
-    return {label:'Bajo',hex:'#EF4444',desc:'Nivel de servicio crítico.'};
-  }
-  function evalFill(v){
-    if(v===null) return null;
-    const p=v*100;
-    if(p>=98) return {label:'Excelente',hex:'#10B981',desc:'Inventario bien dimensionado.'};
-    if(p>=95) return {label:'Bueno',hex:'#84CC16',desc:'Buen nivel de disponibilidad.'};
-    if(p>=90) return {label:'Regular',hex:'#FBBF24',desc:'Riesgo de quiebres de stock.'};
-    return {label:'Bajo',hex:'#EF4444',desc:'Faltantes frecuentes.'};
-  }
-  function evalRot(v){
-    if(v===null) return null;
-    if(v>=12) return {label:'Alta',hex:'#10B981',desc:'Inventario muy dinámico (≥12x/año).'};
-    if(v>=6) return {label:'Saludable',hex:'#84CC16',desc:'Rotación sana para la mayoría de sectores.'};
-    if(v>=3) return {label:'Moderada',hex:'#FBBF24',desc:'Inventario algo lento.'};
-    return {label:'Lenta',hex:'#EF4444',desc:'Capital inmovilizado en inventario.'};
-  }
-  function evalCosto(v){
-    if(v===null) return null;
-    const p=v*100;
-    if(p<=8) return {label:'Eficiente',hex:'#10B981',desc:'Costo logístico bajo control.'};
-    if(p<=12) return {label:'Aceptable',hex:'#84CC16',desc:'Dentro del promedio del sector.'};
-    if(p<=18) return {label:'Alto',hex:'#FBBF24',desc:'Oportunidad de optimización.'};
-    return {label:'Excesivo',hex:'#EF4444',desc:'Costo logístico erosiona margen.'};
-  }
-
-  function mount(container){
-    load();
-    if(!state.folio) state.folio=folioNuevo();
-    save();
-    container.innerHTML = `
-      <div class="tool-section">
-        <div class="tool-section__head">
-          <div class="tool-section__title">
-            <div class="tool-section__icon"><svg class="ic"><use href="#i-chart-bar"/></svg></div>
-            <div>
-              <h1>Indicadores Logísticos</h1>
-              <p>KPIs de cadena de suministro · OTIF, Fill Rate, rotación y costo</p>
-            </div>
-          </div>
-          <div class="tool-section__actions">
-            <button class="btn btn--ghost btn--sm" id="logi-reset">Nuevo reporte</button>
-            <button class="btn btn--accent btn--sm" id="logi-pdf">Descargar PDF<svg class="ic"><use href="#i-download"/></svg></button>
-          </div>
-        </div>
-        <div class="logi" id="logi-root"></div>
-      </div>
-    `;
-    container.querySelector('#logi-reset').addEventListener('click',()=>{
-      if(!confirm('¿Iniciar un nuevo reporte? Se perderán los datos actuales.')) return;
-      state={folio:folioNuevo(),setup:{empresa:'',periodo:'',responsable:'',fecha:new Date().toISOString().slice(0,10)},entregasTotales:'',entregasOk:'',lineasPedidas:'',lineasSurtidas:'',costoVentas:'',inventarioPromedio:'',costoLogistico:'',ventas:''};
-      save(); render(); if(typeof Toast!=='undefined')Toast.info('Nuevo reporte','Folio: '+state.folio);
-    });
-    container.querySelector('#logi-pdf').addEventListener('click',()=>generarPDF());
-    render();
-  }
-
-  function gaugeSVG(value, color, big){
-    // value 0..1 (para rotación se normaliza aparte)
-    const R=big?52:46, C=2*Math.PI*R, off=C*(1-Math.max(0,Math.min(1,value)));
-    return `<svg viewBox="0 0 ${big?130:116} ${big?130:116}" class="logi-gauge__svg">
-      <circle cx="${big?65:58}" cy="${big?65:58}" r="${R}" class="logi-gauge__track"/>
-      <circle cx="${big?65:58}" cy="${big?65:58}" r="${R}" class="logi-gauge__fill" stroke="${color}" stroke-dasharray="${C}" stroke-dashoffset="${C}" style="--to:${off};"/>
-    </svg>`;
-  }
-
-  function kpiCard(opts){
-    // opts: titulo, sub, valorTxt, value(0..1 para gauge), cls, inputs[]
-    const {titulo, sub, valorTxt, value, cls, inputsHTML} = opts;
-    let resultHTML;
-    if (cls && !toolEsVIP()){
-      // Hay datos válidos pero no es VIP → candado
-      resultHTML = `
-        <div class="logi-card__pending">
-          <div class="logi-gauge logi-gauge--empty"><svg viewBox="0 0 80 80" class="logi-gauge__svg"><circle cx="40" cy="40" r="34" class="logi-gauge__track"/></svg><div class="logi-gauge__center"><svg class="ic" style="width:20px;height:20px;color:var(--primary);"><use href="#i-crown"/></svg></div></div>
-          <p>Resultado disponible para miembros <strong>VIP</strong>.</p>
-        </div>`;
-    } else if (cls){
-      resultHTML = `
-        <div class="logi-gauge">
-          ${gaugeSVG(value, cls.hex, false)}
-          <div class="logi-gauge__center"><div class="logi-gauge__val" style="color:${cls.hex};">${valorTxt}</div></div>
-        </div>
-        <div class="logi-card__verdict">
-          <span class="logi-badge" style="background:${cls.hex}1f;color:${cls.hex};border-color:${cls.hex}55;">${cls.label}</span>
-          <p>${cls.desc}</p>
-        </div>`;
-    } else {
-      resultHTML = `
-        <div class="logi-card__pending">
-          <div class="logi-gauge logi-gauge--empty">${gaugeSVG(0,'var(--text-3)',false)}<div class="logi-gauge__center"><div class="logi-gauge__val logi-gauge__val--muted">—</div></div></div>
-          <p>Captura los datos para calcular este indicador.</p>
-        </div>`;
-    }
-    return `
-      <div class="logi-card">
-        <div class="logi-card__head">
-          <div><div class="logi-card__title">${titulo}</div><div class="logi-card__sub">${sub}</div></div>
-        </div>
-        <div class="logi-card__inputs">${inputsHTML}</div>
-        <div class="logi-card__result">${resultHTML}</div>
-      </div>
-    `;
-  }
-
-  function fld(label, id, ph){
-    return `<div class="logi-field"><label>${label}</label><input type="number" inputmode="decimal" class="input" id="${id}" value="${state[id]}" placeholder="${ph}"></div>`;
-  }
-
-  function render(){
-    const root=document.getElementById('logi-root');
-    if(!root) return;
-    const r=calc();
-    const clsOtif=evalOTIF(r.otif), clsFill=evalFill(r.fill), clsRot=evalRot(r.rotacion), clsCosto=evalCosto(r.costoPct);
-
-    root.innerHTML = `
-      <div class="logi-head">
-        <span class="logi-folio">${state.folio}</span>
-        <span class="logi-meta">4 indicadores clave de logística</span>
-      </div>
-      <div class="logi-setup">
-        <div class="logi-field"><label>Empresa</label><input type="text" class="input" id="logi-empresa" value="${state.setup.empresa.replace(/"/g,'&quot;')}" placeholder="Industrias del Centro"></div>
-        <div class="logi-field"><label>Periodo</label><input type="text" class="input" id="logi-periodo" value="${state.setup.periodo.replace(/"/g,'&quot;')}" placeholder="Ej: Mayo 2026"></div>
-        <div class="logi-field"><label>Responsable</label><input type="text" class="input" id="logi-responsable" value="${state.setup.responsable.replace(/"/g,'&quot;')}" placeholder="Nombre"></div>
-      </div>
-      <div class="logi-grid">
-        ${kpiCard({titulo:'OTIF', sub:'On Time In Full · entregas a tiempo y completas', valorTxt:r.otif!==null?(r.otif*100).toFixed(1)+'%':'—', value:r.otif||0, cls:clsOtif,
-          inputsHTML: fld('Entregas a tiempo y completas','entregasOk','190')+fld('Entregas totales','entregasTotales','200')})}
-        ${kpiCard({titulo:'Fill Rate', sub:'Líneas surtidas vs. líneas pedidas', valorTxt:r.fill!==null?(r.fill*100).toFixed(1)+'%':'—', value:r.fill||0, cls:clsFill,
-          inputsHTML: fld('Líneas surtidas completas','lineasSurtidas','970')+fld('Líneas pedidas','lineasPedidas','1000')})}
-        ${kpiCard({titulo:'Rotación de inventario', sub:'Veces que se renueva el stock', valorTxt:r.rotacion!==null?r.rotacion.toFixed(1)+'x':'—', value:r.rotacion!==null?r.rotacion/15:0, cls:clsRot,
-          inputsHTML: fld('Costo de ventas (COGS)','costoVentas','2400000')+fld('Inventario promedio','inventarioPromedio','300000')})}
-        ${kpiCard({titulo:'Costo logístico', sub:'Costo logístico como % de ventas', valorTxt:r.costoPct!==null?(r.costoPct*100).toFixed(1)+'%':'—', value:r.costoPct!==null?Math.min(1,r.costoPct/0.25):0, cls:clsCosto,
-          inputsHTML: fld('Costo logístico total','costoLogistico','480000')+fld('Ventas totales','ventas','5000000')})}
-      </div>
-    `;
-
-    // binds setup
-    ['empresa','periodo','responsable'].forEach(k=>{
-      root.querySelector('#logi-'+k).addEventListener('input',e=>{state.setup[k]=e.target.value;save();});
-    });
-    // binds KPIs (recalcular sin perder foco → re-render diferido por input)
-    ['entregasOk','entregasTotales','lineasSurtidas','lineasPedidas','costoVentas','inventarioPromedio','costoLogistico','ventas'].forEach(id=>{
-      const el=root.querySelector('#'+id);
-      if(el) el.addEventListener('input',()=>{ state[id]=el.value; save(); refreshResults(); });
-    });
-    animateGauges();
-  }
-
-  // Recalcula solo los resultados sin re-renderizar los inputs (no pierde foco)
-  function refreshResults(){
-    const r=calc();
-    const map=[
-      ['otif', r.otif, evalOTIF(r.otif), r.otif!==null?(r.otif*100).toFixed(1)+'%':'—', r.otif||0],
-      ['fill', r.fill, evalFill(r.fill), r.fill!==null?(r.fill*100).toFixed(1)+'%':'—', r.fill||0],
-      ['rot', r.rotacion, evalRot(r.rotacion), r.rotacion!==null?r.rotacion.toFixed(1)+'x':'—', r.rotacion!==null?r.rotacion/15:0],
-      ['costo', r.costoPct, evalCosto(r.costoPct), r.costoPct!==null?(r.costoPct*100).toFixed(1)+'%':'—', r.costoPct!==null?Math.min(1,r.costoPct/0.25):0]
-    ];
-    const cards=document.querySelectorAll('#logi-root .logi-card');
-    const vip=toolEsVIP();
-    map.forEach((m,i)=>{
-      const card=cards[i]; if(!card) return;
-      const resultBox=card.querySelector('.logi-card__result');
-      const [,val,cls,txt,gv]=m;
-      if(cls && !vip){
-        resultBox.innerHTML = `<div class="logi-card__pending"><div class="logi-gauge logi-gauge--empty"><svg viewBox="0 0 80 80" class="logi-gauge__svg"><circle cx="40" cy="40" r="34" class="logi-gauge__track"/></svg><div class="logi-gauge__center"><svg class="ic" style="width:20px;height:20px;color:var(--primary);"><use href="#i-crown"/></svg></div></div><p>Resultado disponible para miembros <strong>VIP</strong>.</p></div>`;
-      } else if(cls){
-        resultBox.innerHTML = `
-          <div class="logi-gauge">${gaugeSVG(gv, cls.hex, false)}<div class="logi-gauge__center"><div class="logi-gauge__val" style="color:${cls.hex};">${txt}</div></div></div>
-          <div class="logi-card__verdict"><span class="logi-badge" style="background:${cls.hex}1f;color:${cls.hex};border-color:${cls.hex}55;">${cls.label}</span><p>${cls.desc}</p></div>`;
-      } else {
-        resultBox.innerHTML = `<div class="logi-card__pending"><div class="logi-gauge logi-gauge--empty">${gaugeSVG(0,'var(--text-3)',false)}<div class="logi-gauge__center"><div class="logi-gauge__val logi-gauge__val--muted">—</div></div></div><p>Captura los datos para calcular este indicador.</p></div>`;
-      }
-    });
-    animateGauges();
-  }
-
-  function animateGauges(){
-    requestAnimationFrame(()=>{
-      document.querySelectorAll('#logi-root .logi-gauge__fill').forEach(c=>{
-        const to=c.style.getPropertyValue('--to'); c.style.strokeDashoffset=to;
-      });
-    });
-  }
-
-  function generarPDF(){
-    const r=calc();
-    if(r.otif===null && r.fill===null && r.rotacion===null && r.costoPct===null){
-      if(typeof Toast!=='undefined')Toast.error('Sin datos','Captura al menos un indicador antes de generar el PDF.');
-      return;
-    }
-    if(!toolRequiereVIP('los Indicadores Logísticos')) return;
-    if(!window.jspdf){ if(typeof Toast!=='undefined')Toast.error('Generador no disponible','Verifica conexión.'); return; }
-    try{
-      const {jsPDF}=window.jspdf;
-      const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-      const W=210,M=16; let y=M;
-      pdf.setFillColor(255,122,45); pdf.rect(0,0,W,6,'F');
-      pdf.setFillColor(26,20,16); pdf.rect(0,6,W,3,'F');
-      y=20;
-      pdf.setFontSize(14); pdf.setTextColor(26,20,16); pdf.setFont(undefined,'bold');
-      pdf.text('REPORTE DE INDICADORES LOGÍSTICOS', M, y);
-      pdf.setFont(undefined,'normal'); y+=6;
-      pdf.setFontSize(9); pdf.setTextColor(120,108,90);
-      pdf.text('BioNova · Biomedicina · Microbiología · Medicina general', M, y); y+=4;
-      pdf.text('Folio: '+state.folio+' · '+new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'}), M, y);
-      y+=10;
-      pdf.setFontSize(10); pdf.setTextColor(26,20,16); pdf.setFont(undefined,'bold');
-      pdf.text('DATOS GENERALES', M, y); pdf.setFont(undefined,'normal'); pdf.setFontSize(9); y+=6;
-      [['Empresa',state.setup.empresa],['Periodo',state.setup.periodo],['Responsable',state.setup.responsable],['Fecha',state.setup.fecha]].forEach(([l,v])=>{
-        pdf.setTextColor(120,108,90); pdf.text(l+':',M,y); pdf.setTextColor(26,20,16); pdf.text(String(v||'—'),M+34,y); y+=5;
-      });
-      y+=6;
-      const rows=[
-        ['OTIF', r.otif!==null?(r.otif*100).toFixed(1)+'%':'—', r.otif!==null?evalOTIF(r.otif).label:'—', '≥95% excelente'],
-        ['Fill Rate', r.fill!==null?(r.fill*100).toFixed(1)+'%':'—', r.fill!==null?evalFill(r.fill).label:'—', '≥98% excelente'],
-        ['Rotación inventario', r.rotacion!==null?r.rotacion.toFixed(1)+'x':'—', r.rotacion!==null?evalRot(r.rotacion).label:'—', '≥6x saludable'],
-        ['Costo logístico', r.costoPct!==null?(r.costoPct*100).toFixed(1)+'%':'—', r.costoPct!==null?evalCosto(r.costoPct).label:'—', '≤8% eficiente']
-      ];
-      y = pdfTablaSimple(pdf, {
-        startY:y, margin:M,
-        head:['Indicador','Valor','Evaluación','Benchmark'],
-        body:rows,
-        colWidths:[55,32,42,49], fontSize:9
-      });
-      y += 10;
-      pdf.setFontSize(7.5); pdf.setTextColor(150,140,125);
-      pdf.text('Documento generado por Indicadores Logísticos de BioNova · Herramienta Pro VIP', M, 287);
-      pdf.save(state.folio+'.pdf');
-      if(typeof Toast!=='undefined')Toast.success('PDF generado',state.folio);
-    }catch(e){
-      console.error('[LOGI] PDF error:',e);
-      if(typeof Toast!=='undefined')Toast.error('Error al generar PDF',e.message||'Intenta de nuevo');
-    }
-  }
-
-  return {open(){navigateToSection('tool-logistica');}, mount};
-})();
-
-/* =========================================================
-   HERRAMIENTA TABLA NOM-STPS
-   Buscador de Normas Oficiales Mexicanas de seguridad e higiene
-   Búsqueda en tiempo real · filtros por categoría · ficha detallada
-   ========================================================= */
-const NOMTool = (function(){
-  // Base de NOMs de seguridad y salud en el trabajo (STPS)
-  const NOMS = [
-    {n:'NOM-001-STPS-2008', cat:'Seguridad', titulo:'Edificios, locales e instalaciones', desc:'Condiciones de seguridad de los edificios, locales, instalaciones y áreas en los centros de trabajo.'},
-    {n:'NOM-002-STPS-2010', cat:'Seguridad', titulo:'Prevención y protección contra incendios', desc:'Condiciones de seguridad para la prevención y protección contra incendios en los centros de trabajo.'},
-    {n:'NOM-004-STPS-1999', cat:'Maquinaria', titulo:'Sistemas de protección de maquinaria', desc:'Sistemas y dispositivos de seguridad en la maquinaria y equipo que se utilice en los centros de trabajo.'},
-    {n:'NOM-005-STPS-1998', cat:'Químico', titulo:'Manejo de sustancias químicas peligrosas', desc:'Condiciones de seguridad e higiene para el manejo, transporte y almacenamiento de sustancias químicas peligrosas.'},
-    {n:'NOM-006-STPS-2014', cat:'Manejo de materiales', titulo:'Manejo y almacenamiento de materiales', desc:'Condiciones de seguridad y salud en el manejo y almacenamiento de materiales mediante el uso de maquinaria.'},
-    {n:'NOM-009-STPS-2011', cat:'Trabajos en altura', titulo:'Trabajos en altura', desc:'Condiciones de seguridad para realizar trabajos en altura.'},
-    {n:'NOM-010-STPS-2014', cat:'Químico', titulo:'Agentes químicos contaminantes', desc:'Agentes químicos contaminantes del ambiente laboral · reconocimiento, evaluación y control.'},
-    {n:'NOM-011-STPS-2001', cat:'Físico', titulo:'Ruido', desc:'Condiciones de seguridad e higiene donde se genere ruido.'},
-    {n:'NOM-012-STPS-2012', cat:'Físico', titulo:'Radiaciones ionizantes', desc:'Condiciones de seguridad y salud donde se manejen fuentes de radiación ionizante.'},
-    {n:'NOM-013-STPS-1993', cat:'Físico', titulo:'Radiaciones no ionizantes', desc:'Condiciones de seguridad e higiene donde se generen radiaciones electromagnéticas no ionizantes.'},
-    {n:'NOM-015-STPS-2001', cat:'Físico', titulo:'Condiciones térmicas elevadas o abatidas', desc:'Condiciones térmicas elevadas o abatidas · condiciones de seguridad e higiene.'},
-    {n:'NOM-017-STPS-2008', cat:'EPP', titulo:'Equipo de protección personal', desc:'Selección, uso y manejo del equipo de protección personal en los centros de trabajo.'},
-    {n:'NOM-018-STPS-2015', cat:'Químico', titulo:'Sistema GHS de sustancias peligrosas', desc:'Sistema armonizado para identificación y comunicación de peligros de sustancias químicas (GHS).'},
-    {n:'NOM-019-STPS-2011', cat:'Organización', titulo:'Comisiones de seguridad e higiene', desc:'Constitución, integración, organización y funcionamiento de las comisiones de seguridad e higiene.'},
-    {n:'NOM-020-STPS-2011', cat:'Maquinaria', titulo:'Recipientes sujetos a presión', desc:'Recipientes sujetos a presión, recipientes criogénicos y generadores de vapor o calderas.'},
-    {n:'NOM-022-STPS-2015', cat:'Eléctrico', titulo:'Electricidad estática', desc:'Electricidad estática en los centros de trabajo · condiciones de seguridad.'},
-    {n:'NOM-025-STPS-2008', cat:'Físico', titulo:'Iluminación', desc:'Condiciones de iluminación en los centros de trabajo.'},
-    {n:'NOM-026-STPS-2008', cat:'Señalización', titulo:'Colores y señales de seguridad', desc:'Colores y señales de seguridad e higiene, e identificación de riesgos por fluidos en tuberías.'},
-    {n:'NOM-027-STPS-2008', cat:'Trabajos especiales', titulo:'Soldadura y corte', desc:'Actividades de soldadura y corte · condiciones de seguridad e higiene.'},
-    {n:'NOM-029-STPS-2011', cat:'Eléctrico', titulo:'Mantenimiento de instalaciones eléctricas', desc:'Mantenimiento de las instalaciones eléctricas en los centros de trabajo · condiciones de seguridad.'},
-    {n:'NOM-030-STPS-2009', cat:'Organización', titulo:'Servicios preventivos de seguridad', desc:'Servicios preventivos de seguridad y salud en el trabajo · funciones y actividades.'},
-    {n:'NOM-033-STPS-2015', cat:'Trabajos especiales', titulo:'Espacios confinados', desc:'Condiciones de seguridad para realizar trabajos en espacios confinados.'},
-    {n:'NOM-034-STPS-2016', cat:'Manejo de materiales', titulo:'Acceso de personas con discapacidad', desc:'Condiciones de seguridad para el acceso y desarrollo de actividades de trabajadores con discapacidad.'},
-    {n:'NOM-035-STPS-2018', cat:'Psicosocial', titulo:'Factores de riesgo psicosocial', desc:'Identificación, análisis y prevención de factores de riesgo psicosocial en el trabajo.'},
-    {n:'NOM-036-1-STPS-2018', cat:'Ergonomía', titulo:'Factores de riesgo ergonómico (manejo de cargas)', desc:'Factores de riesgo ergonómico · manejo manual de cargas.'}
-  ];
-  const CATEGORIAS = ['Todas', ...Array.from(new Set(NOMS.map(x=>x.cat))).sort()];
-  const CAT_COLOR = {
-    'Seguridad':'#2a6df6','Maquinaria':'#8B5CF6','Químico':'#10B981','Físico':'#3B82F6',
-    'EPP':'#F59E0B','Eléctrico':'#EAB308','Organización':'#EC4899','Señalización':'#06B6D4',
-    'Trabajos en altura':'#EF4444','Trabajos especiales':'#F97316','Psicosocial':'#A855F7',
-    'Ergonomía':'#14B8A6','Manejo de materiales':'#6366F1'
-  };
-  let q='', catActiva='Todas';
-
-  function mount(container){
-    container.innerHTML = `
-      <div class="tool-section">
-        <div class="tool-section__head">
-          <div class="tool-section__title">
-            <div class="tool-section__icon"><svg class="ic"><use href="#i-shield-check"/></svg></div>
-            <div>
-              <h1>Tabla NOM-STPS</h1>
-              <p>Normas Oficiales Mexicanas de seguridad y salud en el trabajo</p>
-            </div>
-          </div>
-          <div class="tool-section__actions">
-            <span class="nom-count">${NOMS.length} normas</span>
-          </div>
-        </div>
-        <div class="nom" id="nom-root"></div>
-      </div>
-    `;
-    render();
-  }
-
-  function catColor(cat){ return CAT_COLOR[cat] || 'var(--primary)'; }
-
-  function render(){
-    const root=document.getElementById('nom-root');
-    if(!root) return;
-    root.innerHTML = `
-      <div class="nom-controls">
-        <div class="nom-search">
-          <svg class="ic nom-search__icon"><use href="#i-search"/></svg>
-          <input type="text" class="nom-search__input" id="nom-q" placeholder="Buscar por número, título o tema…" value="${q.replace(/"/g,'&quot;')}">
-          ${q ? '<button class="nom-search__clear" id="nom-clear"><svg class="ic"><use href="#i-x"/></svg></button>' : ''}
-        </div>
-        <div class="nom-cats" id="nom-cats">
-          ${CATEGORIAS.map(c=>`<button class="nom-cat ${catActiva===c?'is-active':''}" data-cat="${c}" ${c!=='Todas'?`style="--cat:${catColor(c)};"`:''}>${c}</button>`).join('')}
-        </div>
-      </div>
-      <div class="nom-list" id="nom-list"></div>
-    `;
-    const qi=root.querySelector('#nom-q');
-    qi.addEventListener('input',e=>{ q=e.target.value; renderList(); toggleClear(); });
-    const clr=root.querySelector('#nom-clear');
-    if(clr) clr.addEventListener('click',()=>{ q=''; render(); setTimeout(()=>root.querySelector('#nom-q')?.focus(),0); });
-    root.querySelectorAll('[data-cat]').forEach(b=>b.addEventListener('click',()=>{ catActiva=b.dataset.cat; render(); }));
-    renderList();
-  }
-
-  function toggleClear(){
-    const root=document.getElementById('nom-root'); if(!root) return;
-    const search=root.querySelector('.nom-search'); if(!search) return;
-    let clr=root.querySelector('#nom-clear');
-    if(q && !clr){
-      clr=document.createElement('button'); clr.className='nom-search__clear'; clr.id='nom-clear';
-      clr.innerHTML='<svg class="ic"><use href="#i-x"/></svg>';
-      clr.addEventListener('click',()=>{ q=''; render(); });
-      search.appendChild(clr);
-    } else if(!q && clr){ clr.remove(); }
-  }
-
-  function filtrar(){
-    const t=q.trim().toLowerCase();
-    return NOMS.filter(nom=>{
-      if(catActiva!=='Todas' && nom.cat!==catActiva) return false;
-      if(!t) return true;
-      return (nom.n+' '+nom.titulo+' '+nom.desc+' '+nom.cat).toLowerCase().includes(t);
-    });
-  }
-
-  function renderList(){
-    const list=document.getElementById('nom-list');
-    if(!list) return;
-    const res=filtrar();
-    if(res.length===0){
-      list.innerHTML = `<div class="nom-empty"><div class="nom-empty__icon"><svg class="ic ic--xl"><use href="#i-search"/></svg></div><h4>Sin resultados</h4><p>No encontramos normas para "<strong>${q.replace(/</g,'&lt;')}</strong>". Prueba con otro término o categoría.</p></div>`;
-      return;
-    }
-    list.innerHTML = res.map(nom=>`
-      <div class="nom-row" data-n="${nom.n}">
-        <div class="nom-row__main">
-          <div class="nom-row__top">
-            <span class="nom-row__code">${nom.n}</span>
-            <span class="nom-row__cat" style="--cat:${catColor(nom.cat)};">${nom.cat}</span>
-          </div>
-          <div class="nom-row__title">${nom.titulo}</div>
-          <div class="nom-row__desc">${nom.desc}</div>
-        </div>
-        <a class="nom-row__link" href="https://platiica.economia.gob.mx/normalizacion/${nom.n.toLowerCase()}/" target="_blank" rel="noopener" title="Ver ${nom.n} en el catálogo oficial (Gobierno de México)"><svg class="ic"><use href="#i-search"/></svg></a>
-      </div>
-    `).join('');
-  }
-
-  return {open(){navigateToSection('tool-noms');}, mount};
-})();
-
 function navigateToSection(section){
   document.querySelectorAll('.nav-item, .mobile-nav__item, .mobile-drawer__item').forEach(n=>n.classList.remove('is-active'));
   document.querySelectorAll(`[data-section="${section}"]`).forEach(ni => ni.classList.add('is-active'));
@@ -6931,7 +5708,7 @@ const Sections = (function(){
     //    le bloquea el resultado, así que no se considera "uso real" de la herramienta.
     let proUsadas = 0;
     if (esVipUser) {
-      const proKeys = ['imdiil:iper:current','imdiil:oee:current','imdiil:ats:current','imdiil:logi:current'];
+      const proKeys = ['bionova:diluciones','bionova:ufc','bionova:conversor','bionova:dosis','bionova:tfg','bionova:molaridad','bionova:beer','bionova:reporte'];
       proKeys.forEach(k => { try { if (localStorage.getItem(k)) proUsadas++; } catch (e) {} });
     }
     setTxt('act-pro-count', `${proUsadas}/5`);
@@ -9629,11 +8406,14 @@ const Sections = (function(){
       canal:renderCanal,
       perfil:renderPerfil,
       suscripcion:renderSuscripcion,
-      'tool-iper':(c)=>IPERTool.mount(c),
-      'tool-oee':(c)=>OEETool.mount(c),
-      'tool-ats':(c)=>ATSTool.mount(c),
-      'tool-logistica':(c)=>LogiTool.mount(c),
-      'tool-noms':(c)=>NOMTool.mount(c)
+      'tool-diluciones':(c)=>ToolDiluciones.mount(c),
+      'tool-ufc':(c)=>ToolUFC.mount(c),
+      'tool-conversor':(c)=>ToolConversor.mount(c),
+      'tool-dosis':(c)=>ToolDosis.mount(c),
+      'tool-tfg':(c)=>ToolTFG.mount(c),
+      'tool-molaridad':(c)=>ToolMolaridad.mount(c),
+      'tool-beer':(c)=>ToolBeer.mount(c),
+      'tool-reporte':(c)=>ToolReporte.mount(c)
     },
     countdownTimer:null
   };
@@ -10276,7 +9056,7 @@ function initNav(){
         cerrarDrawerMovil();
       }
       // Herramientas con sección propia (se abren dentro del panel, no como popup)
-      const toolSections = { iper:'tool-iper', oee:'tool-oee', ats:'tool-ats', logistica:'tool-logistica', noms:'tool-noms' };
+      const toolSections = { diluciones:'tool-diluciones', ufc:'tool-ufc', conversor:'tool-conversor', dosis:'tool-dosis', tfg:'tool-tfg', molaridad:'tool-molaridad', beer:'tool-beer', reporte:'tool-reporte' };
       if(it.dataset.tool){
         if(toolSections[it.dataset.tool]){ navigateToSection(toolSections[it.dataset.tool]); return; }
         if(Tools[it.dataset.tool]){ Tools[it.dataset.tool].open(); return; }
