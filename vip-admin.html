@@ -1985,13 +1985,48 @@ const Pages={
     'oee':                'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=900&auto=format&fit=crop&q=80'
   },
   _portadaDefault: 'https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=900&auto=format&fit=crop&q=80',
+  _coverSVG(area, titulo){
+    var a=(area||'').toLowerCase(), t=(titulo||'').toLowerCase();
+    var TH={micro:['#0b3b3a','#0e7c6b','#34e0c4'],bioq:['#062b4d','#0e6fb0','#3fc6ff'],mol:['#241852','#5b3bbf','#a78bfa'],lab:['#08214a','#1d4ed8','#69b8ff'],hema:['#3b0a14','#a01b2e','#ff5a6e'],inmuno:['#15173f','#3b3fb0','#7c86ff'],parasit:['#0b3320','#11854f','#34d17e'],invest:['#13203a','#2a4a7a','#7aa6e6'],def:['#081225','#1d4ed8','#69d2ff']};
+    var M={
+      dna:'<path d=\"M5 3c0 6 14 6 14 12M19 3c0 6-14 6-14 12\"/><path d=\"M6.5 6.5h11M5.5 9.5h13M5.5 14.5h13M6.5 17.5h11\" stroke-width=\"1\"/>',
+      microbe:'<circle cx=\"12\" cy=\"12\" r=\"7.5\"/><circle cx=\"10\" cy=\"10\" r=\"1.3\"/><circle cx=\"14\" cy=\"13\" r=\"1.3\"/><circle cx=\"12\" cy=\"8.5\" r=\"1\"/><path d=\"M12 1.5v2M12 20.5v2M1.5 12h2M20.5 12h2M4 4l1.4 1.4M20 20l-1.4-1.4M20 4l-1.4 1.4M4 20l1.4-1.4\"/>',
+      flask:'<path d=\"M9 3h6M10 3v6l-4.5 8a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9V3\"/><path d=\"M7.5 14.5h9\"/>',
+      drop:'<path d=\"M12 3s6.5 6.5 6.5 11.5a6.5 6.5 0 0 1-13 0C5.5 9.5 12 3 12 3z\"/>',
+      blood:'<path d=\"M12 2.5s7 7.5 7 12.5a7 7 0 0 1-14 0C5 10 12 2.5 12 2.5z\"/>',
+      shield:'<path d=\"M12 2.5l8 3v5.5c0 5-3.5 8.5-8 10.5-4.5-2-8-5.5-8-10.5V5.5z\"/><path d=\"M8.5 12l2.3 2.3 4.7-4.7\"/>',
+      scope:'<path d=\"M6 19h13M10 19V9M10 9a4.5 4.5 0 0 1 6.5-1M14.5 19c4.2-.4 6.5-3.8 6.5-8\"/><circle cx=\"9\" cy=\"6.5\" r=\"2.3\"/>'
+    };
+    function pick(){
+      if(a.indexOf('microbi')>=0)return['micro','microbe'];
+      if(a.indexOf('bioqu')>=0||a.indexOf('qu\u00edmic')>=0||a.indexOf('quimic')>=0)return['bioq','flask'];
+      if(a.indexOf('molecular')>=0||a.indexOf('gen\u00e9t')>=0||a.indexOf('genet')>=0)return['mol','dna'];
+      if(a.indexOf('laboratorio')>=0)return['lab','drop'];
+      if(a.indexOf('hemato')>=0)return['hema','blood'];
+      if(a.indexOf('inmuno')>=0)return['inmuno','shield'];
+      if(a.indexOf('parasit')>=0)return['parasit','microbe'];
+      if(a.indexOf('investig')>=0||a.indexOf('biomedic')>=0)return['invest','scope'];
+      if(/hemato|biometr|sangu|hemogram/.test(t))return['hema','blood'];
+      if(/microbi|bacteri|gram|cultivo|antibiog|ferment|levadur/.test(t))return['micro','microbe'];
+      if(/molecular|adn|dna|pcr|crispr|gen\u00e9t|genet|secuenc/.test(t))return['mol','dna'];
+      if(/inmun|elisa|serolog|anticuerp/.test(t))return['inmuno','shield'];
+      if(/bioqu|qu\u00edmic|quimic|aliment|metabolit|farmac|fermenta/.test(t))return['bioq','flask'];
+      if(/cristal|material|difrac/.test(t))return['invest','scope'];
+      if(/muestra|protocolo|laboratorio|uroan|reactiv|preanal/.test(t))return['lab','drop'];
+      return['def','dna'];
+    }
+    var pk=pick(),c=TH[pk[0]],motif=M[pk[1]];
+    var s='<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 220\" preserveAspectRatio=\"xMidYMid slice\">'
+      +'<defs><linearGradient id=\"g\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"'+c[0]+'\"/><stop offset=\"1\" stop-color=\"'+c[1]+'\"/></linearGradient>'
+      +'<radialGradient id=\"r\" cx=\"0.5\" cy=\"0.42\" r=\"0.62\"><stop offset=\"0\" stop-color=\"'+c[2]+'\" stop-opacity=\"0.30\"/><stop offset=\"1\" stop-color=\"'+c[2]+'\" stop-opacity=\"0\"/></radialGradient>'
+      +'<pattern id=\"d\" width=\"26\" height=\"26\" patternUnits=\"userSpaceOnUse\"><circle cx=\"2\" cy=\"2\" r=\"1\" fill=\"#ffffff\" fill-opacity=\"0.05\"/></pattern></defs>'
+      +'<rect width=\"400\" height=\"220\" fill=\"url(#g)\"/><rect width=\"400\" height=\"220\" fill=\"url(#d)\"/><rect width=\"400\" height=\"220\" fill=\"url(#r)\"/>'
+      +'<g transform=\"translate(146,56) scale(4.5)\" fill=\"none\" stroke=\"'+c[2]+'\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.92\">'+motif+'</g></svg>';
+    return 'data:image/svg+xml,'+encodeURIComponent(s);
+  },
   _getPortada(curso) {
     if (curso.portada) return curso.portada;
-    const t = (curso.titulo || '').toLowerCase();
-    for (const [k, url] of Object.entries(Pages._portadasCursos)) {
-      if (t.includes(k)) return url;
-    }
-    return Pages._portadaDefault;
+    return Pages._coverSVG(curso.area, curso.titulo);
   },
 
   // Estado de la sección (filtros, búsqueda, orden)
@@ -3074,11 +3109,7 @@ const Pages={
 
     return `
       <div class="curso-row" data-web-id="${w.id}" style="--area-color:${colorBorde};">
-        <div class="curso-row__thumb" style="background:color-mix(in srgb,${colorBorde} 14%,transparent);color:${colorBorde};display:flex;align-items:center;justify-content:center;background-image:none;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
-            <circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49"/><path d="M7.76 16.24a6 6 0 0 1 0-8.49"/>
-          </svg>
-        </div>
+        <div class="curso-row__thumb" style="background-image:url('${Pages._coverSVG(w.area, w.titulo)}');background-size:cover;background-position:center;"></div>
         <div class="curso-row__body">
           <div class="curso-row__title">${tituloEsc}</div>
           <div class="curso-row__meta">
@@ -3509,12 +3540,7 @@ const Pages={
       const cursoTitEsc = (m.cursoTitulo || '').replace(/"/g,'&quot;').replace(/</g,'&lt;');
       return `
         <div class="curso-row" style="--area-color:${areaColor};">
-          <div class="curso-row__thumb" style="background:color-mix(in srgb,${areaColor} 14%,transparent);color:${areaColor};display:flex;align-items:center;justify-content:center;background-image:none;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-            </svg>
-          </div>
+          <div class="curso-row__thumb" style="background-image:url('${Pages._coverSVG(m.cursoArea, m.titulo)}');background-size:cover;background-position:center;"></div>
           <div class="curso-row__body">
             <div class="curso-row__title">${tituloEsc}</div>
             <div class="curso-row__meta">
