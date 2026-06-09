@@ -2865,7 +2865,7 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 .fomo-banner{
   position:sticky;top:0;z-index:100;
   display:flex;align-items:center;justify-content:center;gap:12px;
-  padding:8px 24px;
+  padding:calc(8px + env(safe-area-inset-top)) 24px 8px;
   background:linear-gradient(90deg,var(--primary),var(--highlight));
   color:#081225;
   font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;
@@ -2891,8 +2891,10 @@ button.dir-det__row{background:var(--surface-2);border:1px solid var(--border-2)
 }
 .fomo-banner__cta:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(0,0,0,.25)}
 .fomo-banner__cta svg{width:12px;height:12px}
+body.has-fomo .main{padding-top:18px}
+@media(max-width:880px){body.has-fomo .main{padding-top:14px}}
 @media (max-width:768px){
-  .fomo-banner{padding:7px 12px;font-size:11.5px;gap:8px;line-height:1.3}
+  .fomo-banner{padding:calc(7px + env(safe-area-inset-top)) 12px 7px;font-size:11.5px;gap:8px;line-height:1.3}
   .fomo-banner__cta{padding:5px 10px;font-size:11px}
   .fomo-banner__icon{display:none}
 }
@@ -3628,7 +3630,7 @@ window.__setDisplayName = async (nombre) => {
         <div class="banner__info">
           <span class="banner__eyebrow"><span class="banner__eyebrow__dot"></span><span id="greeting-label">En vivo</span><span class="banner__version">v.2026.05</span></span>
           <h1 class="banner__title" id="hero-title">Buenas tardes, ingeniero</h1>
-          <p class="banner__sub">Tu acceso a cursos premium, herramientas pro de seguridad y la comunidad de ingeniería industrial más activa de México.</p>
+          <p class="banner__sub">Tu acceso a cursos premium, herramientas pro de laboratorio y la comunidad de biomedicina, microbiología y medicina más activa de México.</p>
         </div>
         <div class="banner__stats">
           <div class="banner__stat" data-section="cursos" style="cursor:pointer"><div class="banner__stat-lbl">Cursos</div><div class="banner__stat-val" id="bn-stat-cursos">0</div></div>
@@ -10533,9 +10535,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       if (S.modo === 'invitado') {
         heroTitle.textContent = 'Estás explorando BioNova VIP';
       } else if (S.modo === 'sin-membresia') {
-        heroTitle.textContent = `${part}, ${S.displayName?.split(' ')[0]||'ingeniero'}`;
+        heroTitle.textContent = `${part}, ${S.displayName?.split(' ')[0]||'miembro'}`;
       } else {
-        heroTitle.textContent = `${part}, ${S.displayName?.split(' ')[0]||'ingeniero'}`;
+        heroTitle.textContent = `${part}, ${S.displayName?.split(' ')[0]||'miembro'}`;
       }
     }
 
@@ -10546,8 +10548,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if (banner) {
       if (S.modo === 'vip') {
         banner.style.display = 'none';
+        document.body.classList.remove('has-fomo');
       } else if (S.modo === 'invitado') {
         banner.style.display = '';
+        document.body.classList.add('has-fomo');
         const msg = S.demo.visitas === 1
           ? '<strong>Bienvenido al demo</strong> · 5 minutos para explorar BioNova VIP.'
           : (S.demo.visitas === 2
@@ -10558,6 +10562,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
         startDemoTimer();
       } else { // sin-membresia
         banner.style.display = '';
+        document.body.classList.add('has-fomo');
         if (bannerText) bannerText.innerHTML = '<strong>Activa tu suscripción</strong> para acceder a cursos, clases y herramientas pro.';
         if (bannerTimer) bannerTimer.style.display = 'none';
       }
