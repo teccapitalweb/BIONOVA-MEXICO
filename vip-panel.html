@@ -5655,19 +5655,25 @@ const Sections = (function(){
         });
       } catch (e) { console.warn('[cert] lectura Firestore falló, uso local:', e); }
     }
-    // 2) Fallback local (por si Firestore aún no tiene el cert recién emitido)
-    if (lista.length === 0) {
-      const progreso = getProgreso ? getProgreso() : {};
-      if (cursos && cursos.length) for (const c of cursos) {
-        const prog = progreso[c.id];
-        if (prog && prog.completado) {
-          const fecha = prog.fechaCompletado || new Date().toISOString();
+    // 2) Reconciliar con el progreso local: muestra TODOS los completados y
+    //    respalda en Firestore (backfill idempotente) los que aún no estén,
+    //    para que cualquier certificado sea verificable por folio.
+    const yaEnFs = new Set(lista.map(x => x.folio));
+    const progreso = getProgreso ? getProgreso() : {};
+    if (cursos && cursos.length) for (const c of cursos) {
+      const prog = progreso[c.id];
+      if (prog && prog.completado) {
+        const fecha = prog.fechaCompletado || new Date().toISOString();
+        const folio = folioCert(c.id, fecha);
+        if (!yaEnFs.has(folio)) {
+          try { emitirCertificadoFirestore(c); } catch (e) {}
           lista.push({
             id: c.id, titulo: c.titulo, area: c.area || 'General',
             horas: c.horas || 8, sesiones: (c.sesiones && c.sesiones.length) || 0,
-            calificacion: 100, folio: folioCert(c.id, fecha),
+            calificacion: 100, folio,
             emitido: fecha, instructor: c.instructor || 'Equipo BioNova'
           });
+          yaEnFs.add(folio);
         }
       }
     }
