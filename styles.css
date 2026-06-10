@@ -1026,3 +1026,57 @@ img{max-width:100%;display:block}
   text-transform: uppercase;
   letter-spacing: .06em;
 }
+
+/* ===================== TEMA CLARO GLOBAL (override) ===================== */
+/* Header claro */
+.site-header{background:rgba(247,251,254,.86);border-bottom:1px solid var(--line)}
+.brand{color:var(--text)}
+.brand-subtitle{color:var(--muted)}
+.brand-logo{border-color:var(--line)}
+.menu{color:var(--text)}
+.menu a{color:#33415c}
+.menu a:hover{color:var(--text)}
+.menu-toggle{color:var(--text)}
+
+/* Hero claro (degradado cyan -> casi blanco, como la referencia) */
+.hero{background:radial-gradient(circle at 78% 0%,rgba(34,211,238,.22),transparent 46%),linear-gradient(180deg,#d8f0fb 0%,#e8f4fc 42%,#f6fafe 100%);color:var(--text)}
+.hero p{color:#33415c}
+.eyebrow{background:#fff;border:1px solid var(--line);color:#0891b2}
+.hero-points span{background:#fff;border:1px solid var(--line);color:#0891b2}
+.stat-card{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.stat-card span{color:var(--muted)}
+.glass{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.quick-card small{color:#0891b2}
+.quick-card ul{color:#33415c}
+.btn-secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
+.btn-outline-light{background:#fff;border:1px solid var(--line);color:var(--text)}
+
+/* Sección Club clara */
+.club-section{background:linear-gradient(180deg,#e9f6fb 0%,#f2f9fd 55%,#edf6fc 100%);color:var(--text)}
+.club-subtitle{color:var(--muted)}
+.club-badge-pill{background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.3);color:#0891b2}
+.club-gradient{background:linear-gradient(135deg,#0891b2 0%,#06b6d4 55%,#14b8a6 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.club-feature{background:#fff;border:1px solid var(--line);box-shadow:0 10px 28px rgba(8,40,80,.06)}
+.club-feature:hover{background:#fff;border-color:rgba(6,182,212,.4)}
+.club-feature-text strong{color:var(--text)}
+.club-feature-text span{color:var(--muted)}
+
+/* CTA + footer claros */
+.cta-box{background:linear-gradient(135deg,#e4f3fb,#f1f8fd);color:var(--text);border:1px solid var(--line)}
+.site-footer{background:#eef4fa;color:var(--muted);border-top:1px solid var(--line)}
+
+/* Menú móvil (dropdown) claro */
+@media(max-width:780px){
+  .menu{background:#ffffff;border:1px solid var(--line)}
+}
+
+/* Sección Modalidad (.section-dark) -> clara */
+.section-dark{background:linear-gradient(180deg,#e9f6fb 0%,#f2f9fd 60%,#edf6fc 100%);color:var(--text)}
+.section-kicker.light{background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.3);color:#0891b2}
+.feature-list div,.process-card li{background:#fff;border:1px solid var(--line)}
+.feature-list span{color:var(--muted)}
+.process-card li{color:var(--text)}
+.process-card li span{background:linear-gradient(135deg,#06b6d4,#0891b2);color:#fff}
+
+/* Contraste de párrafos sobre fondos cyan claros */
+.feature-copy p,.cta-box p{color:#33415c}
