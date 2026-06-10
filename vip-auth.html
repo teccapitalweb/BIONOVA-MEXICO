@@ -126,12 +126,11 @@ body.modo-dia .logo-day{display:block}
   body::before{content:"";position:fixed;inset:0;pointer-events:none;
     background:radial-gradient(70vw 70vw at 88% -6%,var(--glow-blue),transparent 58%),radial-gradient(80vw 80vw at -8% 34%,var(--glow-green),transparent 52%);}
   .split{grid-template-columns:1fr;background:transparent;position:relative;z-index:1;min-height:100dvh}
-  .hero{border:none;background:transparent;padding:30px 24px 4px;gap:18px;min-height:auto}
+  .hero{border:none;background:transparent;justify-content:flex-start;align-items:center;text-align:center;padding:38px 24px 14px;gap:0;min-height:auto}
   .hero::before,.hero::after{display:none}
   .theme-btn{position:absolute}
-  .hero-mid h1{font-size:2rem}
-  .hero-mid p{display:none}
-  .metrics{gap:30px}
+  .lockup{align-items:center}
+  .hero-mid,.metrics{display:none}
   .authside{background:transparent;padding:6px 22px 54px}
 }
 @media(max-width:520px){
