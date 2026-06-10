@@ -146,6 +146,7 @@ img{max-width:100%;display:block}
 }
 @media (max-width:780px){
   .menu-toggle{display:block}
+  .nav-actions .vip-access-mobile{display:inline-flex;align-items:center;font-size:.84rem;padding:8px 14px}
   .menu{position:absolute;top:78px;left:16px;right:16px;background:#0c1831;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:16px;display:none;flex-direction:column;align-items:flex-start}
   .menu.open{display:flex}
   .hero{padding-top:54px}
@@ -210,21 +211,28 @@ img{max-width:100%;display:block}
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Link del nav ─────────────────────────────────────────────────────────── */
-.menu .club-nav-link {
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.vip-access-mobile { display: none; }
+.menu .club-nav-link,
+.vip-access-mobile {
   position: relative;
-  padding: 8px 14px;
+  padding: 9px 18px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(13,148,136,.20), rgba(16,185,129,.12));
-  border: 1px solid rgba(52,211,153,.32);
-  color: #ccfbf1 !important;
-  font-weight: 700;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border: none;
+  color: #0c1831 !important;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(245,158,11,.38);
   transition: all .2s ease;
 }
-.menu .club-nav-link:hover {
-  background: linear-gradient(135deg, rgba(13,148,136,.34), rgba(16,185,129,.22));
-  color: #fff !important;
+.menu .club-nav-link:hover,
+.vip-access-mobile:hover {
+  background: linear-gradient(135deg, #fcd34d, #fbbf24);
+  color: #0c1831 !important;
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(42,109,246,.25);
+  box-shadow: 0 8px 22px rgba(245,158,11,.5);
 }
 
 /* ── Botón hero del Club ──────────────────────────────────────────────────── */
