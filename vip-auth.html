@@ -122,12 +122,16 @@ body.modo-dia .logo-day{display:block}
 .alert__msg strong{font-weight:700;font-family:var(--font-display)}
 .copyr{font-family:var(--font-mono);font-size:.68rem;color:var(--faint);text-align:center;margin-top:18px;letter-spacing:.04em}
 @media(max-width:900px){
-  .split{grid-template-columns:1fr}
-  .hero{border-right:none;border-bottom:1px solid var(--line);padding:34px 26px;gap:26px;min-height:auto}
+  /* Fondo continuo + glow fijo (estilo IMDIIL): un solo lienzo, sin costura de dos tonos */
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;
+    background:radial-gradient(70vw 70vw at 88% -6%,var(--glow-blue),transparent 58%),radial-gradient(80vw 80vw at -8% 34%,var(--glow-green),transparent 52%);}
+  .split{grid-template-columns:1fr;background:transparent;position:relative;z-index:1;min-height:100dvh}
+  .hero{border:none;background:transparent;padding:30px 24px 4px;gap:18px;min-height:auto}
+  .hero::before,.hero::after{display:none}
   .hero-mid h1{font-size:2rem}
   .hero-mid p{display:none}
   .metrics{gap:30px}
-  .authside{padding:34px 22px 48px}
+  .authside{background:transparent;padding:6px 22px 54px}
 }
 @media(max-width:520px){
   .auth-card{padding:24px 18px 22px}
