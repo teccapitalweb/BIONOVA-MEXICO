@@ -2,7 +2,7 @@
    Objetivo: permitir instalación como app y carga más rápida.
    Estrategia: network-first con respaldo en caché (mismo origen).
    Firebase / Firestore / CDNs (otro origen) SIEMPRE van a la red. */
-const CACHE = 'bionova-vip-v1';
+const CACHE = 'bionova-vip-v2';
 const SHELL = [
   './',
   './vip-panel.html',
