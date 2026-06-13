@@ -130,7 +130,14 @@ body.modo-dia .logo-day{display:block}
   .hero::before,.hero::after{display:none}
   .theme-btn{position:absolute}
   .lockup{align-items:center}
-  .hero-mid,.metrics{display:none}
+  .metrics{display:none}
+  /* El hero (lado que vende) pasa a bloque centrado en móvil, como IMDIIL/OdonTeck */
+  .hero-mid{display:flex;flex-direction:column;max-width:360px;margin:0 auto;width:100%}
+  .hero-mid>.eyebrow,.hero-mid>h1,.hero-mid>p:first-of-type{display:none}
+  .hero-marquee{margin:6px 0 16px;max-width:100%}
+  .hero-hook{text-align:left}
+  .hero-benefits,.hero-tools,.hero-price,.hero-refs{text-align:left}
+  .hero-price{margin:10px 0 16px}
   .authside{background:transparent;padding:6px 22px 54px}
 }
 @media(max-width:520px){
