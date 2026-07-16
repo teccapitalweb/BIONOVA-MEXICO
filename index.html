@@ -63,6 +63,10 @@
               </span>
             </a>
             <a class="btn btn-primary" href="#cursos">Ver cursos</a>
+            <!-- MODIFICADO: botón que abre el video tutorial de registro (Google Drive, sin storage del repo) -->
+            <button class="btn btn-video" type="button" id="open-video-tutorial" aria-haspopup="dialog" aria-controls="video-modal">
+              <span class="btn-video-play" aria-hidden="true">▶</span> Ver cómo registrarte
+            </button>
             <a class="btn btn-secondary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20cursos%20de%20BIONOVA%20M%C3%A9xico" target="_blank" rel="noopener noreferrer">WhatsApp</a>
           </div>
 
@@ -716,6 +720,60 @@
       </div>
     </div>
   </div>
+
+  <!-- MODIFICADO: modal de video tutorial "Cómo registrarte" (embebido de Google Drive, no consume storage del repo) -->
+  <div class="modal-backdrop video-backdrop" id="video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Video: cómo registrarte">
+    <div class="modal-panel video-panel">
+      <button class="modal-close" type="button" aria-label="Cerrar video" id="video-modal-close">×</button>
+      <div class="video-modal-head">
+        <span class="section-kicker">Tutorial · 1:50</span>
+        <h3>Cómo registrarte paso a paso</h3>
+        <p>Te mostramos cómo crear tu cuenta y activar tu acceso en menos de dos minutos.</p>
+      </div>
+      <div class="video-embed">
+        <iframe id="video-tutorial-iframe"
+                title="Cómo registrarte en BIONOVA México"
+                src=""
+                data-src="https://drive.google.com/file/d/1XSKzU3LmJ15ad5NlfJQcf3SZ-hcskxY9/preview"
+                allow="autoplay; fullscreen"
+                allowfullscreen
+                loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODIFICADO: control del modal de video (abre/cierra, carga Drive solo al abrir y lo detiene al cerrar) -->
+  <script>
+    (function () {
+      var vModal  = document.getElementById('video-modal');
+      var vOpen   = document.getElementById('open-video-tutorial');
+      var vClose  = document.getElementById('video-modal-close');
+      var vFrame  = document.getElementById('video-tutorial-iframe');
+      if (!vModal || !vOpen || !vFrame) return;
+
+      function abrirVideo() {
+        if (vFrame.getAttribute('src') !== vFrame.dataset.src) {
+          vFrame.setAttribute('src', vFrame.dataset.src); // carga el video solo al abrir
+        }
+        vModal.classList.add('open');
+        vModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+      function cerrarVideo() {
+        vModal.classList.remove('open');
+        vModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        vFrame.setAttribute('src', ''); // detiene la reproducción al cerrar
+      }
+
+      vOpen.addEventListener('click', abrirVideo);
+      if (vClose) vClose.addEventListener('click', cerrarVideo);
+      vModal.addEventListener('click', function (e) { if (e.target === vModal) cerrarVideo(); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && vModal.classList.contains('open')) cerrarVideo();
+      });
+    })();
+  </script>
 
   <script>
     window.courseModalData = {
