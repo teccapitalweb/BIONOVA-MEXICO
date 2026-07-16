@@ -64,7 +64,7 @@
             </a>
             <a class="btn btn-primary" href="#cursos">Ver cursos</a>
             <!-- MODIFICADO: botón que abre el video tutorial de registro (Google Drive, sin storage del repo) -->
-            <button class="btn btn-video" type="button" id="open-video-tutorial" aria-haspopup="dialog" aria-controls="video-modal">
+            <button class="btn btn-video" type="button" id="open-video-tutorial" aria-controls="video-view">
               <span class="btn-video-play" aria-hidden="true">▶</span> Ver cómo registrarte
             </button>
             <a class="btn btn-secondary" href="https://wa.me/522384092448?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20cursos%20de%20BIONOVA%20M%C3%A9xico" target="_blank" rel="noopener noreferrer">WhatsApp</a>
@@ -721,15 +721,13 @@
     </div>
   </div>
 
-  <!-- MODIFICADO: modal de video tutorial "Cómo registrarte" (embebido de Google Drive, no consume storage del repo) -->
-  <div class="modal-backdrop video-backdrop" id="video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Video: cómo registrarte">
-    <div class="modal-panel video-panel">
-      <button class="modal-close" type="button" aria-label="Cerrar video" id="video-modal-close">×</button>
-      <div class="video-modal-head">
-        <span class="section-kicker">Tutorial · 1:50</span>
-        <h3>Cómo registrarte paso a paso</h3>
-        <p>Te mostramos cómo crear tu cuenta y activar tu acceso en menos de dos minutos.</p>
-      </div>
+  <!-- MODIFICADO: apartado "Cómo registrarte" — vista completa dentro de la misma página (video de Google Drive, sin storage del repo) -->
+  <section class="video-view" id="video-view" hidden aria-label="Video: cómo registrarte">
+    <div class="video-view-inner">
+      <button class="btn video-back" type="button" id="video-view-back">← Volver</button>
+      <span class="section-kicker">Tutorial · 1:50</span>
+      <h2>Cómo registrarte paso a paso</h2>
+      <p class="video-view-sub">Te mostramos cómo crear tu cuenta y activar tu acceso en menos de dos minutos.</p>
       <div class="video-embed">
         <iframe id="video-tutorial-iframe"
                 title="Cómo registrarte en BIONOVA México"
@@ -739,39 +737,52 @@
                 allowfullscreen
                 loading="lazy"></iframe>
       </div>
+      <p class="video-view-hint">Tip: usa el ícono de pantalla completa del reproductor para verlo más grande.</p>
+      <button class="btn video-back video-back-bottom" type="button" id="video-view-back-2">← Volver al inicio</button>
     </div>
-  </div>
+  </section>
 
-  <!-- MODIFICADO: control del modal de video (abre/cierra, carga Drive solo al abrir y lo detiene al cerrar) -->
+  <!-- MODIFICADO: control del apartado de video (hash #como-registrarte, botón atrás del navegador/celular también regresa) -->
   <script>
     (function () {
-      var vModal  = document.getElementById('video-modal');
-      var vOpen   = document.getElementById('open-video-tutorial');
-      var vClose  = document.getElementById('video-modal-close');
-      var vFrame  = document.getElementById('video-tutorial-iframe');
-      if (!vModal || !vOpen || !vFrame) return;
+      var vista  = document.getElementById('video-view');
+      var vOpen  = document.getElementById('open-video-tutorial');
+      var vBack  = document.getElementById('video-view-back');
+      var vBack2 = document.getElementById('video-view-back-2');
+      var vFrame = document.getElementById('video-tutorial-iframe');
+      if (!vista || !vOpen || !vFrame) return;
 
-      function abrirVideo() {
+      var HASH = '#como-registrarte';
+
+      function mostrar() {
         if (vFrame.getAttribute('src') !== vFrame.dataset.src) {
-          vFrame.setAttribute('src', vFrame.dataset.src); // carga el video solo al abrir
+          vFrame.setAttribute('src', vFrame.dataset.src); // carga el video solo al entrar
         }
-        vModal.classList.add('open');
-        vModal.setAttribute('aria-hidden', 'false');
+        vista.hidden = false;
         document.body.style.overflow = 'hidden';
+        vista.scrollTop = 0;
       }
-      function cerrarVideo() {
-        vModal.classList.remove('open');
-        vModal.setAttribute('aria-hidden', 'true');
+      function ocultar() {
+        vista.hidden = true;
         document.body.style.overflow = '';
-        vFrame.setAttribute('src', ''); // detiene la reproducción al cerrar
+        vFrame.setAttribute('src', ''); // detiene la reproducción al salir
+      }
+      function sincronizar() {
+        if (window.location.hash === HASH) { mostrar(); } else if (!vista.hidden) { ocultar(); }
       }
 
-      vOpen.addEventListener('click', abrirVideo);
-      if (vClose) vClose.addEventListener('click', cerrarVideo);
-      vModal.addEventListener('click', function (e) { if (e.target === vModal) cerrarVideo(); });
+      vOpen.addEventListener('click', function () { window.location.hash = HASH; });
+      function volver() {
+        if (window.location.hash === HASH) { history.back(); } else { ocultar(); }
+      }
+      if (vBack)  vBack.addEventListener('click', volver);
+      if (vBack2) vBack2.addEventListener('click', volver);
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && vModal.classList.contains('open')) cerrarVideo();
+        if (e.key === 'Escape' && !vista.hidden) volver();
       });
+
+      window.addEventListener('hashchange', sincronizar);
+      sincronizar(); // por si alguien entra directo con el enlace #como-registrarte
     })();
   </script>
 
