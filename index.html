@@ -721,10 +721,9 @@
     </div>
   </div>
 
-  <!-- MODIFICADO: apartado "Cómo registrarte" — vista completa dentro de la misma página (video de Google Drive, sin storage del repo) -->
-  <section class="video-view" id="video-view" hidden aria-label="Video: cómo registrarte">
+  <!-- MODIFICADO: apartado "Cómo registrarte" — vista aparte en la misma página (oculta el resto, no se sobrepone). Video de Google Drive, sin storage del repo. -->
+  <section class="video-view" id="video-view" aria-label="Video: cómo registrarte">
     <div class="video-view-inner">
-      <button class="btn video-back" type="button" id="video-view-back">← Volver</button>
       <span class="section-kicker">Tutorial · 1:50</span>
       <h2>Cómo registrarte paso a paso</h2>
       <p class="video-view-sub">Te mostramos cómo crear tu cuenta y activar tu acceso en menos de dos minutos.</p>
@@ -738,17 +737,16 @@
                 loading="lazy"></iframe>
       </div>
       <p class="video-view-hint">Tip: usa el ícono de pantalla completa del reproductor para verlo más grande.</p>
-      <button class="btn video-back video-back-bottom" type="button" id="video-view-back-2">← Volver al inicio</button>
+      <button class="btn video-back" type="button" id="video-view-back">← Volver al inicio</button>
     </div>
   </section>
 
-  <!-- MODIFICADO: control del apartado de video (hash #como-registrarte, botón atrás del navegador/celular también regresa) -->
+  <!-- MODIFICADO: control del apartado de video (hash #como-registrarte, el botón atrás del navegador/celular también regresa) -->
   <script>
     (function () {
       var vista  = document.getElementById('video-view');
       var vOpen  = document.getElementById('open-video-tutorial');
       var vBack  = document.getElementById('video-view-back');
-      var vBack2 = document.getElementById('video-view-back-2');
       var vFrame = document.getElementById('video-tutorial-iframe');
       if (!vista || !vOpen || !vFrame) return;
 
@@ -758,27 +756,25 @@
         if (vFrame.getAttribute('src') !== vFrame.dataset.src) {
           vFrame.setAttribute('src', vFrame.dataset.src); // carga el video solo al entrar
         }
-        vista.hidden = false;
-        document.body.style.overflow = 'hidden';
-        vista.scrollTop = 0;
+        document.body.classList.add('video-active'); // oculta el resto de la página
+        window.scrollTo(0, 0);
       }
       function ocultar() {
-        vista.hidden = true;
-        document.body.style.overflow = '';
+        document.body.classList.remove('video-active');
         vFrame.setAttribute('src', ''); // detiene la reproducción al salir
       }
       function sincronizar() {
-        if (window.location.hash === HASH) { mostrar(); } else if (!vista.hidden) { ocultar(); }
+        if (window.location.hash === HASH) { mostrar(); }
+        else if (document.body.classList.contains('video-active')) { ocultar(); }
       }
 
       vOpen.addEventListener('click', function () { window.location.hash = HASH; });
       function volver() {
         if (window.location.hash === HASH) { history.back(); } else { ocultar(); }
       }
-      if (vBack)  vBack.addEventListener('click', volver);
-      if (vBack2) vBack2.addEventListener('click', volver);
+      if (vBack) vBack.addEventListener('click', volver);
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !vista.hidden) volver();
+        if (e.key === 'Escape' && document.body.classList.contains('video-active')) volver();
       });
 
       window.addEventListener('hashchange', sincronizar);
