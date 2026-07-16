@@ -18,15 +18,24 @@ revealItems.forEach(item => revealObserver.observe(item));
 
 const statNumbers = document.querySelectorAll('[data-count]');
 const animateValue = el => {
-  const target = Number(el.dataset.count || 0);
-  const start = 0;
-  const duration = 1200;
+  // Separa prefijo (ej. "+") y número del data-count, para conservarlos al animar
+  const raw = String(el.dataset.count || '0');
+  const match = raw.match(/^(\D*)(\d[\d,]*)(\D*)$/);
+  const prefix = match ? match[1] : '';
+  const suffix = match ? match[3] : '';
+  const target = match ? parseInt(match[2].replace(/,/g, ''), 10) : 0;
+  const duration = 1600;
   const startTime = performance.now();
+  el.classList.add('is-counting');
   const tick = now => {
     const progress = Math.min((now - startTime) / duration, 1);
-    const value = Math.floor(start + (target - start) * (1 - Math.pow(1 - progress, 3)));
-    el.textContent = value;
-    if (progress < 1) requestAnimationFrame(tick);
+    const value = Math.floor(target * (1 - Math.pow(1 - progress, 3)));
+    el.textContent = prefix + value.toLocaleString('es-MX') + suffix;
+    if (progress < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      el.textContent = prefix + target.toLocaleString('es-MX') + suffix;
+    }
   };
   requestAnimationFrame(tick);
 };

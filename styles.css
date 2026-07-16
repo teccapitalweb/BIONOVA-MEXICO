@@ -56,11 +56,16 @@ img{max-width:100%;display:block}
 .btn-ghost{border:1px solid var(--line);background:#fff;color:var(--text)}
 .btn-small{padding:11px 16px}
 .btn-block{width:100%}
-.hero-points{display:flex;flex-wrap:wrap;gap:10px}
-.hero-points span{padding:10px 12px;border-radius:999px;background:rgba(255,255,255,.08);color:#cffafe;font-weight:700;font-size:.9rem}
+/* MODIFICADO: features del hero como chips con check (tema claro del hero) */
+.hero-points{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0;margin:0}
+.hero-points li{display:inline-flex;align-items:center;gap:8px;padding:9px 15px 9px 11px;border-radius:999px;background:#fff;border:1px solid var(--line);color:#0e7490;font-weight:700;font-size:.9rem;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.hero-points li:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 8px 20px rgba(8,145,178,.14)}
+.hero-points .hp-check{flex:none}
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
 .stat-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px}
-.stat-card strong{display:block;font-size:2rem;font-weight:900;margin-bottom:6px}
+.stat-card strong{display:block;font-size:2.2rem;font-weight:900;margin-bottom:6px;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.5px;background:linear-gradient(135deg,#0e7490,#0891b2);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.stat-card strong.is-counting{animation:statRise .5s ease}
+@keyframes statRise{from{transform:translateY(10px);opacity:.3}to{transform:translateY(0);opacity:1}}
 .stat-card span{display:block;color:rgba(255,255,255,.74);font-size:.93rem;line-height:1.45}
 .hero-visual{display:grid;gap:18px}
 .glass{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(12px);box-shadow:var(--shadow)}
@@ -73,9 +78,14 @@ img{max-width:100%;display:block}
 .quick-card h2{margin:0;font-size:1.35rem}
 .mini-logo{width:48px;height:48px;border-radius:14px;object-fit:cover}
 .quick-card ul{margin:0 0 18px;padding-left:18px;color:rgba(255,255,255,.82);line-height:1.7}
-.logo-strip{padding:18px 0;background:#fff;border-bottom:1px solid var(--line)}
-.logo-strip-inner{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;align-items:center;color:#12315f;font-weight:800;font-size:.94rem}
-.logo-strip-inner span{padding:12px 16px;border-radius:999px;background:#f4f8fe;border:1px solid #e3ecf8}
+/* MODIFICADO: categorías (título + chips con ícono) */
+.cat-strip{padding:26px 0;background:#fff;border-bottom:1px solid var(--line)}
+.cat-strip-title{margin:0 auto 16px;text-align:center;color:#12315f;font-weight:800;font-size:1.02rem;max-width:46ch}
+.cat-chips{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:stretch;list-style:none;padding:0;margin:0}
+.cat-chips li{display:inline-flex;align-items:center;gap:9px;padding:11px 18px;border-radius:14px;background:linear-gradient(180deg,#f6faff,#eef4fd);border:1px solid #e0e9f6;color:#0e2a52;font-weight:700;font-size:.94rem;box-shadow:0 6px 16px rgba(12,49,95,.06);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.cat-chips li:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(12,49,95,.12);border-color:var(--primary)}
+.cat-chips li svg{flex:none;width:20px;height:20px;fill:none;stroke:var(--primary);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cat-chips li svg path{fill:none}
 .section{padding:92px 0}
 .section-soft{background:var(--surface-soft)}
 .section-dark{background:linear-gradient(135deg,#0a1430,#0f234f);color:#fff}
@@ -155,7 +165,8 @@ img{max-width:100%;display:block}
   .brand-subtitle{display:none}
   .hero h1{max-width:12ch}
   .hero-points{gap:8px}
-  .hero-points span,.logo-strip-inner span{font-size:.84rem}
+  .hero-points li,.cat-chips li{font-size:.84rem}
+  .cat-chips{gap:8px}
   .section{padding:72px 0}
   .cta-box{padding:30px}
 }
@@ -1066,7 +1077,6 @@ body.video-active .video-view{
 .hero{background:radial-gradient(circle at 78% 0%,rgba(34,211,238,.22),transparent 46%),linear-gradient(180deg,#d8f0fb 0%,#e8f4fc 42%,#f6fafe 100%);color:var(--text)}
 .hero p{color:#33415c}
 .eyebrow{background:#fff;border:1px solid var(--line);color:#0891b2}
-.hero-points span{background:#fff;border:1px solid var(--line);color:#0891b2}
 .stat-card{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
 .stat-card span{color:var(--muted)}
 .glass{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
