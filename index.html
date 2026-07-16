@@ -756,7 +756,7 @@
     </div>
   </section>
 
-  <!-- MODIFICADO: control del apartado de video (hash #como-registrarte, el botón atrás del navegador/celular también regresa) -->
+  <!-- MODIFICADO: control del apartado de video (pushState/popstate: 1 clic para volver + botón atrás del navegador) -->
   <script>
     (function () {
       var vista  = document.getElementById('video-view');
@@ -766,34 +766,52 @@
       if (!vista || !vOpen || !vFrame) return;
 
       var HASH = '#como-registrarte';
+      var abierto = false;
 
       function mostrar() {
+        if (abierto) return;
         if (vFrame.getAttribute('src') !== vFrame.dataset.src) {
           vFrame.setAttribute('src', vFrame.dataset.src); // carga el video solo al entrar
         }
         document.body.classList.add('video-active'); // oculta el resto de la página
+        abierto = true;
         window.scrollTo(0, 0);
       }
       function ocultar() {
+        if (!abierto) return;
         document.body.classList.remove('video-active');
         vFrame.setAttribute('src', ''); // detiene la reproducción al salir
-      }
-      function sincronizar() {
-        if (window.location.hash === HASH) { mostrar(); }
-        else if (document.body.classList.contains('video-active')) { ocultar(); }
+        abierto = false;
       }
 
-      vOpen.addEventListener('click', function () { window.location.hash = HASH; });
+      // Abrir: mostramos y empujamos un estado en el historial (para atrapar el botón "atrás")
+      vOpen.addEventListener('click', function () {
+        mostrar();
+        history.pushState({ bnvVideo: true }, '', HASH);
+      });
+
+      // Volver: 1 solo clic. Si empujamos estado, retrocedemos (dispara popstate→ocultar).
       function volver() {
-        if (window.location.hash === HASH) { history.back(); } else { ocultar(); }
+        if (!abierto) return;
+        if (history.state && history.state.bnvVideo) {
+          history.back();
+        } else {
+          ocultar();
+          if (window.location.hash === HASH) { history.replaceState(null, '', window.location.pathname + window.location.search); }
+        }
       }
       if (vBack) vBack.addEventListener('click', volver);
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && document.body.classList.contains('video-active')) volver();
+        if (e.key === 'Escape' && abierto) volver();
       });
 
-      window.addEventListener('hashchange', sincronizar);
-      sincronizar(); // por si alguien entra directo con el enlace #como-registrarte
+      // Botón atrás del navegador/celular
+      window.addEventListener('popstate', function () {
+        if (abierto) ocultar();
+      });
+
+      // Si alguien entra directo con el enlace .../#como-registrarte
+      if (window.location.hash === HASH) { mostrar(); }
     })();
   </script>
 
