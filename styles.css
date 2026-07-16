@@ -1115,3 +1115,178 @@ body.video-active .video-view{
 
 /* Contraste de párrafos sobre fondos cyan claros */
 .feature-copy p,.cta-box p{color:#33415c}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CAPA DE PULIDO 2026 — LIQUID GLASS + MÓVIL TIPO APP  (MODIFICADO)
+   Se agrega al final para no romper reglas previas. Sobre-escribe con cuidado.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root{
+  --font-display:'Space Grotesk','Inter',system-ui,sans-serif;
+  --radius-lg:28px;
+  --radius-md:18px;
+  --glass-bg:rgba(255,255,255,.62);
+  --glass-brd:rgba(255,255,255,.75);
+  --glass-shadow:0 18px 50px rgba(12,49,95,.10),inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+/* — Tipografía display para títulos (distintiva, no Inter) — */
+.hero h1,.section-head h2,.feature-copy h2,.certificate-copy h2,.cta-box h2,
+.club-title,.club-plans-title,.video-view h2,.modal-copy h3,.club-modal-title,
+.brand-title{font-family:var(--font-display);letter-spacing:-.02em}
+.hero h1{font-weight:700;line-height:1.02}
+
+/* — Liquid glass real en las tarjetas clave — */
+.info-card,.benefit-card,.client-card,.course-card,.certificate-list div,.cat-chips li{
+  background:var(--glass-bg);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);
+  backdrop-filter:blur(16px) saturate(140%);
+  border:1px solid var(--glass-brd);
+  box-shadow:var(--glass-shadow);
+}
+.info-card,.benefit-card{border-radius:var(--radius-lg)}
+.course-card{border-radius:var(--radius-lg)}
+.info-card:hover,.benefit-card:hover,.client-card:hover,.course-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 26px 60px rgba(12,49,95,.16),inset 0 1px 0 rgba(255,255,255,.9);
+  border-color:rgba(6,182,212,.35);
+}
+/* brillo superior sutil tipo cristal */
+.info-card,.benefit-card,.course-card{position:relative;overflow:hidden}
+.course-card::before,.info-card::before,.benefit-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);
+}
+
+/* — Chips e íconos con acabado más premium — */
+.icon-badge{background:linear-gradient(135deg,#cffafe,#a5f3fc);color:#0e7490;box-shadow:0 8px 20px rgba(6,182,212,.22)}
+.course-top span,.benefit-pill,.section-kicker{backdrop-filter:blur(6px)}
+
+/* — Botón "Ver cómo registrarte" adaptado al hero claro (antes se veía muy tenue) — */
+.btn-video{background:#fff;border:1px solid var(--line);color:#0e7490;box-shadow:0 10px 24px rgba(8,145,178,.12)}
+.btn-video:hover{border-color:var(--primary);box-shadow:0 14px 30px rgba(8,145,178,.2)}
+.btn-video .btn-video-play{background:var(--primary);color:#fff}
+
+/* — Botones: acabado glass y tap-target cómodo — */
+.btn{border-radius:16px}
+.btn-primary{box-shadow:0 14px 30px rgba(8,145,178,.30),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn-secondary{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.btn:active{transform:translateY(0) scale(.99)}
+
+/* — Foco visible (accesibilidad, faltaba) — */
+a:focus-visible,button:focus-visible,.btn:focus-visible,.chip:focus-visible,input:focus-visible{
+  outline:3px solid rgba(6,182,212,.55);outline-offset:2px;border-radius:12px;
+}
+
+/* — Respeta usuarios que reducen movimiento — */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+  .clients-track{animation:none;transform:none}
+}
+
+/* ─────────────────────────  MÓVIL TIPO APP (≤640px)  ───────────────────────── */
+@media (max-width:640px){
+  /* Tipografía fiel y adaptable */
+  .hero h1{font-size:clamp(2rem,8.5vw,2.9rem);line-height:1.05;max-width:100%}
+  .hero p{font-size:1rem;line-height:1.6}
+  .section-head h2,.feature-copy h2,.certificate-copy h2,.cta-box h2,.club-title{font-size:clamp(1.6rem,7vw,2.2rem)}
+  body{font-size:15px}
+
+  /* Banners pequeños en móvil */
+  .hero-banner{min-height:150px;max-height:190px;border-radius:20px}
+  .hero-card{padding:12px;border-radius:24px}
+  .course-card img{aspect-ratio:16/10}
+  .marquee-card{min-width:230px;max-width:230px;min-height:200px}
+
+  /* Botones adaptables: ocupan el ancho y se apilan como app */
+  .hero-actions{flex-direction:column;align-items:stretch;gap:10px;margin:22px 0 18px}
+  .hero-actions .btn,.hero-actions .btn-club-hero{width:100%;justify-content:center}
+  .btn{padding:14px 18px;font-size:.98rem}
+  .contact-actions .btn,.cta-actions .btn{width:100%;justify-content:center}
+
+  /* Espaciado y radios tipo app */
+  .section{padding:52px 0}
+  .container{width:min(1180px,calc(100% - 28px))}
+  .info-card,.benefit-card,.client-card{padding:22px;border-radius:22px}
+  .stats-grid{gap:12px;margin-top:22px}
+  .stat-card{padding:16px;border-radius:18px}
+  .stat-card strong{font-size:1.9rem}
+
+  /* Categorías: scroll horizontal tipo app en vez de saltos de línea */
+  .cat-chips{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:4px 2px 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .cat-chips::-webkit-scrollbar{display:none}
+  .cat-chips li{flex:0 0 auto;scroll-snap-align:start}
+
+  /* Header más compacto */
+  .nav{min-height:64px}
+  .brand-logo{width:44px;height:44px}
+  .site-header{background:rgba(247,251,254,.9);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+}
+
+/* En pantallas muy chicas, un respiro extra */
+@media (max-width:380px){
+  .hero h1{font-size:1.85rem}
+  .cta-box{padding:24px}
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BOTONES QUE ENGANCHAN — color vivo, gloss y micro-interacción  (MODIFICADO)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Botón primario: cyan vibrante con profundidad y brillo superior */
+.btn-primary{
+  background:linear-gradient(135deg,#22d3ee 0%,#06b6d4 45%,#0e7490 100%);
+  color:#fff;
+  box-shadow:0 12px 28px rgba(6,182,212,.38),inset 0 1px 0 rgba(255,255,255,.45);
+  position:relative;overflow:hidden;
+}
+.btn-primary:hover{
+  box-shadow:0 18px 40px rgba(6,182,212,.5),inset 0 1px 0 rgba(255,255,255,.55);
+  filter:saturate(1.08);
+}
+/* barrido de luz al pasar el cursor (solo botones grandes, para no recortar texto en el pill del nav) */
+.btn-primary::after,.btn-club-hero::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);
+  transform:translateX(-130%);transition:transform .7s ease;pointer-events:none;
+}
+.btn-primary:hover::after,.btn-club-hero:hover::after{transform:translateX(130%)}
+
+/* Club VIP: verde-esmeralda más jugoso y con vida */
+.btn-club-hero{
+  background:linear-gradient(135deg,#10b981 0%,#0d9488 55%,#0891b2 100%);
+  box-shadow:0 16px 34px rgba(13,148,136,.42),inset 0 1px 0 rgba(255,255,255,.35);
+}
+.btn-club-hero:hover{box-shadow:0 22px 46px rgba(13,148,136,.55),inset 0 1px 0 rgba(255,255,255,.45)}
+
+/* Acceso VIP (nav): dorado con más brillo y contraste */
+.menu .club-nav-link,.vip-access-mobile{
+  background:linear-gradient(135deg,#fcd34d 0%,#fbbf24 50%,#f59e0b 100%);
+  box-shadow:0 8px 22px rgba(245,158,11,.45),inset 0 1px 0 rgba(255,255,255,.5);
+}
+
+/* Botón "Ver cursos" secundario cuando va sobre hero claro: relleno cyan translúcido con borde vivo */
+.hero-actions .btn-secondary{
+  background:linear-gradient(135deg,rgba(34,211,238,.16),rgba(6,182,212,.1));
+  border:1px solid rgba(6,182,212,.4);
+  color:#0e7490;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:0 8px 20px rgba(6,182,212,.14);
+}
+.hero-actions .btn-secondary:hover{border-color:var(--primary);box-shadow:0 12px 26px rgba(6,182,212,.22)}
+
+/* Botones de acción del curso / contacto: gradiente cyan coherente */
+.course-actions .btn-primary,.contact-actions .btn-primary,.cta-actions .btn-primary{
+  background:linear-gradient(135deg,#22d3ee,#0891b2);
+}
+
+/* WhatsApp flotante y dock: verde vivo con brillo (más llamativo) */
+.dock-btn.whatsapp{background:linear-gradient(135deg,#25d366,#16a34a);box-shadow:0 10px 24px rgba(34,197,94,.4)}
+.dock-btn:hover{filter:brightness(1.06)}
+
+/* Chips de filtro activos: pastilla cyan con glow */
+.chip.active{background:linear-gradient(135deg,#06b6d4,#0e7490);border-color:transparent;box-shadow:0 8px 20px rgba(6,182,212,.32)}
+.chip:hover{border-color:var(--primary)}
+
+/* Foco cómodo para teclado en todos los botones nuevos */
+.btn-club-hero:focus-visible,.vip-access-mobile:focus-visible,.menu .club-nav-link:focus-visible{outline:3px solid rgba(6,182,212,.55);outline-offset:2px}
