@@ -8774,10 +8774,30 @@ function marcarNotifsLeidas(ids) {
   } catch(e) {}
 }
 
-// Cuenta cuántas notif son nuevas (no leídas)
+// [Eliminar notif · solo cliente] Devuelve IDs de notificaciones eliminadas (ocultas solo para
+// este usuario en localStorage · la colección global `notificaciones` en Firestore NUNCA se toca)
+function getNotifsEliminadas() {
+  const uid = window.UserState?.uid || 'guest';
+  try {
+    return JSON.parse(localStorage.getItem('bionova_notif_deleted_' + uid) || '[]');
+  } catch(e) { return []; }
+}
+
+// [Eliminar notif · solo cliente] Marca un array de IDs como eliminados (solo localStorage)
+function marcarNotifsEliminadas(ids) {
+  const uid = window.UserState?.uid || 'guest';
+  const ya = getNotifsEliminadas();
+  const todas = Array.from(new Set([...ya, ...ids]));
+  try {
+    localStorage.setItem('bionova_notif_deleted_' + uid, JSON.stringify(todas));
+  } catch(e) {}
+}
+
+// Cuenta cuántas notif son nuevas (no leídas y no eliminadas)
 function contarNotifsNuevas() {
   const leidas = new Set(getNotifsLeidas());
-  return window.__notifsState.items.filter(n => !leidas.has(n.id)).length;
+  const eliminadas = new Set(getNotifsEliminadas());
+  return window.__notifsState.items.filter(n => !leidas.has(n.id) && !eliminadas.has(n.id)).length;
 }
 
 // Actualiza el badge (puntito rojo) según haya notif nuevas
@@ -8809,7 +8829,9 @@ function toggleNotifDropdown(){
   let dd=document.getElementById('notif-dropdown');
   if(dd){dd.remove();return;}
 
-  const notifs = window.__notifsState.items || [];
+  // [Eliminar notif · solo cliente] excluye del pintado los ids ocultados por este usuario
+  const eliminadas = new Set(getNotifsEliminadas());
+  const notifs = (window.__notifsState.items || []).filter(n => !eliminadas.has(n.id));
   const leidas = new Set(getNotifsLeidas());
 
   dd=document.createElement('div');
@@ -8849,6 +8871,9 @@ function toggleNotifDropdown(){
             <div style="font-size:11.5px;color:var(--text-2);line-height:1.45;margin-top:3px;text-align:left;">${n.descripcion}</div>
             <div style="font-size:10px;color:var(--text-3);margin-top:5px;letter-spacing:.3px;text-transform:uppercase;text-align:left;">${formatNotifTime(n.createdAtMs)}</div>
           </div>
+          <button type="button" class="notif-del-btn" data-notif-id="${n.id}" aria-label="Eliminar notificación" style="flex-shrink:0;width:24px;height:24px;border-radius:6px;border:0;background:transparent;color:var(--text-3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,color .15s;">
+            <svg class="ic" style="width:13px;height:13px;"><use href="#i-x"/></svg>
+          </button>
         </div>
       `;
     }).join('');
@@ -8857,7 +8882,10 @@ function toggleNotifDropdown(){
   dd.innerHTML=`
     <div style="padding:10px 12px 12px;border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
       <strong style="font-size:13px;font-weight:600;">Notificaciones</strong>
-      <span style="font-size:10px;color:${nuevasCount>0?'var(--primary)':'var(--text-3)'};letter-spacing:.5px;text-transform:uppercase;font-weight:700;">${nuevasCount>0 ? nuevasCount + ' nuevas' : 'Al día'}</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        ${notifs.length > 0 ? `<button type="button" id="notif-del-all-btn" style="font-size:10px;color:var(--text-3);letter-spacing:.3px;background:none;border:0;padding:0;cursor:pointer;">Eliminar todo</button>` : ''}
+        <span style="font-size:10px;color:${nuevasCount>0?'var(--primary)':'var(--text-3)'};letter-spacing:.5px;text-transform:uppercase;font-weight:700;">${nuevasCount>0 ? nuevasCount + ' nuevas' : 'Al día'}</span>
+      </div>
     </div>
     ${bodyHTML}
     ${notifs.length > 0 ? `<div style="padding:9px 12px;border-top:0.5px solid var(--border);text-align:center;"><span style="font-size:11px;color:var(--text-3);">Mostrando últimas ${notifs.length}</span></div>` : ''}`;
@@ -8866,6 +8894,31 @@ function toggleNotifDropdown(){
     el.addEventListener('mouseenter',()=>el.style.background='var(--surface-2)');
     el.addEventListener('mouseleave',()=>el.style.background='transparent');
   });
+
+  // [Eliminar notif · solo cliente] borrar una notificación individual (nunca toca Firestore)
+  dd.querySelectorAll('.notif-del-btn').forEach(btn=>{
+    btn.addEventListener('mouseenter',()=>{btn.style.background='var(--surface-2)';btn.style.color='var(--text)';});
+    btn.addEventListener('mouseleave',()=>{btn.style.background='transparent';btn.style.color='var(--text-3)';});
+    btn.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      marcarNotifsEliminadas([btn.dataset.notifId]);
+      actualizarBadgeNotif();
+      dd.remove();
+      toggleNotifDropdown();
+    });
+  });
+
+  // [Eliminar notif · solo cliente] borrar todas las visibles (nunca toca Firestore)
+  const delAllBtn = dd.querySelector('#notif-del-all-btn');
+  if (delAllBtn) {
+    delAllBtn.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      marcarNotifsEliminadas(notifs.map(n => n.id));
+      actualizarBadgeNotif();
+      dd.remove();
+      toggleNotifDropdown();
+    });
+  }
 
   if (isMobile) {
     document.body.appendChild(dd);
