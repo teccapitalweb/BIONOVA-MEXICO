@@ -55,11 +55,14 @@
           </p>
 
           <div class="hero-actions">
-            <a class="btn btn-club-hero" href="#club">
+            <!-- MODIFICADO: el botón del hero ahora lleva al VIP de Stripe (vip-auth.html)
+                 y el precio se lee en vivo de Firestore config/club (patrón SYNOVA).
+                 Sin número fijo en el HTML: el placeholder se llena al cargar. -->
+            <a class="btn btn-club-hero" href="vip-auth.html">
               <span class="club-hero-emoji">🔬</span>
               <span class="club-hero-text">
                 <strong>Club VIP</strong>
-                <small>Acceso exclusivo · desde $199/mes</small>
+                <small data-precio-club-hero>Acceso exclusivo</small>
               </span>
             </a>
             <a class="btn btn-primary" href="#cursos">Ver cursos</a>
@@ -850,6 +853,21 @@
     const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db   = getFirestore(app);
+
+    /* ══ MODIFICADO · Precio en vivo del botón "Club VIP" del hero ══
+       Lee config/club (el mismo doc que edita vip-admin y con el que el
+       webhook arma el cobro real en Stripe) y llena el placeholder.
+       Si Firestore no responde, se queda "Acceso exclusivo" sin número —
+       nunca se muestra un precio viejo. */
+    (async () => {
+      try {
+        const snap = await getDoc(doc(db, 'config', 'club'));
+        const c = snap.exists() ? snap.data() : {};
+        const mes = Number(c.precioMes) > 0 ? Number(c.precioMes) : 199;
+        document.querySelectorAll('[data-precio-club-hero]').forEach(el =>
+          el.textContent = 'Acceso exclusivo · desde $' + mes.toLocaleString('es-MX') + '/mes');
+      } catch (e) { console.warn('[BioNova] Precio hero: no se pudo leer config/club:', e.message); }
+    })();
 
     // ── CONFIGURACIÓN DEL CLUB ────────────────────────────────────────────
     const CLUB_CONFIG = {

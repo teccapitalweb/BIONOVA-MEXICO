@@ -3173,6 +3173,24 @@ window.__db = db;
 window.__fs = { collection, doc, getDoc, getDocs, query, orderBy, onSnapshot, limit, where, addDoc, setDoc, updateDoc, deleteDoc, deleteField, increment, serverTimestamp, Timestamp, db };
 setPersistence(auth, browserLocalPersistence);
 
+/* ══ MODIFICADO · Precios en vivo (Firestore config/club · patrón SYNOVA) ══
+   Misma fuente de verdad que el webhook: lo que se muestra aquí es lo que
+   Stripe cobra en el checkout (price_data dinámico).
+   cargado:false → la UI muestra "$—" hasta tener el precio REAL de Firestore,
+   así jamás se enseña un número viejo aunque el admin acabe de cambiarlo. */
+window.__preciosClub = { mes: 199, ano: 1999, equivMes: 167, ahorro: 389, cargado: false };
+window.__cargarPreciosClub = async function(){
+  try {
+    const snap = await getDoc(doc(db, 'config', 'club'));
+    const c = snap.exists() ? snap.data() : {};
+    const mes = Number(c.precioMes) > 0 ? Number(c.precioMes) : 199;
+    const ano = Number(c.precioAno) > 0 ? Number(c.precioAno) : 1999;
+    window.__preciosClub = { mes, ano, equivMes: Math.round(ano / 12), ahorro: Math.max(0, (mes * 12) - ano), cargado: true };
+  } catch (e) { console.warn('[BioNova] No se pudo leer config/club:', e.message); }
+  return window.__preciosClub;
+};
+window.__cargarPreciosClub();
+
 // ⚠️ CAMBIA esta URL por la de tu Railway cuando esté deployado
 const WEBHOOK_URL = 'https://bionova-academy-webhook-production.up.railway.app';
 window.WEBHOOK_URL = WEBHOOK_URL;
@@ -3191,7 +3209,11 @@ const isCheckoutSuccess = new URLSearchParams(window.location.search).get('check
 
 // Si ya estamos en modo demo (configurado en script anterior), aplicar UserState y salir
 if (window.__isDemoMode) {
-  setTimeout(() => { window.__applyUserState && window.__applyUserState(); }, 80);
+  setTimeout(() => {
+    window.__applyUserState && window.__applyUserState();
+    // MODIFICADO: restaurar la sección donde estaba el usuario antes del F5
+    window.__restaurarSeccionPanel && window.__restaurarSeccionPanel();
+  }, 80);
 } else {
   // ─── Auth normal · puede ser sin-membresia o vip ───
   onAuthStateChanged(auth, async (user) => {
@@ -3291,7 +3313,13 @@ if (window.__isDemoMode) {
       } catch(e) { console.warn('notificacionPendiente:', e.message); }
     }
 
-    setTimeout(() => { window.__applyUserState && window.__applyUserState(); }, 50);
+    setTimeout(() => {
+      window.__applyUserState && window.__applyUserState();
+      // MODIFICADO: restaurar la sección donde estaba el usuario antes del F5.
+      // Va aquí (no en init) porque ya se sabe si es VIP, sin-membresía o admin,
+      // y las secciones se renderizan según ese estado.
+      window.__restaurarSeccionPanel && window.__restaurarSeccionPanel();
+    }, 50);
 
     // ─── Popup: confirmar/editar nombre (1ª vez) · evita certificados con el email ───
     setTimeout(() => { try { window.__maybeAskName && window.__maybeAskName(); } catch(e){} }, 900);
@@ -4577,9 +4605,43 @@ const ToolReporte = (function(){
   }
   return {open(){navigateToSection('tool-reporte');}, mount};
 })();
-function navigateToSection(section){
+/* ═══════════════════════════════════════════════════════════════════
+   MODIFICADO · Persistencia de sección (deep-linking con hash)
+   Antes: al recargar (F5) siempre volvías al Inicio.
+   Ahora: la sección vive en la URL (#cursos, #certificados, …), así el
+   refresh te deja donde estabas, los botones atrás/adelante del
+   navegador funcionan y puedes compartir un link directo a la sección.
+   ═══════════════════════════════════════════════════════════════════ */
+const SECCIONES_VALIDAS_PANEL = [
+  'inicio','cursos','certificados','logros','webinars','pdfs','foro',
+  'directorio','canal','perfil','suscripcion',
+  'tool-diluciones','tool-ufc','tool-conversor','tool-dosis','tool-tfg',
+  'tool-molaridad','tool-beer','tool-reporte'
+];
+
+function seccionPanelDesdeHash(){
+  const h = (window.location.hash || '').replace(/^#\/?/, '').trim();
+  return SECCIONES_VALIDAS_PANEL.includes(h) ? h : null;
+}
+
+function navigateToSection(section, opts){
+  opts = opts || {};
+  if(!SECCIONES_VALIDAS_PANEL.includes(section)) section = 'inicio';
   document.querySelectorAll('.nav-item, .mobile-nav__item, .mobile-drawer__item').forEach(n=>n.classList.remove('is-active'));
   document.querySelectorAll(`[data-section="${section}"]`).forEach(ni => ni.classList.add('is-active'));
+
+  // Reflejar la sección en la URL · replaceState al restaurar/volver para no
+  // ensuciar el historial con entradas duplicadas.
+  if(!opts.silent){
+    const nuevoHash = '#' + section;
+    if(window.location.hash !== nuevoHash){
+      try {
+        if(opts.replace) history.replaceState({section}, '', nuevoHash);
+        else history.pushState({section}, '', nuevoHash);
+      } catch(e){ window.location.hash = section; }
+    }
+  }
+  try { sessionStorage.setItem('bnv_panel_seccion', section); } catch(e){}
   // Si es una herramienta-sección (tool-iper, tool-oee...), resaltar su item data-tool
   if(section.startsWith('tool-')){
     const toolKey=section.slice(5);
@@ -4605,6 +4667,32 @@ function navigateToSection(section){
   window.scrollTo({top:0,behavior:'instant'});
   document.querySelector('main.main')?.scrollTo({top:0,behavior:'instant'});
 }
+
+/* MODIFICADO · Restaurar la sección al cargar.
+   Se llama DESPUÉS de resolver el estado del usuario (VIP / sin-membresía /
+   invitado), porque secciones como "suscripción" y las herramientas se
+   renderizan distinto según el acceso. Si no hay hash, se queda en Inicio
+   como siempre — no cambia el comportamiento de una visita nueva. */
+window.__restaurarSeccionPanel = function(){
+  if (window.__seccionRestaurada) return;
+  window.__seccionRestaurada = true;
+  let destino = seccionPanelDesdeHash();
+  if(!destino){
+    try {
+      const guardada = sessionStorage.getItem('bnv_panel_seccion');
+      if(guardada && SECCIONES_VALIDAS_PANEL.includes(guardada)) destino = guardada;
+    } catch(e){}
+  }
+  if(!destino || destino === 'inicio') return; // ya estamos en Inicio
+  try { navigateToSection(destino, { replace:true }); }
+  catch(e){ console.warn('[BioNova] No se pudo restaurar la sección:', e.message); }
+};
+
+/* Botones atrás/adelante del navegador */
+window.addEventListener('popstate', () => {
+  if (!window.__seccionRestaurada) return; // aún no arranca el panel
+  navigateToSection(seccionPanelDesdeHash() || 'inicio', { silent:true });
+});
 
 function sectionPlaceholder(section){
   const names={pdfs:'PDFs y material','mes-mayo':'Biblioteca · Mayo 2026','mes-abril':'Biblioteca · Abril 2026','mes-marzo':'Biblioteca · Marzo 2026',foro:'Foro VIP',canal:'Canal WhatsApp',perfil:'Mi perfil',suscripcion:'Suscripción'};
@@ -7862,23 +7950,24 @@ const Sections = (function(){
             Elige tu plan
           </h3>
           <div class="plan-picker" id="plan-picker">
+            <!-- MODIFICADO: precios en vivo desde config/club · coinciden con el cobro real de Stripe -->
             <button class="plan-picker__card ${intentPlan==='mensual'?'is-active':''}" data-plan="mensual" type="button">
               <div>
                 <div class="plan-picker__name">VIP Mensual</div>
                 <div class="plan-picker__sub">Cancela cuando quieras</div>
               </div>
               <div style="text-align:right">
-                <div class="plan-picker__price">$199</div>
+                <div class="plan-picker__price" data-precio-picker-mes>${window.__preciosClub.cargado ? '$'+window.__preciosClub.mes.toLocaleString('es-MX') : '$—'}</div>
                 <div class="plan-picker__price-sub">MXN/mes</div>
               </div>
             </button>
             <button class="plan-picker__card ${intentPlan==='anual'?'is-active':''}" data-plan="anual" type="button">
               <div>
                 <div class="plan-picker__name">VIP Anual</div>
-                <div class="plan-picker__sub">Ahorras 21%</div>
+                <div class="plan-picker__sub" data-precio-picker-ahorro>${window.__preciosClub.cargado ? 'Ahorras $'+window.__preciosClub.ahorro.toLocaleString('es-MX') : 'Mejor precio'}</div>
               </div>
               <div style="text-align:right">
-                <div class="plan-picker__price">$1,999</div>
+                <div class="plan-picker__price" data-precio-picker-ano>${window.__preciosClub.cargado ? '$'+window.__preciosClub.ano.toLocaleString('es-MX') : '$—'}</div>
                 <div class="plan-picker__price-sub">MXN/año</div>
               </div>
             </button>
@@ -7905,6 +7994,16 @@ const Sections = (function(){
     // ─── Lógica del selector de plan + Stripe Embedded ───
     let selectedPlan = intentPlan;
     const mountEl = document.getElementById('sub-checkout-mount');
+
+    // MODIFICADO: refrescar el precio del picker con el valor más reciente de
+    // config/club (por si el admin lo cambió mientras el panel estaba abierto)
+    window.__cargarPreciosClub().then(p => {
+      if (!p.cargado) return;
+      const fmt = n => '$' + Number(n).toLocaleString('es-MX');
+      document.querySelectorAll('[data-precio-picker-mes]').forEach(el => el.textContent = fmt(p.mes));
+      document.querySelectorAll('[data-precio-picker-ano]').forEach(el => el.textContent = fmt(p.ano));
+      document.querySelectorAll('[data-precio-picker-ahorro]').forEach(el => el.textContent = 'Ahorras ' + fmt(p.ahorro));
+    });
 
     // Destruir cualquier checkout previo que haya quedado vivo de un render anterior
     // (al salir y volver a la pestaña, esta función se re-ejecuta; la instancia
@@ -8001,10 +8100,19 @@ const Sections = (function(){
 
   /* ─── Estado: VIP activo · muestra plan real y historial ─── */
   function renderSuscripcionVIP(container, S){
+    // MODIFICADO: precios en vivo desde config/club · "$—" hasta tener el real
+    const __p = window.__preciosClub || {};
+    const __fmt = n => '$' + Number(n).toLocaleString('es-MX');
     const PLAN_DATA = {
-      mensual: { name:'VIP Mensual', priceNum:'$199',   priceSub:'MXN / mes', period:'mensual' },
-      anual:   { name:'VIP Anual',   priceNum:'$1,999', priceSub:'MXN / año',  period:'anual' }
+      mensual: { name:'VIP Mensual', priceNum:(__p.cargado ? __fmt(__p.mes) : '$—'), priceSub:'MXN / mes', period:'mensual' },
+      anual:   { name:'VIP Anual',   priceNum:(__p.cargado ? __fmt(__p.ano) : '$—'), priceSub:'MXN / año',  period:'anual' }
     };
+    // Refrescar en cuanto Firestore responda (por si el render ganó la carrera)
+    if (window.__cargarPreciosClub) window.__cargarPreciosClub().then(pp => {
+      if (!pp.cargado) return;
+      const el = container.querySelector('.plan-card__price-num');
+      if (el) el.textContent = (S.plan === 'anual') ? __fmt(pp.ano) : __fmt(pp.mes);
+    });
     const plan = PLAN_DATA[S.plan] || PLAN_DATA.mensual;
     const proxRenovStr = S.membership?.proximaRenovacion
       ? new Date(S.membership.proximaRenovacion).toLocaleDateString('es-MX', {day:'numeric',month:'long',year:'numeric'})
@@ -9287,6 +9395,10 @@ function initNav(){
 
 function init(){
   Theme.init();applyGreeting();initCountdown();initNav();
+  // MODIFICADO · Salvavidas: si el estado del usuario tarda demasiado (red lenta
+  // o webhook caído), restaurar la sección de todos modos a los 2.5s para no
+  // dejar al usuario en Inicio después de un F5.
+  setTimeout(() => { window.__restaurarSeccionPanel && window.__restaurarSeccionPanel(); }, 2500);
   loadProfileFromLS();
   injectSupportFAB();
   window.Modal=Modal;window.Tools=Tools;window.Toast=Toast;window.navigateToSection=navigateToSection;
@@ -9306,6 +9418,23 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     regalo:  { name:'Acceso temporal', price:'—', period:'cortesía', cycle:'cortesía' },
     admin:   { name:'ADMIN',       price:'—',     period:'',         cycle:'—' }
   };
+  // MODIFICADO: sincronizar las etiquetas con el precio en vivo de config/club
+  // en cuanto esté disponible (evita que quede un precio viejo en cualquier UI
+  // que use PLAN_LABELS). Este script clásico corre ANTES que el módulo de
+  // Firebase que define __cargarPreciosClub — si aún no existe, esperar a
+  // DOMContentLoaded (los módulos ya se ejecutaron para ese momento).
+  (function syncPlanLabels(){
+    const aplicar = () => {
+      const p = window.__preciosClub; if (!p || !p.cargado) return;
+      const fmt = n => '$' + Number(n).toLocaleString('es-MX');
+      PLAN_LABELS.mensual.price = fmt(p.mes);
+      PLAN_LABELS.anual.price   = fmt(p.ano);
+    };
+    const arrancar = () => window.__cargarPreciosClub ? window.__cargarPreciosClub().then(aplicar) : aplicar();
+    if (window.__cargarPreciosClub) arrancar();
+    else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arrancar);
+    else arrancar();
+  })();
 
   // ─── Aplicador de UserState · llamado después del auth check ───
   window.__applyUserState = function applyUserState(){
