@@ -2928,13 +2928,14 @@ body.has-fomo .main{padding-top:18px}
 
 /* ─── Popup paywall ─── */
 .paywall-modal{
-  position:fixed;inset:0;z-index:200;
+  position:fixed!important;inset:0!important;z-index:2147483000!important;
   background:rgba(0,0,0,.65);
   backdrop-filter:blur(4px);
   display:none;align-items:center;justify-content:center;padding:20px;
   animation:fadeIn .2s ease;
+  overflow-y:auto;overscroll-behavior:contain;isolation:isolate;
 }
-.paywall-modal.is-open{display:flex}
+.paywall-modal.is-open{display:flex!important}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .paywall-modal__box{
   background:var(--surface);
@@ -3090,7 +3091,7 @@ body.has-fomo .main{padding-top:18px}
 </div>
 
 <!-- Popup paywall (se abre al hacer click en contenido bloqueado) -->
-<div class="paywall-modal" id="paywall-modal" role="dialog" aria-modal="true" aria-labelledby="paywall-title">
+<div class="paywall-modal" id="paywall-modal" role="dialog" aria-modal="true" aria-labelledby="paywall-title" aria-hidden="true">
   <div class="paywall-modal__box">
     <button class="paywall-modal__close" id="paywall-close" aria-label="Cerrar">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -4756,6 +4757,50 @@ const Sections = (function(){
     return window.UserState?.isAdmin && !PREVIEW_AS_USER;
   }
 
+  // ═══ Acceso público controlado: una sola clase gratis en todo el catálogo ═══
+  // La muestra gratuita es la primera sesión del primer curso publicable por orden.
+  // Tener vista una clase anteriormente nunca sustituye una membresía activa.
+  function tieneAccesoVipCompleto() {
+    if (PREVIEW_AS_USER) return false;
+    return window.UserState?.modo === 'vip' || esAdminReal();
+  }
+
+  function cursoConPrimeraClaseGratis() {
+    return cursos.find(c =>
+      c &&
+      c.marcarProximamente !== true &&
+      Array.isArray(c.sesiones) &&
+      c.sesiones.length > 0
+    ) || null;
+  }
+
+  function esPrimeraClaseGratis(cursoId, indexClase) {
+    const cursoGratis = cursoConPrimeraClaseGratis();
+    return !tieneAccesoVipCompleto() &&
+      Boolean(cursoGratis) &&
+      cursoGratis.id === cursoId &&
+      Number(indexClase) === 0;
+  }
+
+  function textoPaywallCurso(curso) {
+    const materiales = Array.isArray(curso?.materiales) ? curso.materiales.length : 0;
+    const extraMateriales = materiales > 0
+      ? ` y ${materiales} material${materiales === 1 ? '' : 'es'} del curso`
+      : ' y todos los materiales del curso';
+    return `Disfruta gratis la primera clase. Activa tu membresía para abrir las demás clases${extraMateriales}.`;
+  }
+
+  function mostrarPaywallCurso(curso) {
+    window.__showPaywallModal?.({
+      title: 'Continúa aprendiendo con BioNova VIP',
+      sub: textoPaywallCurso(curso)
+    });
+  }
+
+  // Expuestos para las filas generadas con HTML dinámico y para pruebas de acceso.
+  window.__bionovaTieneAccesoVipCompleto = tieneAccesoVipCompleto;
+  window.__bionovaEsPrimeraClaseGratis = esPrimeraClaseGratis;
+
   // ═══════════════════════════════════════════════════════════════
   // 🎛️ Dropdown custom fancy · reemplaza select nativo (sin cuadro azul horrible)
   // Uso: bindFancyDropdown('cur-area', (value) => { ... })
@@ -4893,6 +4938,7 @@ const Sections = (function(){
   };
 
   function claseDesbloqueada(cursoId, indexClase, sesiones) {
+    if (!tieneAccesoVipCompleto()) return esPrimeraClaseGratis(cursoId, indexClase);
     if (esAdminReal()) return true;
     if (indexClase === 0) return true; // primera siempre desbloqueada
     const prog = getProgresoCurso(cursoId);
@@ -4900,6 +4946,33 @@ const Sections = (function(){
     const anteriorNum = anterior.numero || indexClase;
     return prog.clasesVistas.includes(anteriorNum);
   }
+
+  window.abrirClaseBionova = function(cursoId, indexClase) {
+    const curso = cursos.find(c => c.id === cursoId);
+    const sesion = curso?.sesiones?.[Number(indexClase)];
+    if (!curso || !sesion) return;
+
+    if (!tieneAccesoVipCompleto() && !esPrimeraClaseGratis(cursoId, indexClase)) {
+      mostrarPaywallCurso(curso);
+      return;
+    }
+
+    const numClase = sesion.numero || (Number(indexClase) + 1);
+    window.abrirVisor(sesion.url || '', sesion.titulo || `Clase ${numClase}`, cursoId, numClase);
+  };
+
+  window.abrirMaterialBionova = function(cursoId, indexMaterial) {
+    const curso = cursos.find(c => c.id === cursoId);
+    const material = curso?.materiales?.[Number(indexMaterial)];
+    if (!curso || !material) return;
+
+    if (!tieneAccesoVipCompleto()) {
+      mostrarPaywallCurso(curso);
+      return;
+    }
+
+    window.abrirVisor(material.url || '', material.titulo || 'Material del curso');
+  };
 
   function progresoCursoPct(cursoId, totalClases) {
     if (!totalClases) return 0;
@@ -5464,14 +5537,17 @@ const Sections = (function(){
     list.innerHTML=`<div class="cursos-grid">${items.map((c, idx)=>{
       const cursoIdx = cursos.findIndex(x => x.id === c.id);
       const desbloqueado = cursoDesbloqueado(cursoIdx, c);
+      const accesoCompleto = tieneAccesoVipCompleto();
+      const esCursoMuestra = cursoConPrimeraClaseGratis()?.id === c.id && !accesoCompleto;
       const diasFalta = diasParaDesbloquear(cursoIdx, c);
       const portada = c.portada || coverSVG(c.area, c.titulo);
       return `
-      <article class="curso-card ${!desbloqueado?'curso-card--locked':''}" data-cid="${c.id}" tabindex="0" style="--area-color:${COLOR_AREA[c.area]||'#2a6df6'};">
+      <article class="curso-card ${accesoCompleto && !desbloqueado?'curso-card--locked':''}" data-cid="${c.id}" tabindex="0" style="--area-color:${COLOR_AREA[c.area]||'#2a6df6'};">
         <div class="curso-card__cover" style="background-image:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.55)),url('${portada}');background-size:cover;background-position:center;">
           <svg class="ic" style="opacity:.85;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));"><use href="#${ICON_AREA[c.area]||'i-book'}"/></svg>
+          ${esCursoMuestra ? '<span class="curso-card__cover-badge" style="left:12px;right:auto;background:var(--success);color:#081225;border-color:var(--success);">1 CLASE GRATIS</span>' : ''}
           ${c.disponibleSiempre ? '<span class="curso-card__cover-badge" style="background:var(--success);color:#081225;">DISPONIBLE</span>' : ''}
-          ${!desbloqueado && diasFalta > 0 ? `<span class="curso-card__cover-badge" style="background:rgba(14,10,6,.85);color:var(--primary);border:1px solid var(--primary);">🔒 Se desbloquea en ${diasFalta} día${diasFalta!==1?'s':''}</span>` : ''}
+          ${accesoCompleto && !desbloqueado && diasFalta > 0 ? `<span class="curso-card__cover-badge" style="background:rgba(14,10,6,.85);color:var(--primary);border:1px solid var(--primary);">🔒 Se desbloquea en ${diasFalta} día${diasFalta!==1?'s':''}</span>` : ''}
         </div>
         <div class="curso-card__body">
           <div class="curso-card__tags">
@@ -5525,8 +5601,9 @@ const Sections = (function(){
       <p style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:18px;">${c.descripcion || c.desc || ''}</p>
     `;
 
-    // Si NO está desbloqueado, mostrar candado con días restantes
-    if (!desbloqueado) {
+    // El desbloqueo progresivo se conserva para miembros. Las personas sin
+    // membresía sí pueden abrir cualquier detalle para conocer el contenido.
+    if (tieneAccesoVipCompleto() && !desbloqueado) {
       bodyContent += `
         <div class="empty-state" style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:14px;padding:32px 24px;">
           <div class="empty-state__icon">
@@ -5555,35 +5632,48 @@ const Sections = (function(){
           </div>
           <div class="modulos-list" style="margin-bottom:18px;">
             ${c.sesiones.map((s, i) => {
-              const titEsc = (s.titulo || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-              const urlEsc = (s.url || '').replace(/'/g, "\\'");
               const numSes = s.numero || (i+1);
               const vista = progCurso.clasesVistas.includes(numSes);
               const desblok = claseDesbloqueada(cursoId, i, c.sesiones);
+              const esMuestraGratis = esPrimeraClaseGratis(cursoId, i);
+              const accesoCompleto = tieneAccesoVipCompleto();
+              const accion = `window.abrirClaseBionova('${cursoId}', ${i})`;
 
-              if (vista) {
+              if (vista && desblok) {
                 return `
-                <div class="modulo" onclick="window.abrirVisor('${urlEsc}', '${titEsc}', '${cursoId}', ${numSes})" style="cursor:pointer;background:color-mix(in srgb,var(--success) 8%,var(--surface-2));border-color:color-mix(in srgb,var(--success) 30%,transparent);" data-bypass-paywall="true">
+                <div class="modulo" onclick="${accion}" style="cursor:pointer;background:color-mix(in srgb,var(--success) 8%,var(--surface-2));border-color:color-mix(in srgb,var(--success) 30%,transparent);" data-bypass-paywall="true">
                   <div class="modulo__num" style="background:var(--success);color:#081225;">✓</div>
                   <div style="flex:1;min-width:0;">
                     <div class="modulo__title">${s.titulo}</div>
-                    <div class="modulo__meta" style="color:var(--success);">Vista · click para repasar</div>
+                    <div class="modulo__meta" style="color:var(--success);">${esMuestraGratis ? 'Clase gratuita · ' : ''}Vista · click para repasar</div>
                   </div>
                   <svg class="ic" style="color:var(--success);"><use href="#i-arrow-right"/></svg>
                 </div>`;
               }
               if (desblok) {
                 return `
-                <div class="modulo" onclick="window.abrirVisor('${urlEsc}', '${titEsc}', '${cursoId}', ${numSes})" style="cursor:pointer;" data-bypass-paywall="true">
-                  <div class="modulo__num">${numSes}</div>
+                <div class="modulo" onclick="${accion}" style="cursor:pointer;${esMuestraGratis?'border-color:color-mix(in srgb,var(--success) 45%,transparent);background:color-mix(in srgb,var(--success) 7%,var(--surface-2));':''}" data-bypass-paywall="true">
+                  <div class="modulo__num"${esMuestraGratis?' style="background:var(--success);color:#081225;"':''}>${numSes}</div>
                   <div style="flex:1;min-width:0;">
                     <div class="modulo__title">${s.titulo}</div>
-                    <div class="modulo__meta">▶ Click para ver la clase</div>
+                    <div class="modulo__meta"${esMuestraGratis?' style="color:var(--success);font-weight:700;"':''}>${esMuestraGratis?'PRIMERA CLASE GRATIS · Click para verla':'▶ Click para ver la clase'}</div>
                   </div>
                   <svg class="ic" style="color:var(--primary);"><use href="#i-arrow-right"/></svg>
                 </div>`;
               }
-              // Bloqueada
+              // Bloqueada: para no-VIP el click abre el paywall sobre este detalle.
+              if (!accesoCompleto) {
+                return `
+                <div class="modulo" onclick="${accion}" style="cursor:pointer;opacity:.72;" data-bypass-paywall="true">
+                  <div class="modulo__num" style="background:var(--surface-3);color:var(--text-3);">🔒</div>
+                  <div style="flex:1;min-width:0;">
+                    <div class="modulo__title" style="color:var(--text-2);">${s.titulo}</div>
+                    <div class="modulo__meta">Activa tu membresía para ver esta clase</div>
+                  </div>
+                  <svg class="ic" style="color:var(--text-3);"><use href="#i-arrow-right"/></svg>
+                </div>`;
+              }
+              // Bloqueo progresivo de miembros: deben completar la clase anterior.
               return `
                 <div class="modulo" style="cursor:not-allowed;opacity:.55;">
                   <div class="modulo__num" style="background:var(--surface-3);color:var(--text-3);">🔒</div>
@@ -5616,19 +5706,18 @@ const Sections = (function(){
         };
 
         // Renderiza una tarjeta de material
-        const matCard = (m) => {
+        const matCard = (m, materialIndex) => {
           const t = tipoMat(m.url);
-          const titEsc = (m.titulo || 'Material del curso').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-          const urlEsc = (m.url || '').replace(/'/g, "\\'");
+          const accesoMaterial = tieneAccesoVipCompleto();
           return `
-            <div class="mat-card" onclick="window.abrirVisor('${urlEsc}', '${titEsc}')" data-bypass-paywall="true" style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;cursor:pointer;color:inherit;transition:all .18s cubic-bezier(.2,.8,.25,1);position:relative;overflow:hidden;" onmouseover="this.style.borderColor='${t.color}';this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 20px rgba(0,0,0,.25)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
+            <div class="mat-card" onclick="window.abrirMaterialBionova('${id}', ${materialIndex})" data-bypass-paywall="true" style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;cursor:pointer;color:inherit;transition:all .18s cubic-bezier(.2,.8,.25,1);position:relative;overflow:hidden;${accesoMaterial?'':'opacity:.72;'}" onmouseover="this.style.borderColor='${t.color}';this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 20px rgba(0,0,0,.25)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
               <div style="width:38px;height:38px;border-radius:9px;background:color-mix(in srgb,${t.color} 16%,transparent);color:${t.color};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:18px;height:18px;display:block;">${t.ic}</span></div>
               <div style="flex:1;min-width:0;">
                 <div style="font-size:13.5px;font-weight:600;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${m.titulo || 'Material del curso'}</div>
                 <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
                   <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:${t.color};">${t.lbl}</span>
                   <span style="font-size:11px;color:var(--text-3);">·</span>
-                  <span style="font-size:11px;color:var(--text-3);">Click para ver</span>
+                  <span style="font-size:11px;color:var(--text-3);">${accesoMaterial?'Click para ver':'🔒 Activa tu membresía para abrir'}</span>
                 </div>
               </div>
               <svg class="ic" style="color:${t.color};opacity:.7;flex-shrink:0;width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -5648,14 +5737,14 @@ const Sections = (function(){
             <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--primary);font-weight:700;background:color-mix(in srgb,var(--primary) 14%,transparent);padding:3px 9px;border-radius:12px;">${totalMat} archivo${totalMat!==1?'s':''}</span>
           </div>
           <div style="display:flex;flex-direction:column;gap:8px;" id="mat-preview-${id}">
-            ${c.materiales.slice(0, PREVIEW_COUNT).map(matCard).join('')}
+              ${c.materiales.slice(0, PREVIEW_COUNT).map((m, materialIndex) => matCard(m, materialIndex)).join('')}
           </div>
         `;
 
         // Si hay más de 3, agregar botón "Ver los X restantes" expandible inline
         if (totalMat > PREVIEW_COUNT) {
           const restantes = totalMat - PREVIEW_COUNT;
-          const restoHTML = c.materiales.slice(PREVIEW_COUNT).map(matCard).join('');
+          const restoHTML = c.materiales.slice(PREVIEW_COUNT).map((m, materialIndex) => matCard(m, materialIndex + PREVIEW_COUNT)).join('');
           bodyContent += `
             <div id="mat-extra-${id}" style="display:none;flex-direction:column;gap:8px;margin-top:8px;animation:slideDown .35s cubic-bezier(.2,.8,.25,1);">
               ${restoHTML}
@@ -9632,7 +9721,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
     // Selectores de cards susceptibles de bloqueo
     const lockableSelectors = [
-      '.curso-card', '.webinar-card', '.webinar-hero', '.pdf-card', '.cert-card',
+      '.webinar-card', '.webinar-hero', '.pdf-card', '.cert-card',
       '[data-lockable="true"]', '.foro-thread', '.canal-card'
     ];
     document.querySelectorAll(lockableSelectors.join(',')).forEach(card => {
@@ -9675,32 +9764,53 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   // ─── Popup paywall genérico ───
   function showPaywallModal(opts){
     const modal = document.getElementById('paywall-modal');
+    if (!modal) return;
     if (opts && opts.title) document.getElementById('paywall-title').textContent = opts.title;
     if (opts && opts.sub) document.getElementById('paywall-sub').textContent = opts.sub;
+    // El modal debe vivir directamente bajo <body> para no quedar atrapado en
+    // el contexto de apilado del detalle del curso.
+    if (modal.parentElement !== document.body) document.body.appendChild(modal);
+    modal.setAttribute('aria-hidden', 'false');
     modal.classList.add('is-open');
+    requestAnimationFrame(() => document.getElementById('paywall-close')?.focus());
   }
   window.__showPaywallModal = showPaywallModal;
 
+  function closePaywallModal(){
+    const modal = document.getElementById('paywall-modal');
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
   // Cerrar modal
   document.getElementById('paywall-close')?.addEventListener('click', () => {
-    document.getElementById('paywall-modal').classList.remove('is-open');
+    closePaywallModal();
   });
   document.getElementById('paywall-dismiss')?.addEventListener('click', () => {
-    document.getElementById('paywall-modal').classList.remove('is-open');
+    closePaywallModal();
   });
   document.getElementById('paywall-cta')?.addEventListener('click', () => {
-    document.getElementById('paywall-modal').classList.remove('is-open');
+    const detalles = Array.from(document.querySelectorAll('.modal-backdrop.is-open[data-modal-id^="curso-"]'));
+    detalles.forEach(backdrop => {
+      try { window.Modal?.close(backdrop.dataset.modalId); } catch(e){}
+    });
     const S = window.UserState;
-    if (S.modo === 'invitado') {
-      window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('bionova_intent_plan') || 'anual');
-    } else {
-      window.navigateToSection?.('suscripcion');
-    }
+    const mostrarPlanes = () => {
+      closePaywallModal();
+      if (S.modo === 'invitado') {
+        window.location.href = 'vip-auth.html?plan=' + (localStorage.getItem('bionova_intent_plan') || 'anual');
+      } else {
+        window.navigateToSection?.('suscripcion');
+      }
+    };
+    if (detalles.length) setTimeout(mostrarPlanes, 270);
+    else mostrarPlanes();
   });
   // Cerrar al click fuera del box
   document.getElementById('paywall-modal')?.addEventListener('click', (e) => {
     if (e.target.id === 'paywall-modal') {
-      e.currentTarget.classList.remove('is-open');
+      closePaywallModal();
     }
   });
 
