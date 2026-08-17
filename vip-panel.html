@@ -4958,7 +4958,13 @@ const Sections = (function(){
     }
 
     const numClase = sesion.numero || (Number(indexClase) + 1);
-    window.abrirVisor(sesion.url || '', sesion.titulo || `Clase ${numClase}`, cursoId, numClase);
+    window.abrirVisor(
+      sesion.videoId || sesion.url || '',
+      sesion.titulo || `Clase ${numClase}`,
+      cursoId,
+      numClase,
+      { videoId: sesion.videoId || '' }
+    );
   };
 
   window.abrirMaterialBionova = function(cursoId, indexMaterial) {
@@ -5117,7 +5123,7 @@ const Sections = (function(){
               .replace(/\/edit$/, '/preview');
   }
 
-  window.abrirVisor = function(url, titulo, cursoId, numClase) {
+  window.abrirVisor = async function(url, titulo, cursoId, numClase, opciones = {}) {
     if (!url) return;
     const overlay = document.getElementById('visorOverlay');
     const frame = document.getElementById('visorFrame');
@@ -5126,9 +5132,43 @@ const Sections = (function(){
     const markBtn = document.getElementById('visorMarkAsViewed');
     if (!overlay || !frame) return;
 
-    frame.src = convertirUrlDrive(url);
+    const videoId = opciones.videoId || (cursoId && /^[0-9a-f-]{36}$/i.test(url) ? url : '');
+    let visorUrl = convertirUrlDrive(url);
+    if (videoId) {
+      try {
+        frame.src = 'about:blank';
+        const headers = { 'Content-Type': 'application/json' };
+        if (window.__currentUser) {
+          headers.Authorization = 'Bearer ' + await window.__currentUser.getIdToken();
+        }
+        const response = await fetch(`${window.WEBHOOK_URL}/api/bunny/embed-token`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ videoId })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.embedUrl) {
+          if (response.status === 403) {
+            mostrarPaywallCurso(cursos.find(c => c.id === cursoId));
+            return;
+          }
+          throw new Error(data.error || `Error HTTP ${response.status}`);
+        }
+        visorUrl = data.embedUrl;
+      } catch (error) {
+        console.error('[Bunny player]', error);
+        if (window.Toast?.show) window.Toast.show('No se pudo abrir la clase. Intenta nuevamente.', 'error');
+        else window.alert('No se pudo abrir la clase. Intenta nuevamente.');
+        return;
+      }
+    }
+
+    frame.src = visorUrl;
     titleEl.textContent = titulo || 'Visor';
-    if (dlEl) dlEl.href = url;
+    if (dlEl) {
+      dlEl.style.display = videoId ? 'none' : '';
+      if (!videoId) dlEl.href = url;
+    }
 
     // Botón "Marcar como vista" solo si es clase con cursoId+numClase
     if (markBtn) {
