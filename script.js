@@ -79,6 +79,12 @@ const openModal = key => {
   modalTitle.textContent = data.title;
   modalDescription.textContent = data.description;
   if (modalList) modalList.innerHTML = (data.items || []).map(item => `<li>${item}</li>`).join('');
+  // El temario se sirve en WebP (≈100 KB en vez de ≈450 KB). Si el navegador no
+  // lo soporta, caemos al JPG original de assets/.
+  modalImage.onerror = () => {
+    modalImage.onerror = null;
+    modalImage.src = data.image.replace('assets/opt/', 'assets/').replace(/-\d+\.webp$/, '.jpg');
+  };
   modalImage.src = data.image;
   modalImage.alt = 'Contenido incluido en ' + data.title;
   modal.classList.add('open');

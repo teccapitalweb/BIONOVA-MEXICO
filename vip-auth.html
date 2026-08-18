@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Acceso de miembros · BioNova VIP</title>
 <meta name="description" content="Inicia sesión o crea tu cuenta en la plataforma VIP de BioNova: biomedicina, microbiología y medicina general.">
 <link rel="icon" type="image/png" href="assets/logo-bionova.jpg">
@@ -186,6 +186,15 @@ body.modo-dia .logo-day{display:block}
 .hero-ref .meta b{color:var(--muted);font-weight:600}
 .hero-trust{font-size:.72rem;color:var(--faint);margin-top:2px}
 </style>
+
+<link rel="stylesheet" href="mobile.css">
+<!-- ═══ Instalable como app (ver manifest.json / sw.js / pwa.js) ═══ -->
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BIONOVA">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 </head>
 <body>
 
@@ -641,5 +650,7 @@ document.getElementById('forgot-link').addEventListener('click', async (e) => {
   document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-register').click(); });
 });
 </script>
+
+<script src="pwa.js" defer></script>
 </body>
 </html>
