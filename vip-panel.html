@@ -4774,12 +4774,14 @@ const Sections = (function(){
     ) || null;
   }
 
+  // MODIFICADO: la muestra gratuita son las PRIMERAS 3 CLASES del primer curso
+  const CLASES_GRATIS = 3;
   function esPrimeraClaseGratis(cursoId, indexClase) {
     const cursoGratis = cursoConPrimeraClaseGratis();
     return !tieneAccesoVipCompleto() &&
       Boolean(cursoGratis) &&
       cursoGratis.id === cursoId &&
-      Number(indexClase) === 0;
+      Number(indexClase) < CLASES_GRATIS;
   }
 
   function textoPaywallCurso(curso) {
@@ -4787,7 +4789,7 @@ const Sections = (function(){
     const extraMateriales = materiales > 0
       ? ` y ${materiales} material${materiales === 1 ? '' : 'es'} del curso`
       : ' y todos los materiales del curso';
-    return `Disfruta gratis la primera clase. Activa tu membresía para abrir las demás clases${extraMateriales}.`;
+    return `Disfruta gratis las primeras 3 clases. Activa tu membresía para abrir las demás clases${extraMateriales}.`;
   }
 
   function mostrarPaywallCurso(curso) {
@@ -4938,7 +4940,15 @@ const Sections = (function(){
   };
 
   function claseDesbloqueada(cursoId, indexClase, sesiones) {
-    if (!tieneAccesoVipCompleto()) return esPrimeraClaseGratis(cursoId, indexClase);
+    if (!tieneAccesoVipCompleto()) {
+      // No-VIP: solo las 3 clases gratis, secuenciales (marcar vista para abrir la siguiente)
+      if (!esPrimeraClaseGratis(cursoId, indexClase)) return false;
+      if (Number(indexClase) === 0) return true;
+      const progFree = getProgresoCurso(cursoId);
+      const antFree = sesiones[Number(indexClase) - 1];
+      const antNumFree = antFree?.numero || Number(indexClase);
+      return progFree.clasesVistas.includes(antNumFree);
+    }
     if (esAdminReal()) return true;
     if (indexClase === 0) return true; // primera siempre desbloqueada
     const prog = getProgresoCurso(cursoId);
@@ -4952,9 +4962,13 @@ const Sections = (function(){
     const sesion = curso?.sesiones?.[Number(indexClase)];
     if (!curso || !sesion) return;
 
-    if (!tieneAccesoVipCompleto() && !esPrimeraClaseGratis(cursoId, indexClase)) {
-      mostrarPaywallCurso(curso);
-      return;
+    if (!tieneAccesoVipCompleto()) {
+      if (!esPrimeraClaseGratis(cursoId, indexClase)) {
+        mostrarPaywallCurso(curso);
+        return;
+      }
+      // Clase gratis pero bloqueada por secuencia: hay que ver la anterior primero
+      if (!claseDesbloqueada(cursoId, Number(indexClase), curso.sesiones)) return;
     }
 
     const numClase = sesion.numero || (Number(indexClase) + 1);
@@ -5585,7 +5599,7 @@ const Sections = (function(){
       <article class="curso-card ${accesoCompleto && !desbloqueado?'curso-card--locked':''}" data-cid="${c.id}" tabindex="0" style="--area-color:${COLOR_AREA[c.area]||'#2a6df6'};">
         <div class="curso-card__cover" style="background-image:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.55)),url('${portada}');background-size:cover;background-position:center;">
           <svg class="ic" style="opacity:.85;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));"><use href="#${ICON_AREA[c.area]||'i-book'}"/></svg>
-          ${esCursoMuestra ? '<span class="curso-card__cover-badge" style="left:12px;right:auto;background:var(--success);color:#081225;border-color:var(--success);">1 CLASE GRATIS</span>' : ''}
+          ${esCursoMuestra ? '<span class="curso-card__cover-badge" style="left:12px;right:auto;background:var(--success);color:#081225;border-color:var(--success);">3 CLASES GRATIS</span>' : ''}
           ${c.disponibleSiempre ? '<span class="curso-card__cover-badge" style="background:var(--success);color:#081225;">DISPONIBLE</span>' : ''}
           ${accesoCompleto && !desbloqueado && diasFalta > 0 ? `<span class="curso-card__cover-badge" style="background:rgba(14,10,6,.85);color:var(--primary);border:1px solid var(--primary);">🔒 Se desbloquea en ${diasFalta} día${diasFalta!==1?'s':''}</span>` : ''}
         </div>
@@ -5696,13 +5710,26 @@ const Sections = (function(){
                   <div class="modulo__num"${esMuestraGratis?' style="background:var(--success);color:#081225;"':''}>${numSes}</div>
                   <div style="flex:1;min-width:0;">
                     <div class="modulo__title">${s.titulo}</div>
-                    <div class="modulo__meta"${esMuestraGratis?' style="color:var(--success);font-weight:700;"':''}>${esMuestraGratis?'PRIMERA CLASE GRATIS · Click para verla':'▶ Click para ver la clase'}</div>
+                    <div class="modulo__meta"${esMuestraGratis?' style="color:var(--success);font-weight:700;"':''}>${esMuestraGratis?'CLASE GRATIS · Click para verla':'▶ Click para ver la clase'}</div>
                   </div>
                   <svg class="ic" style="color:var(--primary);"><use href="#i-arrow-right"/></svg>
                 </div>`;
               }
-              // Bloqueada: para no-VIP el click abre el paywall sobre este detalle.
+              // Bloqueada para no-VIP:
+              // · si es una de las 3 clases gratis → falta ver la anterior (sin paywall)
+              // · si no es gratis → el click abre el paywall sobre este detalle.
               if (!accesoCompleto) {
+                if (esMuestraGratis) {
+                  return `
+                <div class="modulo" style="cursor:not-allowed;opacity:.6;">
+                  <div class="modulo__num" style="background:var(--surface-3);color:var(--text-3);">🔒</div>
+                  <div style="flex:1;min-width:0;">
+                    <div class="modulo__title" style="color:var(--text-2);">${s.titulo}</div>
+                    <div class="modulo__meta" style="color:var(--success);">Clase gratuita · marca como vista la anterior para desbloquear</div>
+                  </div>
+                  <svg class="ic" style="color:var(--text-3);"><use href="#i-arrow-right"/></svg>
+                </div>`;
+                }
                 return `
                 <div class="modulo" onclick="${accion}" style="cursor:pointer;opacity:.72;" data-bypass-paywall="true">
                   <div class="modulo__num" style="background:var(--surface-3);color:var(--text-3);">🔒</div>
