@@ -20,6 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/onboarding-tour.css?v=1">
 
 <style>
 /* BioNova VIP · Layout estilo Zoorigen/Sinergia · 3 columnas */
@@ -3605,7 +3606,7 @@ window.__setDisplayName = async (nombre) => {
       <a class="nav-item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados</a>
     </div>
 
-    <div class="nav-section">
+    <div class="nav-section" data-tour="tools">
       <div class="nav-label">Herramientas pro</div>
       <a class="nav-item" data-tool="diluciones"><svg class="ic"><use href="#i-bn-flask"/></svg>Diluciones C₁V₁</a>
       <a class="nav-item" data-tool="ufc"><svg class="ic"><use href="#i-bn-microbe"/></svg>UFC/mL</a>
@@ -3639,6 +3640,9 @@ window.__setDisplayName = async (nombre) => {
         <span class="pill" id="topbar-pill"><svg class="ic"><use href="#i-user"/></svg><span id="topbar-pill-text">Miembro</span></span>
       </div>
       <div class="topbar__right">
+        <button class="icon-btn" id="btn-tour-help" data-tour-restart type="button" aria-label="Volver a ver el recorrido guiado" title="Recorrido guiado">
+          <span class="tour-help-icon" aria-hidden="true">?</span>
+        </button>
         <button class="icon-btn" id="btn-notif" aria-label="Notificaciones">
           <svg class="ic"><use href="#i-bell"/></svg>
           <span class="dot"></span>
@@ -3790,7 +3794,7 @@ window.__setDisplayName = async (nombre) => {
         <a class="mobile-drawer__item" data-section="certificados"><svg class="ic"><use href="#i-certificate"/></svg>Certificados</a>
       </div>
 
-      <div class="mobile-drawer__section">
+      <div class="mobile-drawer__section" data-tour="tools">
         <div class="mobile-drawer__label">Herramientas pro</div>
         <a class="mobile-drawer__item" data-tool="diluciones"><svg class="ic"><use href="#i-bn-flask"/></svg>Diluciones C₁V₁</a>
         <a class="mobile-drawer__item" data-tool="ufc"><svg class="ic"><use href="#i-bn-microbe"/></svg>UFC/mL</a>
@@ -8034,6 +8038,7 @@ const Sections = (function(){
           </div>
           <button class="btn btn--ghost" id="btn-edit-profile" style="align-self:flex-start;"><svg class="ic"><use href="#i-tools"/></svg>Editar perfil</button>
           <button class="btn btn--ghost" id="btn-mi-tarjeta-dir" style="align-self:flex-start;"><svg class="ic"><use href="#i-users"/></svg>Mi tarjeta del directorio</button>
+          <button class="btn btn--ghost" data-tour-restart type="button" style="align-self:flex-start;"><span class="tour-help-icon" aria-hidden="true">?</span>Ver recorrido guiado</button>
         </section>
 
         <div class="perfil-grid">
@@ -10411,6 +10416,69 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   if (laterBtn) laterBtn.addEventListener('click', function(){ ocultar(true); });
   if (overlay) overlay.addEventListener('click', function(){ ocultar(false); });
 })();
+</script>
+<script src="assets/onboarding-tour.js?v=1"></script>
+<script>
+window.BioNovaOnboarding = new window.MembershipTour({
+  namespace: 'bionova',
+  version: 'v1',
+  brand: 'Guía BioNova',
+  autoDelay: 1600,
+  identity: function(){
+    var state = window.UserState || {};
+    return state.uid || state.email || '';
+  },
+  ready: function(){
+    var state = window.UserState || {};
+    return state.modo && state.modo !== 'cargando' && !!(state.uid || state.email) && getComputedStyle(document.body).visibility !== 'hidden';
+  },
+  steps: [
+    {
+      desktopSelectors: '.sidebar .brand',
+      mobileSelectors: '.topbar__left',
+      title: 'Bienvenido a BioNova',
+      copy: 'Este es tu espacio de aprendizaje en biociencias, laboratorio y práctica clínica. Te mostramos dónde encontrar cada recurso para que puedas empezar con confianza.'
+    },
+    {
+      desktopSelectors: '.sidebar .nav-item[data-section="cursos"]',
+      mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="cursos"]',
+      title: 'Tus cursos de biociencias',
+      copy: 'En Mis cursos encontrarás las clases disponibles, tu progreso y los contenidos de microbiología, bioquímica, laboratorio y áreas afines.'
+    },
+    {
+      desktopSelectors: '.sidebar .nav-item[data-section="pdfs"]',
+      mobileSelectors: '.mobile-drawer .mobile-drawer__item[data-section="pdfs"]',
+      mobileDrawer: true,
+      title: 'PDFs y material de apoyo',
+      copy: 'Aquí se reúnen presentaciones, protocolos, guías y recursos descargables para acompañar tus cursos y tu trabajo en laboratorio.'
+    },
+    {
+      desktopSelectors: '.sidebar .nav-item[data-section="webinars"]',
+      mobileSelectors: '.mobile-nav .mobile-nav__item[data-section="webinars"]',
+      title: 'Clases en vivo',
+      copy: 'Consulta próximas transmisiones y sesiones con especialistas. Desde aquí podrás revisar fechas y entrar cuando una clase esté disponible.'
+    },
+    {
+      desktopSelectors: '.sidebar [data-tour="tools"]',
+      mobileSelectors: '.mobile-drawer [data-tour="tools"]',
+      mobileDrawer: true,
+      title: 'Tu panel de herramientas',
+      copy: 'Usa calculadoras para diluciones, UFC/mL, dosis, TFG, molaridad y Ley de Beer, además del generador de reportes de laboratorio.'
+    },
+    {
+      desktopSelectors: '.sidebar .nav-item[data-section="perfil"]',
+      mobileSelectors: '.mobile-drawer .mobile-drawer__item[data-section="perfil"]',
+      mobileDrawer: true,
+      title: 'Perfil y configuración de tu cuenta',
+      copy: 'En Mi perfil puedes revisar tus datos, preferencias, seguridad y estado de membresía. La sección Suscripción está justo debajo para gestionar tu plan.'
+    },
+    {
+      selectors: '#btn-tour-help',
+      title: 'Vuelve a consultar esta guía',
+      copy: 'Cuando necesites recordar dónde está algo, pulsa este botón de ayuda. También puedes iniciar el recorrido nuevamente desde Mi perfil.'
+    }
+  ]
+});
 </script>
 </body>
 </html>
