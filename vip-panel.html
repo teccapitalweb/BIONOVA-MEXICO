@@ -3082,7 +3082,7 @@ body.has-fomo .main{padding-top:18px}
 <!-- Banner sticky FOMO · solo visible para invitado y sin-membresia -->
 <div class="fomo-banner" id="fomo-banner" style="display:none">
   <span class="fomo-banner__icon" aria-hidden="true">⭐</span>
-  <span class="fomo-banner__text" id="fomo-banner-text"><strong>Activa tu suscripción</strong> para acceder a cursos, clases y herramientas pro.</span>
+  <span class="fomo-banner__text" id="fomo-banner-text"><strong>Tus primeras 4 clases y los primeros 5 materiales del primer curso son gratis.</strong> Activa tu suscripción para desbloquear todos los cursos y materiales.</span>
   <span class="fomo-banner__timer" id="fomo-banner-timer" style="display:none">5:00</span>
   <button class="fomo-banner__cta" id="fomo-banner-cta" type="button">
     Suscribirme
@@ -9705,7 +9705,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       } else { // sin-membresia
         banner.style.display = '';
         document.body.classList.add('has-fomo');
-        if (bannerText) bannerText.innerHTML = '<strong>Activa tu suscripción</strong> para acceder a cursos, clases y herramientas pro.';
+        if (bannerText) bannerText.innerHTML = '<strong>Tus primeras 4 clases y los primeros 5 materiales del primer curso son gratis.</strong> Activa tu suscripción para desbloquear todos los cursos y materiales.';
         if (bannerTimer) bannerTimer.style.display = 'none';
       }
     }
