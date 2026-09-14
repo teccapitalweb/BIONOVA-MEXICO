@@ -3082,7 +3082,7 @@ body.has-fomo .main{padding-top:18px}
 <!-- Banner sticky FOMO · solo visible para invitado y sin-membresia -->
 <div class="fomo-banner" id="fomo-banner" style="display:none">
   <span class="fomo-banner__icon" aria-hidden="true">⭐</span>
-  <span class="fomo-banner__text" id="fomo-banner-text"><strong>Tus primeras 4 clases y los primeros 5 materiales del primer curso son gratis.</strong> Activa tu suscripción para desbloquear todos los cursos y materiales.</span>
+  <span class="fomo-banner__text" id="fomo-banner-text"><strong>Tus primeras 4 clases y el primer material del primer curso son gratis.</strong> Activa tu suscripción para desbloquear todos los cursos y materiales.</span>
   <span class="fomo-banner__timer" id="fomo-banner-timer" style="display:none">5:00</span>
   <button class="fomo-banner__cta" id="fomo-banner-cta" type="button">
     Suscribirme
@@ -4775,7 +4775,7 @@ const Sections = (function(){
   }
 
   const CLASES_GRATIS = 4;
-  const MATERIALES_GRATIS = 5;
+  const MATERIALES_GRATIS = 1;
   function esPrimeraClaseGratis(cursoId, indexClase) {
     const cursoGratis = cursoConPrimeraClaseGratis();
     return !tieneAccesoVipCompleto() &&
@@ -4793,7 +4793,7 @@ const Sections = (function(){
   }
 
   function textoPaywallCurso(curso) {
-    return `Disfruta gratis las primeras ${CLASES_GRATIS} clases y los primeros ${MATERIALES_GRATIS} materiales en PDF del primer curso. Activa tu membresía para abrir el resto del contenido.`;
+    return `Disfruta gratis las primeras ${CLASES_GRATIS} clases y el primer material en PDF del primer curso. Activa tu membresía para abrir el resto del contenido.`;
   }
 
   function mostrarPaywallCurso(curso) {
@@ -6861,6 +6861,7 @@ const Sections = (function(){
         out.push({
           id: `${c.id}_${idx}`,
           cursoId: c.id,
+          materialIndex: idx,
           cursoOrden: typeof c.orden === 'number' ? c.orden : cursoIdx,
           cursoTitulo: c.titulo || 'Sin título',
           cursoArea: c.area || 'General',
@@ -6877,6 +6878,7 @@ const Sections = (function(){
 
   // Determina si un material está disponible para este usuario AHORA
   function _materialDisponible(mat) {
+    if (!tieneAccesoVipCompleto()) return esMaterialGratis(mat.cursoId, mat.materialIndex);
     if (esAdminReal()) return true;
     if (mat.disponibleSiempre === true) return true;
     if (mat.cursoDisponibleSiempre === true) return true;
@@ -6931,13 +6933,16 @@ const Sections = (function(){
     const proximos = total - disponiblesAhora;
     const tipos = { excel:0, pdf:0, ppt:0, doc:0 };
     materialesTodos.forEach(m => { const t = _inferirTipoMaterial(m.url); tipos[t]++; });
+    const textoAccesoMateriales = tieneAccesoVipCompleto()
+      ? '<strong style="color:var(--primary);">Se desbloquean según tus días de membresía</strong>, igual que las clases.'
+      : '<strong style="color:var(--success);">El primer material del primer curso es gratis.</strong> Activa tu membresía para abrir los demás.';
 
     container.innerHTML = `
       <div class="fade-up">
         <div class="sec-hero">
           <span class="sec-hero__eyebrow">Descargables</span>
           <h1 class="sec-hero__title">PDFs y material</h1>
-          <p class="sec-hero__sub">Plantillas en Excel, checklists, procedimientos y formatos oficiales listos para tu laboratorio o consulta. <strong style="color:var(--primary);">Se desbloquean según tus días de membresía</strong>, igual que las clases.</p>
+          <p class="sec-hero__sub">Plantillas en Excel, checklists, procedimientos y formatos oficiales listos para tu laboratorio o consulta. ${textoAccesoMateriales}</p>
         </div>
         ${total === 0 ? `
           <div style="text-align:center;padding:60px 24px;background:var(--surface-2);border:1px dashed var(--border-2);border-radius:14px;margin-top:18px;">
@@ -7020,6 +7025,10 @@ const Sections = (function(){
       });
       container.querySelectorAll('.pdf-card[data-disponible="false"]').forEach(card => {
         card.addEventListener('click', () => {
+          if (card.dataset.requiereMembresia === 'true') {
+            mostrarPaywallCurso(cursos.find(c => c.id === card.dataset.cursoId));
+            return;
+          }
           const dias = parseInt(card.dataset.diasFaltan, 10);
           if (Toast) {
             Toast.info(
@@ -7044,7 +7053,9 @@ const Sections = (function(){
     const iconMap = { excel:'i-chart-bar', pdf:'i-news', ppt:'i-chart-bar', doc:'i-news' };
     const ic = iconMap[tipo] || 'i-news';
     const tipoLabel = { excel:'Excel', pdf:'PDF', ppt:'PPT', doc:'DOC' }[tipo] || 'Archivo';
+    const muestraGratis = esMaterialGratis(m.cursoId, m.materialIndex);
     const disponible = _materialDisponible(m);
+    const requiereMembresia = !tieneAccesoVipCompleto() && !muestraGratis;
     const diasFaltan = _diasParaMaterial(m);
     const tituloEsc = (m.titulo || '').replace(/"/g,'&quot;').replace(/</g,'&lt;');
     const cursoEsc = (m.cursoTitulo || '').replace(/"/g,'&quot;').replace(/</g,'&lt;');
@@ -7052,6 +7063,9 @@ const Sections = (function(){
     return `
       <article class="pdf-card ${!disponible ? 'pdf-card--soon' : ''}" style="--pdf-color:${c};cursor:pointer;"
         data-disponible="${disponible}"
+        data-free="${muestraGratis}"
+        data-requiere-membresia="${requiereMembresia}"
+        data-curso-id="${m.cursoId}"
         data-url="${(m.url||'').replace(/"/g,'&quot;')}"
         data-dias-faltan="${diasFaltan}"
         data-titulo="${tituloEsc}"
@@ -7069,8 +7083,10 @@ const Sections = (function(){
           </div>
           <div class="pdf-card__tags">
             ${disponible
-              ? `<span class="tag tag--soon" style="color:#081225;border-color:#34D399;background:#34D399;font-weight:700;">Disponible</span><button class="row-btn pdf-card__btn-soon" style="margin-left:auto;background:linear-gradient(135deg, var(--primary), var(--highlight));color:#081225;cursor:pointer;" onclick="event.stopPropagation();if(typeof window.abrirVisor==='function'){window.abrirVisor('${(m.url||'').replace(/'/g,'%27')}','${tituloEsc.replace(/'/g,'&apos;')}');}"><svg class="ic"><use href="#i-download"/></svg>Abrir</button>`
-              : `<span class="tag tag--soon">${diasFaltan === 1 ? 'Mañana' : 'En '+diasFaltan+' días'}</span><button class="row-btn pdf-card__btn-soon" style="margin-left:auto;opacity:.55;cursor:not-allowed;" disabled><svg class="ic"><use href="#i-clock"/></svg>Disponible pronto</button>`
+              ? `<span class="tag tag--soon" style="color:#081225;border-color:#34D399;background:#34D399;font-weight:700;">${muestraGratis ? 'Gratis' : 'Disponible'}</span><button class="row-btn pdf-card__btn-soon" data-bypass-paywall="true" style="margin-left:auto;background:linear-gradient(135deg, var(--primary), var(--highlight));color:#081225;cursor:pointer;" onclick="event.stopPropagation();if(typeof window.abrirVisor==='function'){window.abrirVisor('${(m.url||'').replace(/'/g,'%27')}','${tituloEsc.replace(/'/g,'&apos;')}');}"><svg class="ic"><use href="#i-download"/></svg>Abrir</button>`
+              : (requiereMembresia
+                ? `<span class="tag tag--soon">Solo VIP</span><button class="row-btn pdf-card__btn-soon" style="margin-left:auto;opacity:.55;cursor:not-allowed;" disabled><svg class="ic"><use href="#i-crown"/></svg>Activa tu membresía</button>`
+                : `<span class="tag tag--soon">${diasFaltan === 1 ? 'Mañana' : 'En '+diasFaltan+' días'}</span><button class="row-btn pdf-card__btn-soon" style="margin-left:auto;opacity:.55;cursor:not-allowed;" disabled><svg class="ic"><use href="#i-clock"/></svg>Disponible pronto</button>`)
             }
           </div>
         </div>
@@ -9705,7 +9721,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       } else { // sin-membresia
         banner.style.display = '';
         document.body.classList.add('has-fomo');
-        if (bannerText) bannerText.innerHTML = '<strong>Tus primeras 4 clases y los primeros 5 materiales del primer curso son gratis.</strong> Activa tu suscripción para desbloquear todos los cursos y materiales.';
+        if (bannerText) bannerText.innerHTML = '<strong>Tus primeras 4 clases y el primer material del primer curso son gratis.</strong> Activa tu suscripción para desbloquear todos los cursos y materiales.';
         if (bannerTimer) bannerTimer.style.display = 'none';
       }
     }
