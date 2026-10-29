@@ -1177,6 +1177,7 @@ window.__signOut = async () => {
     <div class="nav-section">
       <div class="nav-label">Comunidad</div>
       <a class="nav-item" data-section="miembros"><svg class="ic"><use href="#i-users"/></svg>Miembros VIP<span class="nav-item__badge">486</span></a>
+      <a class="nav-item" data-section="estado-pagos" data-control-hub="1"><svg class="ic"><use href="#i-dollar"/></svg>Control de cuentas<span class="nav-item__badge">NUEVO</span></a>
       <a class="nav-item" data-section="noticias"><svg class="ic"><use href="#i-news"/></svg>Noticias</a>
       <a class="nav-item" data-section="foro"><svg class="ic"><use href="#i-users"/></svg>Foro<span class="nav-item__badge" id="badge-foro">0</span></a>
       <a class="nav-item" data-section="directorio"><svg class="ic"><use href="#i-user"/></svg>Directorio<span class="nav-item__badge" id="badge-dir">0</span></a>
@@ -1214,7 +1215,7 @@ window.__signOut = async () => {
     <a class="mobile-nav__item" data-section="cursos"><svg class="ic"><use href="#i-book"/></svg>Cursos</a>
     <a class="mobile-nav__item" data-section="webinars"><svg class="ic"><use href="#i-broadcast"/></svg>Vivo</a>
     <a class="mobile-nav__item" data-section="miembros"><svg class="ic"><use href="#i-users"/></svg>Miembros</a>
-    <a class="mobile-nav__item" data-section="config"><svg class="ic"><use href="#i-settings"/></svg>Config</a>
+    <a class="mobile-nav__item" data-section="estado-pagos" data-control-hub="1"><svg class="ic"><use href="#i-dollar"/></svg>Cuentas</a>
   </nav>
 
 </div>
@@ -4464,7 +4465,7 @@ const Pages={
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
             <div class="mb-action-btn__body">
               <div class="mb-action-btn__title">Regalar acceso temporal</div>
-              <div class="mb-action-btn__sub">3, 7, 10 o 30 días de cortesía</div>
+              <div class="mb-action-btn__sub">Duración exacta o accesos rápidos de cortesía</div>
             </div>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="color:var(--text-3);"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
@@ -4640,7 +4641,7 @@ const Pages={
     });
   },
 
-  // Modal regalar acceso · 4 opciones de duración
+  // Modal regalar acceso · opciones rápidas o duración exacta
   _modalRegalar(m) {
     const nombre = (m.nombre || m.email || 'Este miembro').replace(/</g,'&lt;');
     const body = document.createElement('div');
@@ -4665,6 +4666,13 @@ const Pages={
           </button>
         `).join('')}
       </div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;margin-bottom:14px;padding:14px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;">
+        <label style="display:block;min-width:0;">
+          <span style="display:block;margin-bottom:6px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);">Otra duración</span>
+          <input class="input" id="mb-gift-custom-days" type="number" min="1" max="3650" step="1" inputmode="numeric" placeholder="Ej. 22 días" style="width:100%;">
+        </label>
+        <button class="btn btn--accent" type="button" id="mb-gift-custom-confirm" style="background:#A855F7;border-color:#A855F7;">Regalar días</button>
+      </div>
       <div style="font-size:11.5px;color:var(--text-3);padding:10px 12px;background:color-mix(in srgb, #A855F7 8%, var(--surface-2));border-left:3px solid #A855F7;border-radius:6px;line-height:1.55;">
         🎁 El miembro recibirá acceso completo durante los días seleccionados. Al expirar volverá a "Sin pagar" y podrás regalar de nuevo o pedirle que pague.
       </div>
@@ -4674,11 +4682,16 @@ const Pages={
     Modal.open({ title: 'Regalar acceso', subtitle: 'Cortesía temporal', icon: 'i-users', body, footer });
     footer.querySelector('#mb-cancel').addEventListener('click', () => Modal.close());
 
-    body.querySelectorAll('[data-days]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const days = parseInt(btn.dataset.days, 10);
+    const applyGift = async (days, btn) => {
+        if (!Number.isInteger(days) || days < 1 || days > 3650) {
+          Toast.error('Duración inválida', 'Escribe un número entero entre 1 y 3,650 días.');
+          body.querySelector('#mb-gift-custom-days')?.focus();
+          return;
+        }
         btn.style.opacity = '.6'; btn.style.cursor = 'wait';
         body.querySelectorAll('[data-days]').forEach(b => b.disabled = true);
+        const customButton = body.querySelector('#mb-gift-custom-confirm');
+        if (customButton) customButton.disabled = true;
         const r = await Pages._llamarActivar(m.uid || m.id, 'regalo', days, true);
         if (r.ok) {
           Toast.success('🎁 Regalo enviado', `${nombre} tiene ${days} días gratis`);
@@ -4686,9 +4699,22 @@ const Pages={
         } else {
           Toast.error('No se pudo regalar', r.error || 'Error desconocido');
           body.querySelectorAll('[data-days]').forEach(b => { b.disabled = false; b.style.opacity = '1'; b.style.cursor = 'pointer'; });
+          if (customButton) { customButton.disabled = false; customButton.style.opacity = '1'; customButton.style.cursor = 'pointer'; }
         }
-      });
+    };
+
+    body.querySelectorAll('[data-days]').forEach(btn => {
+      btn.addEventListener('click', () => applyGift(parseInt(btn.dataset.days, 10), btn));
     });
+    const customInput = body.querySelector('#mb-gift-custom-days');
+    const customButton = body.querySelector('#mb-gift-custom-confirm');
+    customButton.addEventListener('click', () => applyGift(Number(customInput.value), customButton));
+    customInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        applyGift(Number(customInput.value), customButton);
+      }
+      });
   },
 
   // Renovar es activar de nuevo (mismo plan, suma 30 o 365 días)
@@ -5375,7 +5401,7 @@ function dirAdminCargar(){
    refresh te deja donde estabas, los botones atrás/adelante del
    navegador funcionan y puedes compartir un link directo a la sección.
    ═══════════════════════════════════════════════════════════════════ */
-const SECCIONES_VALIDAS = ['dashboard','notificaciones','cursos','webinars','pdfs','certificados','miembros','noticias','config','foro','directorio'];
+const SECCIONES_VALIDAS = ['dashboard','notificaciones','cursos','webinars','pdfs','certificados','miembros','estado-pagos','auditoria','creditos-masivos','noticias','config','foro','directorio'];
 
 function seccionDesdeHash(){
   const h = (window.location.hash || '').replace(/^#\/?/, '').trim();
@@ -5389,7 +5415,11 @@ function navigate(section, opts){
   if(section!=='directorio' && typeof _dirAdminUnsub==='function'){ _dirAdminUnsub(); _dirAdminUnsub=null; }
   document.querySelectorAll('.nav-item, .mobile-nav__item').forEach(n=>n.classList.remove('is-active'));
   document.querySelectorAll(`[data-section="${section}"]`).forEach(n=>n.classList.add('is-active'));
+  if(['estado-pagos','auditoria','creditos-masivos'].includes(section)){
+    document.querySelectorAll('[data-control-hub]').forEach(n=>n.classList.add('is-active'));
+  }
   const p=document.getElementById('page');
+  p.dataset.live=section;
   const fn=Pages[section]||Pages.dashboard;
   fn(p);
 
@@ -5410,6 +5440,11 @@ function navigate(section, opts){
   window.scrollTo({top:0,behavior:'instant'});
   document.querySelector('.main')?.scrollTo({top:0,behavior:'instant'});
 }
+
+window.Pages=Pages;
+window.Toast=Toast;
+window.Modal=Modal;
+window.navigateTo=navigate;
 
 /* Sección inicial: hash de la URL → respaldo en sessionStorage → dashboard */
 function seccionInicial(){
@@ -5699,6 +5734,7 @@ window.addEventListener('adminready', () => {
 if (window.__currentAdmin) AdminStore.init();
 </script>
 
+<script src="assets/bionova-account-control.js?v=20261029-1"></script>
 
 <script src="pwa.js" defer></script>
 </body>

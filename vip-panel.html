@@ -3119,6 +3119,7 @@ window.UserState = {
   modo: 'cargando',
   uid: null, email: null, displayName: null, iniciales: 'IN',
   plan: null, isAdmin: false,
+  creditos: 0,
   membership: { activo:false, proximaRenovacion:null, historial:[], metodoPago:null },
   demo: { timerRestante:300, iniciado:null, visitas:0 }
 };
@@ -3170,6 +3171,7 @@ const firebaseConfig = {
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+window.__auth = auth;
 window.__db = db;
 // Exponer funciones de Firestore para que el script no-module pueda usarlas
 window.__fs = { collection, doc, getDoc, getDocs, query, orderBy, onSnapshot, limit, where, addDoc, setDoc, updateDoc, deleteDoc, deleteField, increment, serverTimestamp, Timestamp, db };
@@ -3254,6 +3256,7 @@ if (window.__isDemoMode) {
         const memberSnap = await getDoc(doc(db, 'miembros', user.uid));
         if (memberSnap.exists()) {
           window.memberData = memberSnap.data();
+          window.UserState.creditos = Math.max(0, Number(window.memberData.creditos || 0));
           // Propagar campos de cancelación al UserState para que el panel los use
           window.UserState.cancelacionProgramada = !!window.memberData.cancelacionProgramada;
           const ffa = window.memberData.fechaFinAcceso;
@@ -3268,6 +3271,11 @@ if (window.__isDemoMode) {
         window.memberData = null;
       }
     }
+
+    setTimeout(() => {
+      if (typeof window.__syncLearningProgress === 'function') window.__syncLearningProgress();
+      if (typeof window.__startActivityTracking === 'function') window.__startActivityTracking();
+    }, 250);
 
     // ─── Nombre canónico · UNA sola fuente para dashboard, splash y certificados ───
     // Prioridad: nombre guardado en Firestore (registro) → displayName Auth → local → correo
@@ -3824,7 +3832,7 @@ window.__setDisplayName = async (nombre) => {
 </div>
 
 <script>
-const PREFIX='imdiil:';
+const PREFIX='bionova:';
 const Storage={pref:{get(k,d){const v=localStorage.getItem(PREFIX+'pref:'+k);return v===null?d:v;},set(k,v){localStorage.setItem(PREFIX+'pref:'+k,String(v));}}};
 
 const Theme={
@@ -4918,6 +4926,62 @@ const Sections = (function(){
 
   function setProgreso(p) {
     try { localStorage.setItem(getProgresoKey(), JSON.stringify(p)); } catch {}
+    scheduleProgressSync();
+  }
+
+  let __progressSyncTimer = null;
+  function scheduleProgressSync(){
+    clearTimeout(__progressSyncTimer);
+    __progressSyncTimer = setTimeout(() => window.__syncLearningProgress(), 900);
+  }
+
+  window.__syncLearningProgress = async function(){
+    const user = window.__auth?.currentUser;
+    if (!user || window.__isDemoMode) return;
+    try {
+      const token = await user.getIdToken();
+      const response = await fetch(`${window.WEBHOOK_URL}/activity/progress`, {
+        method:'POST',
+        headers:{ Authorization:`Bearer ${token}`, 'Content-Type':'application/json' },
+        body:JSON.stringify({ courses:getProgreso() })
+      });
+      if (!response.ok) throw new Error('progress-sync-unavailable');
+    } catch(error) {
+      console.warn('[progreso] sincronización pendiente:', error.message);
+    }
+  };
+
+  window.__startActivityTracking = function(){
+    if (window.__bionovaActivityStarted || !window.__auth?.currentUser || window.__isDemoMode) return;
+    window.__bionovaActivityStarted = true;
+    const key = 'bionova_activity_session';
+    let sessionId = sessionStorage.getItem(key);
+    if (!sessionId) {
+      sessionId = (window.crypto?.randomUUID?.() || `${Date.now()}_${Math.random()}`).replace(/[^A-Za-z0-9_-]/g,'');
+      sessionStorage.setItem(key, sessionId);
+    }
+    const startedAt = new Date().toISOString();
+    const startMs = Date.now();
+    const send = async () => {
+      const user = window.__auth?.currentUser;
+      if (!user) return;
+      try {
+        const token = await user.getIdToken();
+        const section = String(location.hash || '#inicio').replace(/^#/,'') || 'inicio';
+        await fetch(`${window.WEBHOOK_URL}/activity/session`, {
+          method:'POST', keepalive:true,
+          headers:{ Authorization:`Bearer ${token}`, 'Content-Type':'application/json' },
+          body:JSON.stringify({ sessionId, startedAt, seconds:Math.floor((Date.now()-startMs)/1000), area:'panel', section })
+        });
+      } catch(error) { console.warn('[actividad] registro pendiente:', error.message); }
+    };
+    send();
+    setInterval(send, 60000);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') send(); });
+    window.addEventListener('pagehide', send);
+  };
+  if (window.__auth?.currentUser) {
+    setTimeout(() => { window.__syncLearningProgress(); window.__startActivityTracking(); }, 250);
   }
 
   function getProgresoCurso(cursoId) {
@@ -4928,6 +4992,8 @@ const Sections = (function(){
   window.marcarClaseVista = function(cursoId, numeroClase) {
     const p = getProgreso();
     if (!p[cursoId]) p[cursoId] = { clasesVistas: [], completado: false, fechaCompletado: null };
+    if (!p[cursoId].classViewedAt) p[cursoId].classViewedAt = {};
+    if (!p[cursoId].classViewedAt[String(numeroClase)]) p[cursoId].classViewedAt[String(numeroClase)] = new Date().toISOString();
     if (!p[cursoId].clasesVistas.includes(numeroClase)) {
       p[cursoId].clasesVistas.push(numeroClase);
       p[cursoId].clasesVistas.sort((a, b) => a - b);
@@ -8017,6 +8083,7 @@ const Sections = (function(){
     const _nom = escapeHtml(S.nombre || S.displayName || 'Miembro');
     const _em  = escapeHtml(S.email || '—');
     const _ini = (S.iniciales || 'IN');
+    const _creditos = Math.max(0, Number(S.creditos || window.memberData?.creditos || 0));
     container.innerHTML = `
       <div class="fade-up">
         <div class="sec-hero">
@@ -8057,6 +8124,7 @@ const Sections = (function(){
             <div class="perfil-field"><span class="perfil-field__lbl">Certificados</span><span class="perfil-field__val" id="pf-certs" style="color:var(--success);font-family:'JetBrains Mono',monospace;">0 emitidos</span></div>
             <div class="perfil-field"><span class="perfil-field__lbl">Horas estudiadas</span><span class="perfil-field__val" id="pf-horas" style="font-family:'JetBrains Mono',monospace;">0 hrs</span></div>
             <div class="perfil-field"><span class="perfil-field__lbl">Racha actual</span><span class="perfil-field__val" id="pf-racha" style="color:var(--primary);font-family:'JetBrains Mono',monospace;">0 días</span></div>
+            <div class="perfil-field"><span class="perfil-field__lbl">Créditos disponibles</span><span class="perfil-field__val" style="color:var(--primary);font-family:'JetBrains Mono',monospace;">${_creditos.toLocaleString('es-MX')}</span></div>
             <div class="perfil-field"><span class="perfil-field__lbl">Último acceso</span><span class="perfil-field__val" id="pf-acceso">—</span></div>
           </div>
 
